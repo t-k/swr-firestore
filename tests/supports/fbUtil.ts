@@ -5,7 +5,6 @@ export const deleteCollection = async (collectionName: string, subCollectionName
   const collectionRef = collection(db, collectionName);
   const qs = await getDocs(collectionRef);
   await Promise.all(qs.docs.map(async (x) => {
-    console.log({ id: x.id, collectionName, subCollectionName });
     if (subCollectionName) {
       await deleteCollection(`${collectionName}/${x.id}/${subCollectionName}`);
     }
