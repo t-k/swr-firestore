@@ -15,12 +15,22 @@
   "files": [
     "dist"
   ],
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "type": "module",
+  "main": "./dist/index.umd.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.umd.cjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --noEmit && vite build",
     "emulator": "firebase emulators:start --project swr-firestore-project --only firestore",
     "test": "vitest",
+    "test:ci": "firebase emulators:exec --only auth,firestore,storage 'vitest run'",
     "coverage": "vitest run --coverage",
     "eslint": "eslint --fix --ext .ts,.tsx .",
     "prettier": "prettier --check --write ."
@@ -31,6 +41,7 @@
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
     "@playwright/test": "^1.31.2",
+    "@rollup/plugin-typescript": "^11.0.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
@@ -46,8 +57,9 @@
     "firebase": "^9.17.1",
     "firebase-tools": "^11.24.1",
     "jsdom": "^21.1.1",
-    "prettier": "2.8.5",
+    "prettier": "^2.8.5",
     "react": "^18.2.0",
+    "rollup-plugin-typescript-paths": "^1.4.0",
     "swr": "^2.1.0 <3.0.0",
     "typescript": "^5.0.2",
     "vite-tsconfig-paths": "^4.0.7",

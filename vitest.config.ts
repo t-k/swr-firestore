@@ -18,7 +18,10 @@ export default defineConfig({
       reporter: ["text", "json", "html"],
     },
     includeSource: ["src/**/*.{ts,tsx}", "tests/**/*.{ts}"],
-    include: ["**/*.{test,spec}.{js,ts,jsx,tsx}", "./tests/**/*.{test,spec}.{js,ts,jsx,tsx}"],
+    include: [
+      "**/*.{test,spec}.{js,ts,jsx,tsx}",
+      "./tests/**/*.{test,spec}.{js,ts,jsx,tsx}",
+    ],
     exclude: ["**/node_modules/**"],
     setupFiles: ["tests/setup.ts"],
     testTimeout: 50000,
