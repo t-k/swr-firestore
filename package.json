@@ -60,7 +60,6 @@
     "eslint": "^8.36.0",
     "eslint-plugin-react": "^7.32.2",
     "firebase": "^9.17.1",
-    "firebase-tools": "^11.24.1",
     "jsdom": "^21.1.1",
     "prettier": "^2.8.5",
     "react": "^18.2.0",

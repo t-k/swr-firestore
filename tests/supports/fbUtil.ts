@@ -1,9 +1,14 @@
-import firebase_tools from "firebase-tools";
-export const deleteCollection = async (collectionName: string) => {
-  await firebase_tools.firestore.delete(collectionName, {
-    project: process.env.GCLOUD_PROJECT,
-    recursive: true,
-    yes: true,
-    force: true,
-  });
+import { collection, deleteDoc, getDocs } from "firebase/firestore";
+import { db } from "./fb";
+
+export const deleteCollection = async (collectionName: string, subCollectionName?: string) => {
+  const collectionRef = collection(db, collectionName);
+  const qs = await getDocs(collectionRef);
+  await Promise.all(qs.docs.map(async (x) => {
+    console.log({ id: x.id, collectionName, subCollectionName });
+    if (subCollectionName) {
+      await deleteCollection(`${collectionName}/${x.id}/${subCollectionName}`);
+    }
+    await deleteDoc(x.ref);
+  }));
 };

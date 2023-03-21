@@ -15,7 +15,7 @@ const SUB_COLLECTION = "SubCollectionTest";
 
 describe("useCollectionGroup", () => {
   beforeEach(async () => {
-    await deleteCollection(COLLECTION);
+    await deleteCollection(COLLECTION, SUB_COLLECTION);
     const ref = collection(db, COLLECTION);
     const doc = await addDoc(ref, {
       content: "hello",
@@ -29,7 +29,7 @@ describe("useCollectionGroup", () => {
     });
   });
   afterEach(async () => {
-    await deleteCollection(COLLECTION);
+    await deleteCollection(COLLECTION, SUB_COLLECTION);
   });
   describe("without option", () => {
     it("should fetch data from Firestore", async () => {
