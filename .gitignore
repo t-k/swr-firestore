@@ -1,0 +1,12 @@
+coverage
+dist
+node_modules
+
+firestore-debug.log
+firebase-debug.log
+ui-debug.log
+tsconfig.tsbuildinfo
+.vscode
+*.d.ts
+*.js
+*.js.map

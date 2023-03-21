@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "ignoreDeprecations": "5.0",
+    "target": "ES6",
+    "declaration": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "importsNotUsedAsValues": "error",
+    "incremental": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "resolveJsonModule": true,
+    "preserveConstEnums": true,
+    "importHelpers": true,
+    "jsx": "preserve",
+    "isolatedModules": true
+  },
+  "include": ["src/**/*.ts"]
+}

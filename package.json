@@ -1,0 +1,60 @@
+{
+  "name": "@t-k/swr-firestore",
+  "description": "React Hooks library for Firestore using SWR's subscription feature.",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/t-k/swr-firestore.git"
+  },
+  "author": "t-k (https://github.com/t-k)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/t-k/swr-firestore/issues"
+  },
+  "homepage": "https://github.com/t-k/swr-firestore#readme",
+  "files": [
+    "dist"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "emulator": "firebase emulators:start --project swr-firestore-project --only firestore",
+    "test": "vitest",
+    "coverage": "vitest run --coverage",
+    "eslint": "eslint --fix --ext .ts,.tsx .",
+    "prettier": "prettier --check --write ."
+  },
+  "dependencies": {
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^7.6.0",
+    "@playwright/test": "^1.31.2",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.4.3",
+    "@types/lodash": "^4.14.191",
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
+    "@typescript-eslint/eslint-plugin": "^5.56.0",
+    "@vitejs/plugin-react": "^3.1.0",
+    "@vitest/coverage-c8": "^0.29.3",
+    "c8": "^7.13.0",
+    "eslint": "^8.36.0",
+    "eslint-plugin-react": "^7.32.2",
+    "firebase": "^9.17.1",
+    "firebase-tools": "^11.24.1",
+    "jsdom": "^21.1.1",
+    "prettier": "2.8.5",
+    "react": "^18.2.0",
+    "swr": "^2.1.0 <3.0.0",
+    "typescript": "^5.0.2",
+    "vite-tsconfig-paths": "^4.0.7",
+    "vitest": "^0.29.3"
+  },
+  "peerDependencies": {
+    "firebase": "^9.17.1",
+    "swr": "^2.1.0 <3.0.0"
+  }
+}
