@@ -1,6 +1,7 @@
 coverage
 dist
 node_modules
+.rollup.cache
 
 firestore-debug.log
 firebase-debug.log
