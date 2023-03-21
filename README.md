@@ -5,7 +5,7 @@ React Hooks library for Firestore, built using the Firebase v9 modular SDK. It u
 ## Usage
 
 ```tsx
-import { useCollection, useCollectionCount } from "@t-k/swr-firestore";
+import { useCollection, useCollectionCount } from "@tatsuokaniwa/swr-firestore";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
@@ -88,7 +88,7 @@ Subscription for collection
 - `error`: FirestoreError | Error
 
 ```ts
-import { useCollection } from "@t-k/swr-firestore";
+import { useCollection } from "@tatsuokaniwa/swr-firestore";
 
 const { data, error } = useCollection<Post>({
   path: "Posts",
@@ -115,7 +115,7 @@ Returns [`SWRResponse`](https://swr.vercel.app/docs/api#return-values)
 - `mutate(data?, options?)`: function to mutate the cached data (details)
 
 ```ts
-import { useCollectionCount } from "@t-k/swr-firestore";
+import { useCollectionCount } from "@tatsuokaniwa/swr-firestore";
 
 const {
   data: postCount,
@@ -172,7 +172,7 @@ Subscription for document
 - `error`: FirestoreError | Error
 
 ```ts
-import { useDoc } from "@t-k/swr-firestore";
+import { useDoc } from "@tatsuokaniwa/swr-firestore";
 
 const { data, error } = useDoc<Post>({
   path: `Posts/${postId}`,

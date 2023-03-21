@@ -1,5 +1,5 @@
 {
-  "name": "@t-k/swr-firestore",
+  "name": "@tatsuokaniwa/swr-firestore",
   "description": "React Hooks library for Firestore using SWR's subscription feature.",
   "version": "0.1.0",
   "repository": {
@@ -33,7 +33,8 @@
     "test:ci": "firebase emulators:exec --only auth,firestore,storage 'vitest run'",
     "coverage": "vitest run --coverage",
     "eslint": "eslint --fix --ext .ts,.tsx .",
-    "prettier": "prettier --check --write ."
+    "prettier": "prettier --check --write .",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "lodash": "^4.17.21"
