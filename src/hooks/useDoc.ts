@@ -1,12 +1,12 @@
 import { FirestoreError, doc, getFirestore } from "firebase/firestore";
 import type { SWRSubscriptionResponse } from "swr/subscription";
-import type { DocumentData, FirstoreKeyParams } from "../util/type";
+import type { DocumentData, KeyParams } from "../util/type";
 import useSWRSubscription from "swr/subscription";
 import { onSnapshot } from "firebase/firestore";
 import { getFirestoreConverter } from "../util/getConverter";
 
 const useDoc = <T>(
-  params?: Omit<FirstoreKeyParams<T>, "where" | "orderBy" | "limit">
+  params: Omit<KeyParams<T>, "where" | "orderBy" | "limit"> | null,
 ): SWRSubscriptionResponse<DocumentData<T>, FirestoreError> => {
   return useSWRSubscription(params, (_, { next }) => {
     if (params == null) {

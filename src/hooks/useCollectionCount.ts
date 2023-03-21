@@ -1,14 +1,14 @@
 import type { SWRHook } from "swr";
 import { collection, getFirestore } from "firebase/firestore";
-import type { FirstoreKeyParams } from "../util/type";
+import type { KeyParams } from "../util/type";
 import useSWR from "swr";
 import { getCountFromServer, limit, orderBy, query, where } from "firebase/firestore";
 
 const useCollectionCount = <T>(
-  params?: FirstoreKeyParams<T>,
-  swrOptions?: Omit<Parameters<SWRHook>[2], "fetcher">
+  params: Omit<KeyParams<T>, "orderBy" | "parseDates"> | null,
+  swrOptions?: Omit<Parameters<SWRHook>[2], "fetcher">,
 ) => {
-  const fetcher = (key: FirstoreKeyParams<T>) => {
+  const fetcher = (key: KeyParams<T>) => {
     const { path, ...option } = key;
     const ref = collection(getFirestore(), path);
     let q;
