@@ -6,7 +6,7 @@ import { onSnapshot } from "firebase/firestore";
 import { getFirestoreConverter } from "../util/getConverter";
 
 const useDoc = <T>(
-  params: Omit<KeyParams<T>, "where" | "orderBy" | "limit"> | null,
+  params: Omit<KeyParams<T>, "where" | "orderBy" | "limit"> | null
 ): SWRSubscriptionResponse<DocumentData<T>, FirestoreError> => {
   return useSWRSubscription(params, (_, { next }) => {
     if (params == null) {

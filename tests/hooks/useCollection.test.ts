@@ -1,5 +1,11 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
-import { CollectionReference, Timestamp, addDoc, collection, serverTimestamp } from "firebase/firestore";
+import {
+  CollectionReference,
+  Timestamp,
+  addDoc,
+  collection,
+  serverTimestamp,
+} from "firebase/firestore";
 import { useCollection } from "../../src";
 import { db } from "../supports/fb";
 import { deleteCollection } from "../supports/fbUtil";
@@ -17,7 +23,9 @@ describe("useCollection", () => {
   describe("without option", () => {
     it("should fetch data from Firestore", async () => {
       const ref = collection(db, COLLECTION) as CollectionReference<Post>;
-      const { result, unmount } = renderHook(() => useCollection<Post>({ path: COLLECTION }));
+      const { result, unmount } = renderHook(() =>
+        useCollection<Post>({ path: COLLECTION })
+      );
       await act(async () => {
         await addDoc(ref, {
           content: "hello",
@@ -26,7 +34,9 @@ describe("useCollection", () => {
         });
         return;
       });
-      await waitFor(() => expect(result.current.data != null).toBe(true), { timeout: 5000 });
+      await waitFor(() => expect(result.current.data != null).toBe(true), {
+        timeout: 5000,
+      });
       expect(result.current.data?.length).toBe(1);
       const el = result.current.data![0];
       expect(el.id).toBeDefined();
@@ -55,7 +65,9 @@ describe("useCollection", () => {
       const { result, unmount } = renderHook(() =>
         useCollection<Post>({ path: COLLECTION, parseDates: ["createdAt"] })
       );
-      await waitFor(() => expect(result.current.data != null).toBe(true), { timeout: 5000 });
+      await waitFor(() => expect(result.current.data != null).toBe(true), {
+        timeout: 5000,
+      });
       const el = result.current.data![0];
       expect(el.createdAt).toBeDefined();
       expect(el.createdAt instanceof Date).toBe(true);
@@ -76,9 +88,14 @@ describe("useCollection", () => {
         createdAt: serverTimestamp(),
       });
       const { result, unmount } = renderHook(() =>
-        useCollection<Post>({ path: COLLECTION, where: [["status", "==", "published"]] })
+        useCollection<Post>({
+          path: COLLECTION,
+          where: [["status", "==", "published"]],
+        })
       );
-      await waitFor(() => expect(result.current.data != null).toBe(true), { timeout: 5000 });
+      await waitFor(() => expect(result.current.data != null).toBe(true), {
+        timeout: 5000,
+      });
       unmount();
     });
   });

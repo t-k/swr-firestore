@@ -1,4 +1,7 @@
-import type { FirestoreDataConverter, QueryDocumentSnapshot } from "firebase/firestore";
+import type {
+  FirestoreDataConverter,
+  QueryDocumentSnapshot,
+} from "firebase/firestore";
 import type { DocumentData } from "./type";
 import get from "lodash/get";
 import set from "lodash/fp/set";
@@ -7,7 +10,11 @@ const formatTimestamp = (obj: object, props?: string[]): object => {
   if (props == null) return obj;
   return props.reduce((result: object, prop: string) => {
     const value = get(obj, prop);
-    return set(prop, value != null && value.toDate ? value.toDate() : value, result);
+    return set(
+      prop,
+      value != null && value.toDate ? value.toDate() : value,
+      result
+    );
   }, obj);
 };
 

@@ -1,5 +1,10 @@
-import {  renderHook, waitFor } from "@testing-library/react";
-import { Timestamp, addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { renderHook, waitFor } from "@testing-library/react";
+import {
+  Timestamp,
+  addDoc,
+  collection,
+  serverTimestamp,
+} from "firebase/firestore";
 import { useCollectionGroup } from "../../src";
 import { db } from "../supports/fb";
 import { deleteCollection } from "../supports/fbUtil";
@@ -28,8 +33,12 @@ describe("useCollectionGroup", () => {
   });
   describe("without option", () => {
     it("should fetch data from Firestore", async () => {
-      const { result, unmount } = renderHook(() => useCollectionGroup<Post>({ path: SUB_COLLECTION }));
-      await waitFor(() => expect(result.current.data != null).toBe(true), { timeout: 5000 });
+      const { result, unmount } = renderHook(() =>
+        useCollectionGroup<Post>({ path: SUB_COLLECTION })
+      );
+      await waitFor(() => expect(result.current.data != null).toBe(true), {
+        timeout: 5000,
+      });
       expect(result.current.data?.length).toBe(1);
       const el = result.current.data![0];
       expect(el.id).toBeDefined();
@@ -43,8 +52,15 @@ describe("useCollectionGroup", () => {
   });
   describe("with parseDates option", () => {
     it("should fetch data from Firestore", async () => {
-      const { result, unmount } = renderHook(() => useCollectionGroup<Post>({ path: SUB_COLLECTION, parseDates: ["createdAt"] }));
-      await waitFor(() => expect(result.current.data != null).toBe(true), { timeout: 5000 });
+      const { result, unmount } = renderHook(() =>
+        useCollectionGroup<Post>({
+          path: SUB_COLLECTION,
+          parseDates: ["createdAt"],
+        })
+      );
+      await waitFor(() => expect(result.current.data != null).toBe(true), {
+        timeout: 5000,
+      });
       expect(result.current.data?.length).toBe(1);
       const el = result.current.data![0];
       expect(el.id).toBeDefined();
@@ -57,7 +73,6 @@ describe("useCollectionGroup", () => {
     });
   });
   describe("with where option", () => {
-
     it("should fetch data from Firestore", async () => {
       const ref = collection(db, COLLECTION);
       const doc = await addDoc(ref, {
@@ -65,13 +80,23 @@ describe("useCollectionGroup", () => {
         status: "draft",
         createdAt: serverTimestamp(),
       });
-      const subRef = collection(db, `${COLLECTION}/${doc.id}/${SUB_COLLECTION}`);
+      const subRef = collection(
+        db,
+        `${COLLECTION}/${doc.id}/${SUB_COLLECTION}`
+      );
       await addDoc(subRef, {
         content: "foo",
         createdAt: serverTimestamp(),
       });
-      const { result, unmount } = renderHook(() => useCollectionGroup<Post>({ path: SUB_COLLECTION, where: [["content", "==", "foo"]] }));
-      await waitFor(() => expect(result.current.data != null).toBe(true), { timeout: 5000 });
+      const { result, unmount } = renderHook(() =>
+        useCollectionGroup<Post>({
+          path: SUB_COLLECTION,
+          where: [["content", "==", "foo"]],
+        })
+      );
+      await waitFor(() => expect(result.current.data != null).toBe(true), {
+        timeout: 5000,
+      });
       expect(result.current.data?.length).toBe(1);
       const el = result.current.data![0];
       expect(el.id).toBeDefined();

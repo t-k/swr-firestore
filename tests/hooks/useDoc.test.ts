@@ -28,7 +28,9 @@ describe("useDoc", () => {
       const ref = collection(db, COLLECTION) as CollectionReference<Post>;
       const id = faker.datatype.uuid();
       const docRef = doc(ref, id);
-      const { result, unmount } = renderHook(() => useDoc<Post>({ path: `${COLLECTION}/${id}` }));
+      const { result, unmount } = renderHook(() =>
+        useDoc<Post>({ path: `${COLLECTION}/${id}` })
+      );
       await act(async () => {
         await setDoc(docRef, {
           content: "hello",
@@ -37,7 +39,9 @@ describe("useDoc", () => {
         });
         return;
       });
-      await waitFor(() => expect(result.current.data != null).toBe(true), { timeout: 5000 });
+      await waitFor(() => expect(result.current.data != null).toBe(true), {
+        timeout: 5000,
+      });
       expect(result.current.data != null).toBe(true);
       expect(result.current.data?.id).toBeDefined();
       expect(result.current.data?.exists).toBeDefined();
@@ -58,7 +62,9 @@ describe("useDoc", () => {
       const ref = collection(db, COLLECTION) as CollectionReference<Post>;
       const id = faker.datatype.uuid();
       const docRef = doc(ref, id);
-      const { result, unmount } = renderHook(() => useDoc<Post>({ path: `${COLLECTION}/${id}`, parseDates: ["createdAt"] }));
+      const { result, unmount } = renderHook(() =>
+        useDoc<Post>({ path: `${COLLECTION}/${id}`, parseDates: ["createdAt"] })
+      );
       await act(async () => {
         await setDoc(docRef, {
           content: "hello",
@@ -67,7 +73,9 @@ describe("useDoc", () => {
         });
         return;
       });
-      await waitFor(() => expect(result.current.data != null).toBe(true), { timeout: 5000 });
+      await waitFor(() => expect(result.current.data != null).toBe(true), {
+        timeout: 5000,
+      });
       expect(result.current.data != null).toBe(true);
       expect(result.current.data?.createdAt instanceof Date).toBe(true);
       unmount();

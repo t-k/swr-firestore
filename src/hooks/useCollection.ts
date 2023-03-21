@@ -1,12 +1,20 @@
 import type { SWRSubscriptionResponse } from "swr/subscription";
 import type { FirestoreError } from "firebase/firestore";
 import type { DocumentData, KeyParams } from "../util/type";
-import { collection, getFirestore, limit, onSnapshot, orderBy, query, where } from "firebase/firestore";
+import {
+  collection,
+  getFirestore,
+  limit,
+  onSnapshot,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
 import { getFirestoreConverter } from "../util/getConverter";
 import useSWRSubscription from "swr/subscription";
 
 const useCollection = <T>(
-  params: KeyParams<T> | null,
+  params: KeyParams<T> | null
 ): SWRSubscriptionResponse<DocumentData<T>[], FirestoreError | Error> => {
   return useSWRSubscription(params, (_, { next }) => {
     if (params == null) {

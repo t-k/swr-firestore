@@ -6,4 +6,10 @@ import useCollectionGroupCount from "./hooks/useCollectionGroupCount";
 import useDoc from "./hooks/useDoc";
 
 export type { DocumentData, KeyParams };
-export { useCollection, useCollectionCount, useCollectionGroup, useCollectionGroupCount, useDoc };
+export {
+  useCollection,
+  useCollectionCount,
+  useCollectionGroup,
+  useCollectionGroupCount,
+  useDoc,
+};

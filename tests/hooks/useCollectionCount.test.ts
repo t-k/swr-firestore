@@ -38,8 +38,12 @@ describe("useCollectionCount", () => {
         },
         unmount: unmountSWRConfig,
       } = renderHook(() => useSWRConfig());
-      const { result, unmount } = renderHook(() => useCollectionCount<Post>({ path: COLLECTION }));
-      await waitFor(() => expect(result.current.isLoading).toBe(false), { timeout: 5000 });
+      const { result, unmount } = renderHook(() =>
+        useCollectionCount<Post>({ path: COLLECTION })
+      );
+      await waitFor(() => expect(result.current.isLoading).toBe(false), {
+        timeout: 5000,
+      });
       expect(result.current.isLoading).toBe(false);
       expect(result.current.data != null).toBe(true);
       expect(result.current.data).toBe(1);
@@ -52,7 +56,9 @@ describe("useCollectionCount", () => {
         mutate({ path: COLLECTION });
         return;
       });
-      await waitFor(() => expect(result.current.data).toBe(2), { timeout: 5000 });
+      await waitFor(() => expect(result.current.data).toBe(2), {
+        timeout: 5000,
+      });
       unmountSWRConfig();
       unmount();
     });
@@ -67,8 +73,15 @@ describe("useCollectionCount", () => {
         status: "published",
         createdAt: serverTimestamp(),
       });
-      const { result, unmount } = renderHook(() => useCollectionCount<Post>({ path: COLLECTION, where: [["status", "==", "published"]] }));
-      await waitFor(() => expect(result.current.isLoading).toBe(false), { timeout: 5000 });
+      const { result, unmount } = renderHook(() =>
+        useCollectionCount<Post>({
+          path: COLLECTION,
+          where: [["status", "==", "published"]],
+        })
+      );
+      await waitFor(() => expect(result.current.isLoading).toBe(false), {
+        timeout: 5000,
+      });
       expect(result.current.isLoading).toBe(false);
       expect(result.current.data != null).toBe(true);
       expect(result.current.data).toBe(1);
