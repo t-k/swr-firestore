@@ -26,5 +26,5 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm i
-    - run: curl -sL firebase.tools | bash
+    - run: npm install -g firebase-tools
     - run: npm run test:ci
