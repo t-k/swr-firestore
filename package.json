@@ -15,6 +15,10 @@
   "files": [
     "dist"
   ],
+  "keywords": [
+    "swr",
+    "firestore"
+  ],
   "type": "module",
   "main": "./dist/index.umd.cjs",
   "module": "./dist/index.js",
