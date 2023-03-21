@@ -27,4 +27,4 @@ jobs:
         cache: 'npm'
     - run: npm i
     - run: curl -sL firebase.tools | bash
-    - run: npm test:ci
+    - run: npm run test:ci
