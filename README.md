@@ -2,6 +2,17 @@
 
 React Hooks library for Firestore, built using the Firebase v9 modular SDK. It utilizes the [`useSWRSubscription`](https://swr.vercel.app/ja/docs/subscription) function from SWR library to enable subscription-based data fetching and caching.
 
+## Installation
+
+```bash
+# if you use NPM
+npm i --save @tatsuokaniwa/swr-firestore
+# if you use Yarn
+yarn add @tatsuokaniwa/swr-firestore
+# if you use pnpm
+pnpm i @tatsuokaniwa/swr-firestore
+```
+
 ## Usage
 
 ```tsx
