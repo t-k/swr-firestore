@@ -17,13 +17,12 @@ export default defineConfig({
       fileName: "index",
     },
     rollupOptions: {
-      external: ["react", "react-dom", "firebase", "firebase/firestore", "swr"],
+      external: ["react", "react-dom", "firebase", "firebase/firestore"],
       output: {
         globals: {
           "firebase/firestore": "firestore",
           react: "React",
           "react-dom": "ReactDOM",
-          swr: "useSWR",
         },
       },
       plugins: [
