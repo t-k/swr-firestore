@@ -1,16 +1,16 @@
-
-name: Node.js CI
+name: Test CI
 
 on:
   workflow_dispatch:
   push:
-    branches: [ $default-branch ]
+    branches:
+      - main
   pull_request:
-    branches: [ $default-branch ]
+    branches:
+      - main
 
 jobs:
   test:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -19,12 +19,12 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm i
-    - run: npm install -g firebase-tools
-    - run: npm run test:ci
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - run: npm i
+      - run: npm install -g firebase-tools
+      - run: npm run test:ci
