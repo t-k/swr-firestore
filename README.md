@@ -1,4 +1,5 @@
 # swr-firestore
+
 [![npm version](https://badge.fury.io/js/@tatsuokaniwa%2Fswr-firestore.svg)](https://badge.fury.io/js/@tatsuokaniwa%2Fswr-firestore)
 [![Node.js CI](https://github.com/t-k/swr-firestore/actions/workflows/test.yaml/badge.svg)](https://github.com/t-k/swr-firestore/actions/workflows/test.yaml)
 
@@ -190,6 +191,60 @@ Subscription for document
 import { useDoc } from "@tatsuokaniwa/swr-firestore";
 
 const { data, error } = useDoc<Post>({
+  path: `Posts/${postId}`,
+});
+```
+
+### `useGetDocs(params, swrOptions)`
+
+Fetch documents with firestore's [getDocs](https://firebase.google.com/docs/reference/js/firestore_.md#getdocs) function
+
+#### Parameters
+
+- `params`: KeyParams | null
+- `swrOptions`: [Options for SWR hook](https://swr.vercel.app/docs/api#options) except `fetcher`
+
+#### Return values
+
+Returns [`SWRResponse`](https://swr.vercel.app/docs/api#return-values)
+
+- `data`: data for given path's collection
+- `error`: FirestoreError | Error
+- `isLoading`: if there's an ongoing request and no "loaded data". Fallback data and previous data are not considered "loaded data"
+- `isValidating`: if there's a request or revalidation loading
+- `mutate(data?, options?)`: function to mutate the cached data (details)
+
+
+```ts
+import { useGetDocs } from "@tatsuokaniwa/swr-firestore";
+
+const { data, error } = useGetDocs<Post>({
+  path: `Posts`,
+});
+```
+### `useGetDoc(params, swrOptions)`
+
+Fetch the document with firestore's [getDoc](https://firebase.google.com/docs/reference/js/firestore_.md#getdoc) function
+
+#### Parameters
+
+- `params`: KeyParams except `where`, `orderBy`, `limit` | null
+- `swrOptions`: [Options for SWR hook](https://swr.vercel.app/docs/api#options) except `fetcher`
+
+#### Return values
+
+Returns [`SWRResponse`](https://swr.vercel.app/docs/api#return-values)
+
+- `data`: data for given path's document
+- `error`: FirestoreError | Error
+- `isLoading`: if there's an ongoing request and no "loaded data". Fallback data and previous data are not considered "loaded data"
+- `isValidating`: if there's a request or revalidation loading
+- `mutate(data?, options?)`: function to mutate the cached data (details)
+
+```ts
+import { useGetDoc } from "@tatsuokaniwa/swr-firestore";
+
+const { data, error } = useGetDoc<Post>({
   path: `Posts/${postId}`,
 });
 ```

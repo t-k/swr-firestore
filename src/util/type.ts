@@ -12,5 +12,7 @@ export type KeyParams<T> = {
   parseDates?: Extract<keyof T, string>[];
 };
 
+export type GetDocKeyParams<T> = KeyParams<T> & { useOfflineCache?: boolean };
+
 export type DocumentData<T> = T &
   Pick<QueryDocumentSnapshot, "exists" | "id" | "ref">;
