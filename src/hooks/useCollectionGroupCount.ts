@@ -14,7 +14,7 @@ const useCollectionGroupCount = <T>(
   params: Omit<KeyParams<T>, "orderBy" | "parseDates"> | null,
   swrOptions?: Omit<Parameters<SWRHook>[2], "fetcher">
 ) => {
-  const fetcher = (key: KeyParams<T>) => {
+  const fetcher = async (key: KeyParams<T>) => {
     const { path, ...option } = key;
     const ref = collectionGroup(getFirestore(), path);
     let q;
@@ -27,9 +27,8 @@ const useCollectionGroupCount = <T>(
         ...(l ? [limit(l)] : [])
       );
     }
-    return getCountFromServer(q ?? ref).then((sn) => {
-      return sn.data().count;
-    });
+    const sn = await getCountFromServer(q ?? ref);
+    return sn.data().count;
   };
   return useSWR(params, fetcher, swrOptions);
 };
