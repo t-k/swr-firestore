@@ -99,4 +99,32 @@ describe("useCollection", () => {
       unmount();
     });
   });
+  describe("with nested object", () => {
+    it("should fetch data from Firestore", async () => {
+      const ref = collection(db, COLLECTION) as CollectionReference<Post>;
+      await addDoc(ref, {
+        content: "hello",
+        status: "published",
+        createdAt: serverTimestamp(),
+        author: {
+          name: "John",
+          createdAt: serverTimestamp(),
+        },
+      });
+      const { result, unmount } = renderHook(() =>
+        useCollection<Post>({
+          path: COLLECTION,
+          parseDates: ["createdAt", "author.createdAt"],
+        })
+      );
+      await waitFor(() => expect(result.current.data != null).toBe(true), {
+        timeout: 5000,
+      });
+      const el = result.current.data![0];
+      expect(el.createdAt).toBeDefined();
+      expect(el.createdAt instanceof Date).toBe(true);
+      expect(el.author?.createdAt instanceof Date).toBe(true);
+      unmount();
+    });
+  });
 });

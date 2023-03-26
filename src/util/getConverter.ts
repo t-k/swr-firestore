@@ -18,7 +18,7 @@ const formatTimestamp = (obj: object, props?: string[]): object => {
 };
 
 export const getFirestoreConverter = <T>(
-  parseDates?: Extract<keyof T, string>[]
+  parseDates?: (Extract<keyof T, string> | string)[]
 ): FirestoreDataConverter<DocumentData<T>> => ({
   fromFirestore(snapshot: QueryDocumentSnapshot) {
     const data = snapshot.data();

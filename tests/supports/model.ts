@@ -5,6 +5,10 @@ export type Post = {
   content: string;
   status: PostStatus;
   createdAt: Date;
+  author?: {
+    name: string;
+    createdAt: Date;
+  };
 };
 
 export type Comment = {
