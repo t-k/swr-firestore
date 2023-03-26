@@ -3,17 +3,16 @@ import type {
   QueryDocumentSnapshot,
 } from "firebase/firestore";
 import type { DocumentData } from "./type";
-import get from "lodash/get";
-import set from "lodash/fp/set";
+import { get, set } from "lodash-es";
 
 const formatTimestamp = (obj: object, props?: string[]): object => {
   if (props == null) return obj;
   return props.reduce((result: object, prop: string) => {
     const value = get(obj, prop);
     return set(
+      result,
       prop,
-      value != null && value.toDate ? value.toDate() : value,
-      result
+      value != null && value.toDate ? value.toDate() : value
     );
   }, obj);
 };

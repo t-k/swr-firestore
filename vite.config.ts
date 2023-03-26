@@ -17,14 +17,23 @@ export default defineConfig({
       fileName: "index",
     },
     rollupOptions: {
-      external: ["react", "react-dom", "firebase", "firebase/firestore", "swr", "swr/subscription"],
+      external: [
+        "firebase",
+        "firebase/firestore",
+        "lodash-es",
+        "react",
+        "react-dom",
+        "swr",
+        "swr/subscription",
+      ],
       output: {
         globals: {
           "firebase/firestore": "firestore",
+          "lodash-es": "lodashEs",
           react: "React",
           "react-dom": "ReactDOM",
-          "swr": "useSWR",
-          "swr/subscription": "useSWRSubscription"
+          swr: "useSWR",
+          "swr/subscription": "useSWRSubscription",
         },
       },
       plugins: [
