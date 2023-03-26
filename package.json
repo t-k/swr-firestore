@@ -59,7 +59,7 @@
     "c8": "^7.13.0",
     "eslint": "^8.36.0",
     "eslint-plugin-react": "^7.32.2",
-    "firebase": "^9.17.1",
+    "firebase": "^9.11.0 < 10.0.0",
     "jsdom": "^21.1.1",
     "prettier": "^2.8.5",
     "react": "^18.2.0",
@@ -70,7 +70,7 @@
     "vitest": "^0.29.3"
   },
   "peerDependencies": {
-    "firebase": "^9.17.1",
+    "firebase": "^9.11.0 < 10.0.0",
     "swr": "^2.1.0 <3.0.0"
   }
 }
