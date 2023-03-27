@@ -66,6 +66,18 @@ export default function App() {
 
 ## API
 
+```ts
+import {
+  useCollection, // Subscription for collection
+  useCollectionCount, // Wrapper for getCountFromServer for collection
+  useCollectionGroup, // Subscription for collectionGroup
+  useCollectionGroupCount, // Wrapper for getCountFromServer for collectionGroup
+  useDoc, // Subscription for document
+  useGetDocs, // Fetch documents with firestore's getDocs
+  useGetDoc, // Fetch documents with firestore's getDoc
+} from "@tatsuokaniwa/swr-firestore";
+```
+
 ### Type definitions for parameters
 
 ```ts
@@ -74,11 +86,12 @@ import type { orderBy, where } from "firebase/firestore";
 type KeyParams<T> = {
   // The path to the collection or document of Firestore.
   path: string;
-  where?: [Extract<keyof T, string>, Parameters<typeof where>[1], ValueOf<T>][];
-  orderBy?: [Extract<keyof T, string>, Parameters<typeof orderBy>[1]][];
+  // `Paths` means object's property path, including nested object
+  where?: [Paths<T>, Parameters<typeof where>[1], ValueOf<T>][];
+  orderBy?: [Paths<T>, Parameters<typeof orderBy>[1]][];
   limit?: number;
   // Array of field names that should be parsed as dates.
-  parseDates?: Extract<keyof T, string>[];
+  parseDates?: Paths<T>[];
 };
 ```
 
@@ -214,7 +227,6 @@ Returns [`SWRResponse`](https://swr.vercel.app/docs/api#return-values)
 - `isValidating`: if there's a request or revalidation loading
 - `mutate(data?, options?)`: function to mutate the cached data (details)
 
-
 ```ts
 import { useGetDocs } from "@tatsuokaniwa/swr-firestore";
 
@@ -222,6 +234,7 @@ const { data, error } = useGetDocs<Post>({
   path: `Posts`,
 });
 ```
+
 ### `useGetDoc(params, swrOptions)`
 
 Fetch the document with firestore's [getDoc](https://firebase.google.com/docs/reference/js/firestore_.md#getdoc) function
