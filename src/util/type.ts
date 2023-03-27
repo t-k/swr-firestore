@@ -35,7 +35,7 @@ type Prev = [
   ...0[]
 ];
 
-export type Paths<T, D extends number = 10> = [D] extends [never]
+export type Paths<T, D extends number = 3> = [D] extends [never]
   ? never
   : T extends object
   ? {
