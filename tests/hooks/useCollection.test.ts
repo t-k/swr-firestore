@@ -69,6 +69,11 @@ describe("useCollection", () => {
         timeout: 5000,
       });
       const el = result.current.data![0];
+      expect(el.id).toBeDefined();
+      expect(el.exists).toBeDefined();
+      expect(el.ref).toBeDefined();
+      expect(el.content).toBeDefined();
+      expect(el.status).toBeDefined();
       expect(el.createdAt).toBeDefined();
       expect(el.createdAt instanceof Date).toBe(true);
       unmount();
@@ -96,6 +101,8 @@ describe("useCollection", () => {
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
       });
+
+      expect(result.current.data?.length).toBe(1);
       unmount();
     });
   });
