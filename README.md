@@ -87,7 +87,7 @@ type KeyParams<T> = {
   // The path to the collection or document of Firestore.
   path: string;
   // `Paths` means object's property path, including nested object
-  where?: [Paths<T>, Parameters<typeof where>[1], ValueOf<T>][];
+  where?: [Paths<T>, Parameters<typeof where>[1], ValueOf<T> | unknown][];
   orderBy?: [Paths<T>, Parameters<typeof orderBy>[1]][];
   limit?: number;
   // Array of field names that should be parsed as dates.

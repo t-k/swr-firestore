@@ -1,3 +1,7 @@
+## [1.0.1] - 2023-03-27
+
+- Fix `where` param's type
+
 ## [1.0.0] - 2023-03-27
 
 - Replace lodash dependency to lodash-es
