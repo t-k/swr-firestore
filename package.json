@@ -34,7 +34,7 @@
     "build": "tsc --noEmit && vite build",
     "emulator": "firebase emulators:start --project swr-firestore-project --only firestore",
     "test": "vitest",
-    "test:ci": "firebase emulators:exec --only auth,firestore,storage 'vitest run'",
+    "test:ci": "firebase emulators:exec --only auth,firestore,storage 'vitest run --coverage'",
     "coverage": "vitest run --coverage",
     "eslint": "eslint --fix --ext .ts,.tsx .",
     "prettier": "prettier --check --write .",

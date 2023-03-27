@@ -16,6 +16,8 @@ export default defineConfig({
       all: true,
       provider: "c8",
       reporter: ["text", "json", "html"],
+      src: ["src"],
+      exclude: ["src/util/type.ts"]
     },
     includeSource: ["src/**/*.{ts,tsx}", "tests/**/*.{ts}"],
     include: [
