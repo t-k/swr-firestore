@@ -75,7 +75,7 @@ import {
   useCollectionGroupCount, // Wrapper for getCountFromServer for collectionGroup
   useDoc, // Subscription for document
   useGetDocs, // Fetch documents with firestore's getDocs
-  useGetDoc, // Fetch documents with firestore's getDoc
+  useGetDoc, // Fetch document with firestore's getDoc
 } from "@tatsuokaniwa/swr-firestore";
 ```
 
