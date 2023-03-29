@@ -1,9 +1,12 @@
 import { renderHook, waitFor } from "@testing-library/react";
+import { FirebaseError } from "firebase/app";
 import {
   Timestamp,
   addDoc,
   collection,
   serverTimestamp,
+  where,
+  or,
 } from "firebase/firestore";
 import { useCollectionGroup } from "../../src";
 import { db } from "../supports/fb";
@@ -12,10 +15,11 @@ import type { Post } from "../supports/model";
 
 const COLLECTION = "CollectionGroupTest";
 const SUB_COLLECTION = "SubCollectionTest";
-
+const ERR_SUB_COLLECTION = "SubCollectionErrTest";
 describe("useCollectionGroup", () => {
   beforeEach(async () => {
     await deleteCollection(COLLECTION, SUB_COLLECTION);
+    await deleteCollection(COLLECTION, ERR_SUB_COLLECTION);
     const ref = collection(db, COLLECTION);
     const doc = await addDoc(ref, {
       content: "hello",
@@ -30,6 +34,7 @@ describe("useCollectionGroup", () => {
   });
   afterEach(async () => {
     await deleteCollection(COLLECTION, SUB_COLLECTION);
+    await deleteCollection(COLLECTION, ERR_SUB_COLLECTION);
   });
   describe("without option", () => {
     it("should fetch data from Firestore", async () => {
@@ -88,6 +93,14 @@ describe("useCollectionGroup", () => {
         content: "foo",
         createdAt: serverTimestamp(),
       });
+      await addDoc(subRef, {
+        content: "foo",
+        createdAt: serverTimestamp(),
+      });
+      await addDoc(subRef, {
+        content: "bar",
+        createdAt: serverTimestamp(),
+      });
       const { result, unmount } = renderHook(() =>
         useCollectionGroup<Post>({
           path: SUB_COLLECTION,
@@ -97,11 +110,142 @@ describe("useCollectionGroup", () => {
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
       });
-      expect(result.current.data?.length).toBe(1);
       const el = result.current.data![0];
       expect(el.id).toBeDefined();
       expect(el.exists).toBeDefined();
       expect(el.ref).toBeDefined();
+      result.current.data?.forEach((x) => {
+        expect(x.content).toBe("foo");
+      });
+      unmount();
+    });
+  });
+
+  describe("with orderBy option", () => {
+    it("should fetch data from Firestore", async () => {
+      const ref = collection(db, COLLECTION);
+      const doc = await addDoc(ref, {
+        content: "hello",
+        status: "draft",
+        createdAt: serverTimestamp(),
+      });
+      const subRef = collection(
+        db,
+        `${COLLECTION}/${doc.id}/${SUB_COLLECTION}`
+      );
+      await addDoc(subRef, {
+        content: "foo",
+        createdAt: serverTimestamp(),
+      });
+      const { result, unmount } = renderHook(() =>
+        useCollectionGroup<Post>({
+          path: SUB_COLLECTION,
+          orderBy: [["createdAt", "desc"]],
+        })
+      );
+      await waitFor(() => expect(result.current.data != null).toBe(true), {
+        timeout: 5000,
+      });
+      const data1 = result.current!.data![0];
+      const data2 = result.current!.data![1];
+      expect(data1.createdAt > data2.createdAt).toBe(true);
+      unmount();
+    });
+  });
+
+  describe("with limit option", () => {
+    it("should fetch data from Firestore", async () => {
+      const ref = collection(db, COLLECTION);
+      const doc = await addDoc(ref, {
+        content: "hello",
+        status: "draft",
+        createdAt: serverTimestamp(),
+      });
+      const subRef = collection(
+        db,
+        `${COLLECTION}/${doc.id}/${SUB_COLLECTION}`
+      );
+      await addDoc(subRef, {
+        content: "foo",
+        createdAt: serverTimestamp(),
+      });
+      await addDoc(subRef, {
+        content: "bar",
+        createdAt: serverTimestamp(),
+      });
+      const { result, unmount } = renderHook(() =>
+        useCollectionGroup<Post>({
+          path: SUB_COLLECTION,
+          limit: 1,
+        })
+      );
+      await waitFor(() => expect(result.current.data != null).toBe(true), {
+        timeout: 5000,
+      });
+      expect(result.current.data?.length).toBe(1);
+      unmount();
+    });
+  });
+  describe("with queryConstraints", () => {
+    it("should fetch data from Firestore", async () => {
+      const ref = collection(db, COLLECTION);
+      const doc = await addDoc(ref, {
+        content: "hello",
+        status: "draft",
+        createdAt: serverTimestamp(),
+      });
+      const subRef = collection(
+        db,
+        `${COLLECTION}/${doc.id}/${SUB_COLLECTION}`
+      );
+      await addDoc(subRef, {
+        content: "foo",
+        createdAt: serverTimestamp(),
+      });
+      await addDoc(subRef, {
+        content: "bar",
+        createdAt: serverTimestamp(),
+      });
+      const { result, unmount } = renderHook(() =>
+        useCollectionGroup<Post>({
+          path: SUB_COLLECTION,
+          queryConstraints: [
+            or(where("content", "==", "foo"), where("content", "==", "bar")),
+          ],
+        })
+      );
+      await waitFor(() => expect(result.current.data != null).toBe(true), {
+        timeout: 5000,
+      });
+      expect(result.current.data?.length).toBe(2);
+      unmount();
+    });
+  });
+  describe("error", () => {
+    it("should return FirestoreError", async () => {
+      const ref = collection(db, COLLECTION);
+      const doc = await addDoc(ref, {
+        content: "hello",
+        status: "draft",
+        createdAt: serverTimestamp(),
+      });
+      const subRef = collection(
+        db,
+        `${COLLECTION}/${doc.id}/${ERR_SUB_COLLECTION}`
+      );
+      await addDoc(subRef, {
+        content: "foo",
+        createdAt: serverTimestamp(),
+      });
+      const { result, unmount } = renderHook(() =>
+        useCollectionGroup<Post>({
+          path: ERR_SUB_COLLECTION,
+        })
+      );
+      await waitFor(() => expect(result.current.error != null).toBe(true), {
+        timeout: 5000,
+      });
+      expect(result.current.error instanceof FirebaseError).toBe(true);
       unmount();
     });
   });

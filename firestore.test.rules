@@ -2,7 +2,68 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /{document=**} {
+      allow read: if false;
+      allow write: if true;
+    }
+    
+    match /CollectionTest/{resourceId} {
       allow read: if true;
+      allow write: if true;
+    }
+    match /CollectionErrTest/{resourceId} {
+      allow read: if false;
+      allow write: if true;
+    }
+    match /CountTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /CountErrTest/{resourceId} {
+      allow read: if false;
+      allow write: if true;
+    }
+    
+    match /{path=**}/SubCollectionTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /{path=**}/SubCollectionErrTest/{resourceId} {
+      allow read: if false;
+      allow write: if true;
+    }
+    
+    match /{path=**}/SubCollectionCountTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /{path=**}/SubCollectionCountErrTest/{resourceId} {
+      allow read: if false;
+      allow write: if true;
+    }
+
+    match /DocTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /DocErrTest/{resourceId} {
+      allow read: if false;
+      allow write: if true;
+    }
+    match /useGetDocTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /useGetDocErrTest/{resourceId} {
+      allow read: if false;
+      allow write: if true;
+    }
+    
+    match /useGetDocsTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /useGetDocsErrTest/{resourceId} {
+      allow read: if false;
       allow write: if true;
     }
   }

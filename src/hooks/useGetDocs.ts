@@ -1,28 +1,40 @@
 import type { SWRHook } from "swr";
+import type { QueryConstraint } from "firebase/firestore";
+import type { DocumentData, GetDocKeyParams } from "../util/type";
+import useSWR from "swr";
 import {
   collection,
   getDocs,
   getDocsFromCache,
   getFirestore,
+  limit,
+  orderBy,
+  query,
+  where,
 } from "firebase/firestore";
-import type { DocumentData, GetDocKeyParams } from "../util/type";
-import useSWR from "swr";
-import { limit, orderBy, query, where } from "firebase/firestore";
 import { getFirestoreConverter } from "../util/getConverter";
+import { isQueryConstraintParams } from "../util/typeGuard";
 
 const useGetDocs = <T>(
   params: GetDocKeyParams<T> | null,
   swrOptions?: Omit<Parameters<SWRHook>[2], "fetcher">
 ) => {
-  const fetcher = async (
-    key: GetDocKeyParams<T>
-  ): Promise<DocumentData<T>[] | undefined> => {
-    const { path, ...option } = key;
-    const converter = getFirestoreConverter<T>(option?.parseDates);
+  let swrKey = params;
+  if (params != null && isQueryConstraintParams(params)) {
+    swrKey = JSON.parse(JSON.stringify(params));
+  }
+  const fetcher = async (): Promise<DocumentData<T>[] | undefined> => {
+    if (params == null) {
+      return;
+    }
+    const { path, parseDates } = params;
+    const converter = getFirestoreConverter<T>(parseDates);
     const ref = collection(getFirestore(), path);
     let q;
-    if (option) {
-      const { where: w, orderBy: o, limit: l } = option;
+    if (isQueryConstraintParams(params)) {
+      q = query(ref, ...(params.queryConstraints as QueryConstraint[]));
+    } else {
+      const { where: w, orderBy: o, limit: l } = params;
       q = query(
         ref,
         ...(w ? w : []).map((q) => where(...q)),
@@ -30,10 +42,10 @@ const useGetDocs = <T>(
         ...(l ? [limit(l)] : [])
       );
     }
-    const getFn = option.useOfflineCache ? getDocsFromCache : getDocs;
-    const sn = await getFn((q ?? ref).withConverter(converter));
+    const getFn = params.useOfflineCache ? getDocsFromCache : getDocs;
+    const sn = await getFn(q.withConverter(converter));
     return sn.docs.map((x) => x.data());
   };
-  return useSWR(params, fetcher, swrOptions);
+  return useSWR(swrKey, fetcher, swrOptions);
 };
 export default useGetDocs;

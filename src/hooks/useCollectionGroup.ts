@@ -1,5 +1,5 @@
 import type { SWRSubscriptionResponse } from "swr/subscription";
-import type { FirestoreError } from "firebase/firestore";
+import type { FirestoreError, QueryConstraint } from "firebase/firestore";
 import type { DocumentData, KeyParams } from "../util/type";
 import useSWRSubscription from "swr/subscription";
 import {
@@ -12,22 +12,29 @@ import {
   where,
 } from "firebase/firestore";
 import { getFirestoreConverter } from "../util/getConverter";
+import { isQueryConstraintParams } from "../util/typeGuard";
 
 const useCollectionGroup = <T>(
   params: KeyParams<T> | null
 ): SWRSubscriptionResponse<DocumentData<T>[], FirestoreError> => {
-  return useSWRSubscription(params, (_, { next }) => {
+  let swrKey = params;
+  if (params != null && isQueryConstraintParams(params)) {
+    swrKey = JSON.parse(JSON.stringify(params));
+  }
+  return useSWRSubscription(swrKey, (_, { next }) => {
     if (params == null) {
       return () => {
         // do nothing
       };
     }
-    const { path, ...options } = params;
-    const converter = getFirestoreConverter<T>(options?.parseDates);
+    const { path, parseDates } = params;
+    const converter = getFirestoreConverter<T>(parseDates);
     const ref = collectionGroup(getFirestore(), path);
     let q;
-    if (options != null) {
-      const { where: w, orderBy: o, limit: l } = options;
+    if (isQueryConstraintParams(params)) {
+      q = query(ref, ...(params.queryConstraints as QueryConstraint[]));
+    } else {
+      const { where: w, orderBy: o, limit: l } = params;
       q = query(
         ref,
         ...(w ? w : []).map((q) => where(...q)),
@@ -36,7 +43,7 @@ const useCollectionGroup = <T>(
       );
     }
     const unsub = onSnapshot<T>(
-      (q ?? ref).withConverter(converter),
+      q.withConverter(converter),
       (qs) => {
         next(
           null,

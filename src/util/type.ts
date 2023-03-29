@@ -1,4 +1,10 @@
-import type { orderBy, where } from "firebase/firestore";
+import type {
+  orderBy,
+  QueryCompositeFilterConstraint,
+  QueryConstraint,
+  QueryNonFilterConstraint,
+  where,
+} from "firebase/firestore";
 import type { QueryDocumentSnapshot } from "firebase/firestore";
 
 // Typescript: deep keyof of a nested object
@@ -47,15 +53,30 @@ export type Paths<T, D extends number = 3> = [D] extends [never]
 
 export type ValueOf<T> = T[keyof T];
 
-export type KeyParams<T> = {
-  // The path to the collection or document of Firestore.
-  path: string;
+export type QueryParams<T> = {
   where?: [Paths<T>, Parameters<typeof where>[1], ValueOf<T> | unknown][];
   orderBy?: [Paths<T>, Parameters<typeof orderBy>[1]][];
   limit?: number;
+};
+
+export type QueryConstraintParams = {
+  queryConstraints?:
+    | [QueryCompositeFilterConstraint, ...Array<QueryNonFilterConstraint>]
+    | QueryConstraint[];
+};
+
+type BaseParams<T> = {
+  // The path to the collection or document of Firestore.
+  path: string;
   // Array of field names that should be parsed as dates.
   parseDates?: Paths<T>[];
 };
+
+export type KeyParams<T> = BaseParams<T> &
+  (QueryParams<T> | QueryConstraintParams);
+
+export type KeyParamsForCount<T> = BaseParams<T> &
+  (Omit<QueryParams<T>, "orderBy" | "parseDates"> | QueryConstraintParams);
 
 export type GetDocKeyParams<T> = KeyParams<T> & { useOfflineCache?: boolean };
 

@@ -8,13 +8,14 @@ const useGetDoc = <T>(
   params: Omit<GetDocKeyParams<T>, "where" | "orderBy" | "limit"> | null,
   swrOptions?: Omit<Parameters<SWRHook>[2], "fetcher">
 ) => {
-  const fetcher = async (
-    key: GetDocKeyParams<T>
-  ): Promise<DocumentData<T> | undefined> => {
-    const { path, ...option } = key;
-    const converter = getFirestoreConverter<T>(option?.parseDates);
+  const fetcher = async (): Promise<DocumentData<T> | undefined> => {
+    if (params == null) {
+      return;
+    }
+    const { path, parseDates, ...options } = params;
+    const converter = getFirestoreConverter<T>(parseDates);
     const ref = doc(getFirestore(), path);
-    const getFn = option.useOfflineCache ? getDocFromCache : getDoc;
+    const getFn = options.useOfflineCache ? getDocFromCache : getDoc;
     const sn = await getFn(ref.withConverter(converter));
     return sn.data();
   };

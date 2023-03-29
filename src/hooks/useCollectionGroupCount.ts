@@ -1,35 +1,45 @@
 import type { SWRHook } from "swr";
-import { collectionGroup, getFirestore } from "firebase/firestore";
-import type { KeyParams } from "../util/type";
+import type { QueryConstraint } from "firebase/firestore";
+import type { KeyParamsForCount } from "../util/type";
 import useSWR from "swr";
 import {
+  collectionGroup,
   getCountFromServer,
+  getFirestore,
   limit,
-  orderBy,
   query,
   where,
 } from "firebase/firestore";
+import { isQueryConstraintParams } from "../util/typeGuard";
 
 const useCollectionGroupCount = <T>(
-  params: Omit<KeyParams<T>, "orderBy" | "parseDates"> | null,
+  params: KeyParamsForCount<T> | null,
   swrOptions?: Omit<Parameters<SWRHook>[2], "fetcher">
 ) => {
-  const fetcher = async (key: KeyParams<T>) => {
-    const { path, ...option } = key;
+  let swrKey = params;
+  if (params != null && isQueryConstraintParams(params)) {
+    swrKey = JSON.parse(JSON.stringify(params));
+  }
+  const fetcher = async () => {
+    if (params == null) {
+      return;
+    }
+    const { path } = params;
     const ref = collectionGroup(getFirestore(), path);
     let q;
-    if (option) {
-      const { where: w, orderBy: o, limit: l } = option;
+    if (isQueryConstraintParams(params)) {
+      q = query(ref, ...(params.queryConstraints as QueryConstraint[]));
+    } else {
+      const { where: w, limit: l } = params;
       q = query(
         ref,
         ...(w ? w : []).map((q) => where(...q)),
-        ...(o ? o : []).map((q) => orderBy(...q)),
         ...(l ? [limit(l)] : [])
       );
     }
-    const sn = await getCountFromServer(q ?? ref);
+    const sn = await getCountFromServer(q);
     return sn.data().count;
   };
-  return useSWR(params, fetcher, swrOptions);
+  return useSWR(swrKey, fetcher, swrOptions);
 };
 export default useCollectionGroupCount;
