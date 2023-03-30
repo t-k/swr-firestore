@@ -16,7 +16,7 @@ import { isQueryConstraintParams } from "../util/typeGuard";
 
 const useCollection = <T>(
   params: KeyParams<T> | null
-): SWRSubscriptionResponse<DocumentData<T>[], FirestoreError | Error> => {
+): SWRSubscriptionResponse<DocumentData<T>[], FirestoreError> => {
   let swrKey = params;
   if (params != null && isQueryConstraintParams(params)) {
     swrKey = JSON.parse(JSON.stringify(params));
