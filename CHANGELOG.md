@@ -1,6 +1,8 @@
 ## [1.1.0] - 2023-03-30
 
 - Allow raw QueryConstraints
+- Modify Error Type to `FirestoreError`
+- Modify tests
 
 ## [1.0.1] - 2023-03-27
 
