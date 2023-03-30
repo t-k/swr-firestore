@@ -1,8 +1,8 @@
-import { FirestoreError, doc, getFirestore } from "firebase/firestore";
+import type { FirestoreError } from "firebase/firestore";
 import type { SWRSubscriptionResponse } from "swr/subscription";
 import type { DocumentData, KeyParams } from "../util/type";
 import useSWRSubscription from "swr/subscription";
-import { onSnapshot } from "firebase/firestore";
+import { doc, getFirestore, onSnapshot } from "firebase/firestore";
 import { getFirestoreConverter } from "../util/getConverter";
 
 const useDoc = <T>(
