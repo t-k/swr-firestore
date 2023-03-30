@@ -40,7 +40,7 @@ export default function App() {
   const { data } = useCollection<Post>(
     isLogin
       ? {
-          path: "Posts",
+          path: "posts",
           where: [["status", "==", "published"]],
           orderBy: [["createdAt", "desc"]],
           parseDates: ["createdAt"],
@@ -48,7 +48,7 @@ export default function App() {
       : null
   );
   const { data: postCount } = useCollectionCount<Post>({
-    path: "Posts",
+    path: "posts",
     where: [["status", "==", "published"]],
   });
   return (
@@ -63,6 +63,29 @@ export default function App() {
     </div>
   );
 }
+```
+
+### For more complex queries
+To perform complex queries like using `OR` queries or raw `QueryConstraint`, use the `queryConstraints` parameter.
+However, this method does not provide input completion for field names from type definitions.
+
+```tsx
+import {
+  or,
+  orderBy,
+  where,
+} from "firebase/firestore";
+
+useCollection<City>({
+  path: "cities",
+  queryConstraints: [
+    or(
+      where('capital', '==', true),
+      where('population', '>=', 1000000)
+    ),
+    orderBy("createdAt", "desc"),
+  ],
+})
 ```
 
 ## API
@@ -84,16 +107,29 @@ import {
 ```ts
 import type { orderBy, where } from "firebase/firestore";
 // First argument of hook, specifies options to firestore, and is also used as a key for SWR.
-type KeyParams<T> = {
-  // The path to the collection or document of Firestore.
-  path: string;
-  // `Paths` means object's property path, including nested object
-  where?: [Paths<T>, Parameters<typeof where>[1], ValueOf<T> | unknown][];
-  orderBy?: [Paths<T>, Parameters<typeof orderBy>[1]][];
-  limit?: number;
-  // Array of field names that should be parsed as dates.
-  parseDates?: Paths<T>[];
-};
+type KeyParams<T> =
+  | {
+      // The path to the collection or document of Firestore.
+      path: string
+      // `Paths` means object's property path, including nested object
+      where?: [Paths<T>, Parameters<typeof where>[1], ValueOf<T> | unknown][]
+      orderBy?: [Paths<T>, Parameters<typeof orderBy>[1]][]
+      limit?: number
+      // Array of field names that should be parsed as dates.
+      parseDates?: Paths<T>[]
+    }
+  // OR for more complex query
+  | {
+      // The path to the collection or document of Firestore.
+      path: string
+      // raw query constraints from `firebase/firestore`
+      queryConstraints?:
+        | [QueryCompositeFilterConstraint, ...Array<QueryNonFilterConstraint>]
+        | QueryConstraint[]
+      // Array of field names that should be parsed as dates.
+      parseDates?: Paths<T>[]
+    }
+
 ```
 
 ### Type definitions for return data
@@ -115,7 +151,7 @@ Subscription for collection
 #### Return values
 
 - `data`: data for given path's collection
-- `error`: FirestoreError | Error
+- `error`: FirestoreError
 
 ```ts
 import { useCollection } from "@tatsuokaniwa/swr-firestore";
@@ -139,7 +175,7 @@ Wrapper for getCountFromServer for collection
 Returns [`SWRResponse`](https://swr.vercel.app/docs/api#return-values)
 
 - `data`: number for given path's collection count result
-- `error`: FirestoreError | Error
+- `error`: FirestoreError
 - `isLoading`: if there's an ongoing request and no "loaded data". Fallback data and previous data are not considered "loaded data"
 - `isValidating`: if there's a request or revalidation loading
 - `mutate(data?, options?)`: function to mutate the cached data (details)
@@ -167,7 +203,7 @@ Subscription for collectionGroup
 #### Return values
 
 - `data`: data for given path's collectionGroup
-- `error`: FirestoreError | Error
+- `error`: FirestoreError
 
 ### `useCollectionGroupCount(params, swrOptions)`
 
@@ -183,7 +219,7 @@ Wrapper for getCountFromServer for collectionGroup
 Returns [`SWRResponse`](https://swr.vercel.app/docs/api#return-values)
 
 - `data`: number for given path's collectionGroup count result
-- `error`: FirestoreError | Error
+- `error`: FirestoreError
 - `isLoading`: if there's an ongoing request and no "loaded data". Fallback data and previous data are not considered "loaded data"
 - `isValidating`: if there's a request or revalidation loading
 - `mutate(data?, options?)`: function to mutate the cached data (details)
@@ -199,7 +235,7 @@ Subscription for document
 #### Return values
 
 - `data`: data for given path's document
-- `error`: FirestoreError | Error
+- `error`: FirestoreError
 
 ```ts
 import { useDoc } from "@tatsuokaniwa/swr-firestore";
@@ -223,7 +259,7 @@ Fetch documents with firestore's [getDocs](https://firebase.google.com/docs/refe
 Returns [`SWRResponse`](https://swr.vercel.app/docs/api#return-values)
 
 - `data`: data for given path's collection
-- `error`: FirestoreError | Error
+- `error`: FirestoreError
 - `isLoading`: if there's an ongoing request and no "loaded data". Fallback data and previous data are not considered "loaded data"
 - `isValidating`: if there's a request or revalidation loading
 - `mutate(data?, options?)`: function to mutate the cached data (details)
@@ -250,7 +286,7 @@ Fetch the document with firestore's [getDoc](https://firebase.google.com/docs/re
 Returns [`SWRResponse`](https://swr.vercel.app/docs/api#return-values)
 
 - `data`: data for given path's document
-- `error`: FirestoreError | Error
+- `error`: FirestoreError
 - `isLoading`: if there's an ongoing request and no "loaded data". Fallback data and previous data are not considered "loaded data"
 - `isValidating`: if there's a request or revalidation loading
 - `mutate(data?, options?)`: function to mutate the cached data (details)
