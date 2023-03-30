@@ -1,3 +1,7 @@
+## [1.1.0] - 2023-03-30
+
+- Allow raw QueryConstraints
+
 ## [1.0.1] - 2023-03-27
 
 - Fix `where` param's type
