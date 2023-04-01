@@ -8,6 +8,7 @@ import {
   where,
 } from "firebase/firestore";
 import { useCollectionGroupCount } from "../../src";
+import emptyMiddleware from "../supports/emptyMiddleware";
 import { db } from "../supports/fb";
 import { deleteCollection } from "../supports/fbUtil";
 import type { Post } from "../supports/model";
@@ -149,6 +150,23 @@ describe("useCollectionGroupCount", () => {
     });
   });
 
+  describe("with swr config", () => {
+    it("should fetch data from Firestore", async () => {
+      const { result, unmount } = renderHook(() =>
+        useCollectionGroupCount<Post>(
+          {
+            path: SUB_COLLECTION,
+          },
+          { use: [emptyMiddleware] }
+        )
+      );
+      await waitFor(() => expect(result.current.data != null).toBe(true), {
+        timeout: 5000,
+      });
+      expect(result.current.data! > 0).toBe(true);
+      unmount();
+    });
+  });
   describe("error", () => {
     it("should return FirebaseError", async () => {
       const ref = collection(db, COLLECTION);

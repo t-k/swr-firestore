@@ -1,4 +1,4 @@
-import type { SWRHook } from "swr";
+import type { SWRConfiguration } from "swr";
 import type { QueryConstraint } from "firebase/firestore";
 import type { DocumentData, GetDocKeyParams } from "../util/type";
 import useSWR from "swr";
@@ -14,10 +14,11 @@ import {
 } from "firebase/firestore";
 import { getFirestoreConverter } from "../util/getConverter";
 import { isQueryConstraintParams } from "../util/typeGuard";
+import serializeMiddleware from "../middleware/serializeMiddleware";
 
 const useGetDocs = <T>(
   params: GetDocKeyParams<T> | null,
-  swrOptions?: Omit<Parameters<SWRHook>[2], "fetcher">
+  swrOptions?: Omit<SWRConfiguration, "fetcher">
 ) => {
   let swrKey = params;
   if (params != null && isQueryConstraintParams(params)) {
@@ -46,6 +47,9 @@ const useGetDocs = <T>(
     const sn = await getFn(q.withConverter(converter));
     return sn.docs.map((x) => x.data());
   };
-  return useSWR(swrKey, fetcher, swrOptions);
+  return useSWR(swrKey, fetcher, {
+    ...swrOptions,
+    use: [serializeMiddleware, ...(swrOptions?.use ?? [])],
+  });
 };
 export default useGetDocs;

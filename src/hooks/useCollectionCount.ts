@@ -1,4 +1,4 @@
-import type { SWRHook } from "swr";
+import type { SWRConfiguration } from "swr";
 import type { QueryConstraint } from "firebase/firestore";
 import type { KeyParamsForCount } from "../util/type";
 import useSWR from "swr";
@@ -11,10 +11,11 @@ import {
   where,
 } from "firebase/firestore";
 import { isQueryConstraintParams } from "../util/typeGuard";
+import serializeMiddleware from "../middleware/serializeMiddleware";
 
 const useCollectionCount = <T>(
   params: KeyParamsForCount<T> | null,
-  swrOptions?: Omit<Parameters<SWRHook>[2], "fetcher">
+  swrOptions?: Omit<SWRConfiguration, "fetcher">
 ) => {
   let swrKey = params;
   if (params != null && isQueryConstraintParams(params)) {
@@ -40,6 +41,9 @@ const useCollectionCount = <T>(
     const sn = await getCountFromServer(q);
     return sn.data().count;
   };
-  return useSWR(swrKey, fetcher, swrOptions);
+  return useSWR(swrKey, fetcher, {
+    ...swrOptions,
+    use: [serializeMiddleware, ...(swrOptions?.use ?? [])],
+  });
 };
 export default useCollectionCount;

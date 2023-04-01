@@ -14,6 +14,7 @@ import type { Post } from "../supports/model";
 import { faker } from "@faker-js/faker";
 import { deleteCollection } from "../supports/fbUtil";
 import { FirebaseError } from "firebase/app";
+import emptyMiddleware from "../supports/emptyMiddleware";
 
 const COLLECTION = "DocTest";
 const ERR_COLLECTION = "DocErrTest";
@@ -108,6 +109,35 @@ describe("useDoc", () => {
     });
   });
 
+  describe("with swr config", () => {
+    it("should fetch data from Firestore", async () => {
+      const ref = collection(db, COLLECTION) as CollectionReference<Post>;
+      const id = faker.datatype.uuid();
+      const docRef = doc(ref, id);
+      await setDoc(docRef, {
+        content: "hello",
+        status: "draft",
+        createdAt: serverTimestamp(),
+        author: {
+          name: "John",
+          createdAt: serverTimestamp(),
+        },
+      });
+      const { result, unmount } = renderHook(() =>
+        useDoc<Post>(
+          {
+            path: `${COLLECTION}/${id}`,
+          },
+          { use: [emptyMiddleware] }
+        )
+      );
+      await waitFor(() => expect(result.current.data != null).toBe(true), {
+        timeout: 5000,
+      });
+      expect(result.current.data != null).toBe(true);
+      unmount();
+    });
+  });
   describe("error", () => {
     it("should return FirebaseError", async () => {
       const ref = collection(db, ERR_COLLECTION) as CollectionReference<Post>;

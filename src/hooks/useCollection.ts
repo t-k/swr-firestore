@@ -13,49 +13,52 @@ import {
 import { getFirestoreConverter } from "../util/getConverter";
 import useSWRSubscription from "swr/subscription";
 import { isQueryConstraintParams } from "../util/typeGuard";
+import serializeMiddleware from "../middleware/serializeMiddleware";
+import type { SWRConfiguration } from "swr";
 
 const useCollection = <T>(
-  params: KeyParams<T> | null
+  params: KeyParams<T> | null,
+  swrOptions?: Omit<SWRConfiguration, "fetcher">
 ): SWRSubscriptionResponse<DocumentData<T>[], FirestoreError> => {
-  let swrKey = params;
-  if (params != null && isQueryConstraintParams(params)) {
-    swrKey = JSON.parse(JSON.stringify(params));
-  }
-
-  return useSWRSubscription(swrKey, (_, { next }) => {
-    if (params == null) {
-      return () => {
-        // do nothing
-      };
-    }
-    const { path, parseDates } = params;
-    const converter = getFirestoreConverter<T>(parseDates);
-    const ref = collection(getFirestore(), path);
-    let q;
-    if (isQueryConstraintParams(params)) {
-      q = query(ref, ...(params.queryConstraints as QueryConstraint[]));
-    } else {
-      const { where: w, orderBy: o, limit: l } = params;
-      q = query(
-        ref,
-        ...(w ? w : []).map((q) => where(...q)),
-        ...(o ? o : []).map((q) => orderBy(...q)),
-        ...(l ? [limit(l)] : [])
-      );
-    }
-    const unsub = onSnapshot<T>(
-      q.withConverter(converter),
-      (qs) => {
-        next(
-          null,
-          qs.docs.map((x) => x.data())
-        );
-      },
-      (error) => {
-        next(error);
+  return useSWRSubscription(
+    params,
+    (p, { next }) => {
+      console.log({ p });
+      if (params == null) {
+        return () => {
+          // do nothing
+        };
       }
-    );
-    return () => unsub && unsub();
-  });
+      const { path, parseDates } = params;
+      const converter = getFirestoreConverter<T>(parseDates);
+      const ref = collection(getFirestore(), path);
+      let q;
+      if (isQueryConstraintParams(params)) {
+        q = query(ref, ...(params.queryConstraints as QueryConstraint[]));
+      } else {
+        const { where: w, orderBy: o, limit: l } = params;
+        q = query(
+          ref,
+          ...(w ? w : []).map((q) => where(...q)),
+          ...(o ? o : []).map((q) => orderBy(...q)),
+          ...(l ? [limit(l)] : [])
+        );
+      }
+      const unsub = onSnapshot<T>(
+        q.withConverter(converter),
+        (qs) => {
+          next(
+            null,
+            qs.docs.map((x) => x.data())
+          );
+        },
+        (error) => {
+          next(error);
+        }
+      );
+      return () => unsub && unsub();
+    },
+    { ...swrOptions, use: [serializeMiddleware, ...(swrOptions?.use ?? [])] }
+  );
 };
 export default useCollection;

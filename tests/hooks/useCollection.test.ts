@@ -11,6 +11,7 @@ import {
   orderBy,
 } from "firebase/firestore";
 import { useCollection } from "../../src";
+import emptyMiddleware from "../supports/emptyMiddleware";
 import { db } from "../supports/fb";
 import { deleteCollection } from "../supports/fbUtil";
 import type { Post } from "../supports/model";
@@ -178,6 +179,7 @@ describe("useCollection", () => {
       unmount();
     });
   });
+
   describe("with queryConstraints", () => {
     it("should fetch data from Firestore", async () => {
       const { result, unmount } = renderHook(() =>
@@ -196,6 +198,23 @@ describe("useCollection", () => {
         timeout: 5000,
       });
       expect(result.current.data?.length).toBe(2);
+      unmount();
+    });
+  });
+  describe("with swr config", () => {
+    it("should fetch data from Firestore", async () => {
+      const { result, unmount } = renderHook(() =>
+        useCollection<Post>(
+          {
+            path: COLLECTION,
+          },
+          { use: [emptyMiddleware] }
+        )
+      );
+      await waitFor(() => expect(result.current.data != null).toBe(true), {
+        timeout: 5000,
+      });
+      expect(result.current.data!.length > 0).toBe(true);
       unmount();
     });
   });

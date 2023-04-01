@@ -1,12 +1,13 @@
-import type { SWRHook } from "swr";
+import type { SWRConfiguration } from "swr";
 import { doc, getDoc, getDocFromCache, getFirestore } from "firebase/firestore";
 import type { DocumentData, GetDocKeyParams } from "../util/type";
 import useSWR from "swr";
 import { getFirestoreConverter } from "../util/getConverter";
+import serializeMiddleware from "../middleware/serializeMiddleware";
 
 const useGetDoc = <T>(
   params: Omit<GetDocKeyParams<T>, "where" | "orderBy" | "limit"> | null,
-  swrOptions?: Omit<Parameters<SWRHook>[2], "fetcher">
+  swrOptions?: Omit<SWRConfiguration, "fetcher">
 ) => {
   const fetcher = async (): Promise<DocumentData<T> | undefined> => {
     if (params == null) {
@@ -19,6 +20,9 @@ const useGetDoc = <T>(
     const sn = await getFn(ref.withConverter(converter));
     return sn.data();
   };
-  return useSWR(params, fetcher, swrOptions);
+  return useSWR(params, fetcher, {
+    ...swrOptions,
+    use: [serializeMiddleware, ...(swrOptions?.use ?? [])],
+  });
 };
 export default useGetDoc;

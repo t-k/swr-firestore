@@ -9,6 +9,7 @@ import {
   or,
 } from "firebase/firestore";
 import { useCollectionGroup } from "../../src";
+import emptyMiddleware from "../supports/emptyMiddleware";
 import { db } from "../supports/fb";
 import { deleteCollection } from "../supports/fbUtil";
 import type { Post } from "../supports/model";
@@ -218,6 +219,24 @@ describe("useCollectionGroup", () => {
         timeout: 5000,
       });
       expect(result.current.data?.length).toBe(2);
+      unmount();
+    });
+  });
+
+  describe("with swr config", () => {
+    it("should fetch data from Firestore", async () => {
+      const { result, unmount } = renderHook(() =>
+        useCollectionGroup<Post>(
+          {
+            path: SUB_COLLECTION,
+          },
+          { use: [emptyMiddleware] }
+        )
+      );
+      await waitFor(() => expect(result.current.data != null).toBe(true), {
+        timeout: 5000,
+      });
+      expect(result.current.data!.length! > 0).toBe(true);
       unmount();
     });
   });

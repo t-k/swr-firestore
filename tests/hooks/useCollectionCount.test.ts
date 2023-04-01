@@ -12,6 +12,7 @@ import { db } from "../supports/fb";
 import { deleteCollection } from "../supports/fbUtil";
 import type { Post } from "../supports/model";
 import { FirebaseError } from "firebase/app";
+import emptyMiddleware from "../supports/emptyMiddleware";
 
 const COLLECTION = "CountTest";
 const ERR_COLLECTION = "CountErrTest";
@@ -127,6 +128,24 @@ describe("useCollectionCount", () => {
         timeout: 5000,
       });
       expect(result.current.data).toBe(3);
+      unmount();
+    });
+  });
+
+  describe("with swr config", () => {
+    it("should fetch data from Firestore", async () => {
+      const { result, unmount } = renderHook(() =>
+        useCollectionCount<Post>(
+          {
+            path: COLLECTION,
+          },
+          { use: [emptyMiddleware] }
+        )
+      );
+      await waitFor(() => expect(result.current.data != null).toBe(true), {
+        timeout: 5000,
+      });
+      expect(result.current.data! > 0).toBe(true);
       unmount();
     });
   });
