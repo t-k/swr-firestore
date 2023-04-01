@@ -22,8 +22,7 @@ const useCollection = <T>(
 ): SWRSubscriptionResponse<DocumentData<T>[], FirestoreError> => {
   return useSWRSubscription(
     params,
-    (p, { next }) => {
-      console.log({ p });
+    (_, { next }) => {
       if (params == null) {
         return () => {
           // do nothing
