@@ -1,3 +1,8 @@
+## [1.1.2] - 2023-04-01
+
+Same code as the previous version `1.1.1`.
+We had to release this version because the README.md file was not included when the package was published on npmjs.com.
+
 ## [1.1.1] - 2023-04-01
 
 - Add Middleware to adjust the key for SWR
