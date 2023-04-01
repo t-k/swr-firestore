@@ -140,13 +140,14 @@ import type { QueryDocumentSnapshot } from "firebase/firestore";
 type DocumentData<T> = T & Pick<QueryDocumentSnapshot, "exists" | "id" | "ref">;
 ```
 
-### `useCollection(params)`
+### `useCollection(params, swrOptions)`
 
 Subscription for collection
 
 #### Parameters
 
 - `params`: KeyParams | null
+- `swrOptions`: [Options for SWR hook](https://swr.vercel.app/docs/api#options) except `fetcher`
 
 #### Return values
 
@@ -192,13 +193,14 @@ const {
 });
 ```
 
-### `useCollectionGroup(params)`
+### `useCollectionGroup(params, swrOptions)`
 
 Subscription for collectionGroup
 
 #### Parameters
 
 - `params`: KeyParams | null
+- `swrOptions`: [Options for SWR hook](https://swr.vercel.app/docs/api#options) except `fetcher`
 
 #### Return values
 
@@ -224,13 +226,14 @@ Returns [`SWRResponse`](https://swr.vercel.app/docs/api#return-values)
 - `isValidating`: if there's a request or revalidation loading
 - `mutate(data?, options?)`: function to mutate the cached data (details)
 
-### `useDoc(params)`
+### `useDoc(params, swrOptions)`
 
 Subscription for document
 
 #### Parameters
 
 - `params`: KeyParams except `where`, `orderBy`, `limit` | null
+- `swrOptions`: [Options for SWR hook](https://swr.vercel.app/docs/api#options) except `fetcher`
 
 #### Return values
 
