@@ -1,3 +1,8 @@
+## [1.1.1] - 2023-04-01
+
+- Add Middleware to adjust the key for SWR
+- Add `swrOptions` parameter to the Subscription.
+
 ## [1.1.0] - 2023-03-30
 
 - Allow raw QueryConstraints
