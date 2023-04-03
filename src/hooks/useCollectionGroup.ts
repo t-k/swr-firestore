@@ -1,4 +1,7 @@
-import type { SWRSubscriptionResponse } from "swr/subscription";
+import type {
+  SWRSubscriptionOptions,
+  SWRSubscriptionResponse,
+} from "swr/subscription";
 import type { FirestoreError, QueryConstraint } from "firebase/firestore";
 import type { DocumentData, KeyParams } from "../util/type";
 import useSWRSubscription from "swr/subscription";
@@ -13,7 +16,7 @@ import {
 } from "firebase/firestore";
 import { getFirestoreConverter } from "../util/getConverter";
 import { isQueryConstraintParams } from "../util/typeGuard";
-import type { SWRConfiguration } from "swr";
+import type { Key, SWRConfiguration } from "swr";
 import serializeMiddleware from "../middleware/serializeMiddleware";
 
 const useCollectionGroup = <T>(
@@ -22,11 +25,12 @@ const useCollectionGroup = <T>(
 ): SWRSubscriptionResponse<DocumentData<T>[], FirestoreError> => {
   return useSWRSubscription(
     params,
-    (_, { next }) => {
+    (
+      _: Key,
+      { next }: SWRSubscriptionOptions<DocumentData<T>[], FirestoreError>
+    ) => {
       if (params == null) {
-        return () => {
-          // do nothing
-        };
+        return;
       }
       const { path, parseDates } = params;
       const converter = getFirestoreConverter<T>(parseDates);
@@ -43,7 +47,7 @@ const useCollectionGroup = <T>(
           ...(l ? [limit(l)] : [])
         );
       }
-      const unsub = onSnapshot<T>(
+      const unsub = onSnapshot<DocumentData<T>>(
         q.withConverter(converter),
         (qs) => {
           next(

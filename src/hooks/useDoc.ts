@@ -22,7 +22,7 @@ const useDoc = <T>(
       const { path } = params;
       const ref = doc(getFirestore(), path);
       const converter = getFirestoreConverter<T>(params?.parseDates);
-      const unsub = onSnapshot<T>(
+      const unsub = onSnapshot<DocumentData<T>>(
         ref.withConverter(converter),
         (doc) => {
           next(null, doc.data());
