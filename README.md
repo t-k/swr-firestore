@@ -114,6 +114,10 @@ type KeyParams<T> =
       // `Paths` means object's property path, including nested object
       where?: [Paths<T>, Parameters<typeof where>[1], ValueOf<T> | unknown][]
       orderBy?: [Paths<T>, Parameters<typeof orderBy>[1]][]
+      startAt?: Parameters<typeof startAt>;
+      startAfter?: Parameters<typeof startAfter>;
+      endAt?: Parameters<typeof endAt>;
+      endBefore?: Parameters<typeof endBefore>;
       limit?: number
       // Array of field names that should be parsed as dates.
       parseDates?: Paths<T>[]
@@ -168,7 +172,7 @@ Wrapper for getCountFromServer for collection
 
 #### Parameters
 
-- `params`: KeyParams except `orderBy`, `parseDates` | null
+- `params`: KeyParams except `parseDates` | null
 - `swrOptions`: [Options for SWR hook](https://swr.vercel.app/docs/api#options) except `fetcher`
 
 #### Return values
@@ -213,7 +217,7 @@ Wrapper for getCountFromServer for collectionGroup
 
 #### Parameters
 
-- `params`: KeyParams except `orderBy`, `parseDates` | null
+- `params`: KeyParams except `parseDates` | null
 - `swrOptions`: [Options for SWR hook](https://swr.vercel.app/docs/api#options) except `fetcher`
 
 #### Return values

@@ -1,3 +1,9 @@
+## [1.2.0] - 2023-04-10
+
+- Update `useCollection`, `useCollectionCount`, `useCollectionGroup`, `useCollectionGroupCount`, and `useGetDocs` hooks to include query cursor parameters: `startAt`, `startAfter`, `endAt`, and `endBefore`
+- Add `orderBy` parameter to `useCollectionCount` and `useCollectionGroupCount` hooks to support query cursor
+- Remove duplicate code for SWR key tweaking
+
 ## [1.1.2] - 2023-04-01
 
 Same code as the previous version `1.1.1`.
