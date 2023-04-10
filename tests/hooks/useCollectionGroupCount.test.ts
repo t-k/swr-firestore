@@ -28,10 +28,15 @@ describe("useCollectionGroupCount", () => {
       createdAt: serverTimestamp(),
     });
     const subRef = collection(db, `${COLLECTION}/${doc.id}/${SUB_COLLECTION}`);
-    await addDoc(subRef, {
-      content: "hello",
-      createdAt: serverTimestamp(),
-    });
+    await Promise.all(
+      [1, 10, 100, 1000].map((x) => {
+        return addDoc(subRef, {
+          content: "hello",
+          createdAt: serverTimestamp(),
+          sortableId: x,
+        });
+      })
+    );
   });
   afterEach(async () => {
     await deleteCollection(COLLECTION, SUB_COLLECTION);
@@ -40,7 +45,7 @@ describe("useCollectionGroupCount", () => {
   describe("without option", () => {
     it("should fetch data from Firestore", async () => {
       const { result, unmount } = renderHook(() =>
-        useCollectionGroupCount<Post>({ path: SUB_COLLECTION })
+        useCollectionGroupCount<Comment>({ path: SUB_COLLECTION })
       );
       await waitFor(() => expect(result.current.isLoading).toBe(false), {
         timeout: 5000,
@@ -68,7 +73,7 @@ describe("useCollectionGroupCount", () => {
         createdAt: serverTimestamp(),
       });
       const { result, unmount } = renderHook(() =>
-        useCollectionGroupCount<Post>({
+        useCollectionGroupCount<Comment>({
           path: SUB_COLLECTION,
           where: [["content", "==", "foo"]],
         })
@@ -100,7 +105,7 @@ describe("useCollectionGroupCount", () => {
         createdAt: serverTimestamp(),
       });
       const { result, unmount } = renderHook(() =>
-        useCollectionGroupCount<Post>({
+        useCollectionGroupCount<Comment>({
           path: SUB_COLLECTION,
           limit: 1,
         })
@@ -111,6 +116,69 @@ describe("useCollectionGroupCount", () => {
       expect(result.current.isLoading).toBe(false);
       expect(result.current.data != null).toBe(true);
       expect(result.current.data).toBe(1);
+      unmount();
+    });
+  });
+
+  describe("with query cursor", () => {
+    describe("with startAt", async () => {
+      const { result, unmount } = renderHook(() =>
+        useCollectionGroupCount<Comment>({
+          path: SUB_COLLECTION,
+          orderBy: [["sortableId", "asc"]],
+          startAt: [10],
+        })
+      );
+      await waitFor(() => expect(result.current.isLoading).toBe(false), {
+        timeout: 5000,
+      });
+      expect(result.current.isLoading).toBe(false);
+      expect(result.current.data).toBe(3);
+      unmount();
+    });
+    describe("with startAfter", async () => {
+      const { result, unmount } = renderHook(() =>
+        useCollectionGroupCount<Comment>({
+          path: SUB_COLLECTION,
+          orderBy: [["sortableId", "asc"]],
+          startAfter: [10],
+        })
+      );
+      await waitFor(() => expect(result.current.isLoading).toBe(false), {
+        timeout: 5000,
+      });
+      expect(result.current.isLoading).toBe(false);
+      expect(result.current.data).toBe(2);
+      unmount();
+    });
+    describe("with endAt", async () => {
+      const { result, unmount } = renderHook(() =>
+        useCollectionGroupCount<Comment>({
+          path: SUB_COLLECTION,
+          orderBy: [["sortableId", "asc"]],
+          endAt: [100],
+        })
+      );
+      await waitFor(() => expect(result.current.isLoading).toBe(false), {
+        timeout: 5000,
+      });
+      expect(result.current.isLoading).toBe(false);
+      expect(result.current.data).toBe(3);
+      unmount();
+    });
+    describe("with endBefore", async () => {
+      const { result, unmount } = renderHook(() =>
+        useCollectionGroupCount<Comment>({
+          path: SUB_COLLECTION,
+          orderBy: [["sortableId", "asc"]],
+          startAt: [100],
+        })
+      );
+      await waitFor(() => expect(result.current.isLoading).toBe(false), {
+        timeout: 5000,
+      });
+      expect(result.current.isLoading).toBe(false);
+      expect(result.current.data).toBe(2);
       unmount();
     });
   });
@@ -135,7 +203,7 @@ describe("useCollectionGroupCount", () => {
         createdAt: serverTimestamp(),
       });
       const { result, unmount } = renderHook(() =>
-        useCollectionGroupCount<Post>({
+        useCollectionGroupCount<Comment>({
           path: SUB_COLLECTION,
           queryConstraints: [
             or(where("content", "==", "foo"), where("content", "==", "bar")),
@@ -153,7 +221,7 @@ describe("useCollectionGroupCount", () => {
   describe("with swr config", () => {
     it("should fetch data from Firestore", async () => {
       const { result, unmount } = renderHook(() =>
-        useCollectionGroupCount<Post>(
+        useCollectionGroupCount<Comment>(
           {
             path: SUB_COLLECTION,
           },
@@ -184,7 +252,7 @@ describe("useCollectionGroupCount", () => {
         createdAt: serverTimestamp(),
       });
       const { result, unmount } = renderHook(() =>
-        useCollectionGroupCount<Post>({
+        useCollectionGroupCount<Comment>({
           path: ERR_SUB_COLLECTION,
         })
       );

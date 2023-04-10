@@ -25,6 +25,7 @@ describe("useCollectionCount", () => {
       content: "foo",
       status: "draft",
       createdAt: serverTimestamp(),
+      sortableId: 1,
       author: {
         name: "John",
         createdAt: serverTimestamp(),
@@ -34,6 +35,7 @@ describe("useCollectionCount", () => {
       content: "bar",
       status: "published",
       createdAt: serverTimestamp(),
+      sortableId: 10,
       author: {
         name: "John",
         createdAt: serverTimestamp(),
@@ -43,6 +45,7 @@ describe("useCollectionCount", () => {
       content: "baz",
       status: "published",
       createdAt: serverTimestamp(),
+      sortableId: 100,
       author: {
         name: "John",
         createdAt: serverTimestamp(),
@@ -52,6 +55,7 @@ describe("useCollectionCount", () => {
       content: "qux",
       status: "draft",
       createdAt: serverTimestamp(),
+      sortableId: 1000,
       author: {
         name: "John",
         createdAt: serverTimestamp(),
@@ -107,6 +111,69 @@ describe("useCollectionCount", () => {
       });
       expect(result.current.isLoading).toBe(false);
       expect(result.current.data).toBe(1);
+      unmount();
+    });
+  });
+  describe("with query cursor", () => {
+    describe("with startAt", async () => {
+      const { result, unmount } = renderHook(() =>
+        useCollectionCount<Post>({
+          path: COLLECTION,
+          orderBy: [["sortableId", "asc"]],
+          startAt: [10],
+        })
+      );
+      await waitFor(() => expect(result.current.isLoading).toBe(false), {
+        timeout: 5000,
+      });
+      expect(result.current.isLoading).toBe(false);
+      console.log("erro", result.current.error);
+      expect(result.current.data).toBe(3);
+      unmount();
+    });
+    describe("with startAfter", async () => {
+      const { result, unmount } = renderHook(() =>
+        useCollectionCount<Post>({
+          path: COLLECTION,
+          orderBy: [["sortableId", "asc"]],
+          startAfter: [10],
+        })
+      );
+      await waitFor(() => expect(result.current.isLoading).toBe(false), {
+        timeout: 5000,
+      });
+      expect(result.current.isLoading).toBe(false);
+      expect(result.current.data).toBe(2);
+      unmount();
+    });
+    describe("with endAt", async () => {
+      const { result, unmount } = renderHook(() =>
+        useCollectionCount<Post>({
+          path: COLLECTION,
+          orderBy: [["sortableId", "asc"]],
+          endAt: [100],
+        })
+      );
+      await waitFor(() => expect(result.current.isLoading).toBe(false), {
+        timeout: 5000,
+      });
+      expect(result.current.isLoading).toBe(false);
+      expect(result.current.data).toBe(3);
+      unmount();
+    });
+    describe("with endBefore", async () => {
+      const { result, unmount } = renderHook(() =>
+        useCollectionCount<Post>({
+          path: COLLECTION,
+          orderBy: [["sortableId", "asc"]],
+          startAt: [100],
+        })
+      );
+      await waitFor(() => expect(result.current.isLoading).toBe(false), {
+        timeout: 5000,
+      });
+      expect(result.current.isLoading).toBe(false);
+      expect(result.current.data).toBe(2);
       unmount();
     });
   });

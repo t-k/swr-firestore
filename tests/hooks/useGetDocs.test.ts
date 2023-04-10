@@ -29,6 +29,7 @@ describe("useGetDocs", () => {
       content: "foo",
       status: "draft",
       createdAt: serverTimestamp(),
+      sortableId: 1,
       author: {
         name: "John",
         createdAt: serverTimestamp(),
@@ -38,6 +39,7 @@ describe("useGetDocs", () => {
       content: "bar",
       status: "published",
       createdAt: serverTimestamp(),
+      sortableId: 10,
       author: {
         name: "John",
         createdAt: serverTimestamp(),
@@ -47,6 +49,7 @@ describe("useGetDocs", () => {
       content: "baz",
       status: "published",
       createdAt: serverTimestamp(),
+      sortableId: 100,
       author: {
         name: "John",
         createdAt: serverTimestamp(),
@@ -56,6 +59,7 @@ describe("useGetDocs", () => {
       content: "qux",
       status: "draft",
       createdAt: serverTimestamp(),
+      sortableId: 1000,
       author: {
         name: "John",
         createdAt: serverTimestamp(),
@@ -150,6 +154,89 @@ describe("useGetDocs", () => {
       });
       expect(result.current.data?.length).toBe(1);
       unmount();
+    });
+  });
+
+  describe("with query cursor", () => {
+    describe("with startAt", () => {
+      it("should fetch data from Firestore", async () => {
+        const { result, unmount } = renderHook(() =>
+          useGetDocs<Post>({
+            path: COLLECTION,
+            orderBy: [["sortableId", "asc"]],
+            startAt: [10],
+          })
+        );
+        await waitFor(() => expect(result.current.data != null).toBe(true), {
+          timeout: 5000,
+        });
+        expect(result.current.data!.length > 0).toBe(true);
+        result.current.data?.forEach((x) => {
+          const sortableId = x.sortableId ?? 0;
+          expect(sortableId >= 10).toBe(true);
+        });
+        unmount();
+      });
+    });
+    describe("with startAfter", () => {
+      it("should fetch data from Firestore", async () => {
+        const { result, unmount } = renderHook(() =>
+          useGetDocs<Post>({
+            path: COLLECTION,
+            orderBy: [["sortableId", "asc"]],
+            startAfter: [10],
+          })
+        );
+        await waitFor(() => expect(result.current.data != null).toBe(true), {
+          timeout: 5000,
+        });
+        expect(result.current.data!.length > 0).toBe(true);
+        result.current.data?.forEach((x) => {
+          const sortableId = x.sortableId ?? 0;
+          expect(sortableId > 10).toBe(true);
+        });
+        unmount();
+      });
+    });
+    describe("with endAt", () => {
+      it("should fetch data from Firestore", async () => {
+        const { result, unmount } = renderHook(() =>
+          useGetDocs<Post>({
+            path: COLLECTION,
+            orderBy: [["sortableId", "asc"]],
+            endAt: [100],
+          })
+        );
+        await waitFor(() => expect(result.current.data != null).toBe(true), {
+          timeout: 5000,
+        });
+        expect(result.current.data!.length > 0).toBe(true);
+        result.current.data?.forEach((x) => {
+          const sortableId = x.sortableId ?? 0;
+          expect(sortableId <= 100).toBe(true);
+        });
+        unmount();
+      });
+    });
+    describe("with endBefore", () => {
+      it("should fetch data from Firestore", async () => {
+        const { result, unmount } = renderHook(() =>
+          useGetDocs<Post>({
+            path: COLLECTION,
+            orderBy: [["sortableId", "asc"]],
+            endBefore: [100],
+          })
+        );
+        await waitFor(() => expect(result.current.data != null).toBe(true), {
+          timeout: 5000,
+        });
+        expect(result.current.data!.length > 0).toBe(true);
+        result.current.data?.forEach((x) => {
+          const sortableId = x.sortableId ?? 0;
+          expect(sortableId < 100).toBe(true);
+        });
+        unmount();
+      });
     });
   });
   describe("with queryConstraints", () => {

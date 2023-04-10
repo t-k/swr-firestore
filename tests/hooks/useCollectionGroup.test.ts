@@ -28,10 +28,15 @@ describe("useCollectionGroup", () => {
       createdAt: serverTimestamp(),
     });
     const subRef = collection(db, `${COLLECTION}/${doc.id}/${SUB_COLLECTION}`);
-    await addDoc(subRef, {
-      content: "hello",
-      createdAt: serverTimestamp(),
-    });
+    await Promise.all(
+      [1, 10, 100, 1000].map((x) => {
+        return addDoc(subRef, {
+          content: "hello",
+          createdAt: serverTimestamp(),
+          sortableId: x,
+        });
+      })
+    );
   });
   afterEach(async () => {
     await deleteCollection(COLLECTION, SUB_COLLECTION);
@@ -40,12 +45,12 @@ describe("useCollectionGroup", () => {
   describe("without option", () => {
     it("should fetch data from Firestore", async () => {
       const { result, unmount } = renderHook(() =>
-        useCollectionGroup<Post>({ path: SUB_COLLECTION })
+        useCollectionGroup<Comment>({ path: SUB_COLLECTION })
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
       });
-      expect(result.current.data?.length).toBe(1);
+      expect(result.current.data?.length > 0).toBe(true);
       const el = result.current.data![0];
       expect(el.id).toBeDefined();
       expect(el.exists).toBeDefined();
@@ -59,7 +64,7 @@ describe("useCollectionGroup", () => {
   describe("with parseDates option", () => {
     it("should fetch data from Firestore", async () => {
       const { result, unmount } = renderHook(() =>
-        useCollectionGroup<Post>({
+        useCollectionGroup<Comment>({
           path: SUB_COLLECTION,
           parseDates: ["createdAt"],
         })
@@ -67,7 +72,7 @@ describe("useCollectionGroup", () => {
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
       });
-      expect(result.current.data?.length).toBe(1);
+      expect(result.current.data?.length > 0).toBe(true);
       const el = result.current.data![0];
       expect(el.id).toBeDefined();
       expect(el.exists).toBeDefined();
@@ -103,7 +108,7 @@ describe("useCollectionGroup", () => {
         createdAt: serverTimestamp(),
       });
       const { result, unmount } = renderHook(() =>
-        useCollectionGroup<Post>({
+        useCollectionGroup<Comment>({
           path: SUB_COLLECTION,
           where: [["content", "==", "foo"]],
         })
@@ -139,7 +144,7 @@ describe("useCollectionGroup", () => {
         createdAt: serverTimestamp(),
       });
       const { result, unmount } = renderHook(() =>
-        useCollectionGroup<Post>({
+        useCollectionGroup<Comment>({
           path: SUB_COLLECTION,
           orderBy: [["createdAt", "desc"]],
         })
@@ -175,7 +180,7 @@ describe("useCollectionGroup", () => {
         createdAt: serverTimestamp(),
       });
       const { result, unmount } = renderHook(() =>
-        useCollectionGroup<Post>({
+        useCollectionGroup<Comment>({
           path: SUB_COLLECTION,
           limit: 1,
         })
@@ -185,6 +190,88 @@ describe("useCollectionGroup", () => {
       });
       expect(result.current.data?.length).toBe(1);
       unmount();
+    });
+  });
+  describe("with query cursor", () => {
+    describe("with startAt", () => {
+      it("should fetch data from Firestore", async () => {
+        const { result, unmount } = renderHook(() =>
+          useCollectionGroup<Comment>({
+            path: SUB_COLLECTION,
+            orderBy: [["sortableId", "asc"]],
+            startAt: [10],
+          })
+        );
+        await waitFor(() => expect(result.current.data != null).toBe(true), {
+          timeout: 5000,
+        });
+        expect(result.current.data!.length > 0).toBe(true);
+        result.current.data?.forEach((x) => {
+          const sortableId = x.sortableId ?? 0;
+          expect(sortableId >= 10).toBe(true);
+        });
+        unmount();
+      });
+    });
+    describe("with startAfter", () => {
+      it("should fetch data from Firestore", async () => {
+        const { result, unmount } = renderHook(() =>
+          useCollectionGroup<Comment>({
+            path: SUB_COLLECTION,
+            orderBy: [["sortableId", "asc"]],
+            startAfter: [10],
+          })
+        );
+        await waitFor(() => expect(result.current.data != null).toBe(true), {
+          timeout: 5000,
+        });
+        expect(result.current.data!.length > 0).toBe(true);
+        result.current.data?.forEach((x) => {
+          const sortableId = x.sortableId ?? 0;
+          expect(sortableId > 10).toBe(true);
+        });
+        unmount();
+      });
+    });
+    describe("with endAt", () => {
+      it("should fetch data from Firestore", async () => {
+        const { result, unmount } = renderHook(() =>
+          useCollectionGroup<Comment>({
+            path: SUB_COLLECTION,
+            orderBy: [["sortableId", "asc"]],
+            endAt: [100],
+          })
+        );
+        await waitFor(() => expect(result.current.data != null).toBe(true), {
+          timeout: 5000,
+        });
+        expect(result.current.data!.length > 0).toBe(true);
+        result.current.data?.forEach((x) => {
+          const sortableId = x.sortableId ?? 0;
+          expect(sortableId <= 100).toBe(true);
+        });
+        unmount();
+      });
+    });
+    describe("with endBefore", () => {
+      it("should fetch data from Firestore", async () => {
+        const { result, unmount } = renderHook(() =>
+          useCollectionGroup<Comment>({
+            path: SUB_COLLECTION,
+            orderBy: [["sortableId", "asc"]],
+            endBefore: [100],
+          })
+        );
+        await waitFor(() => expect(result.current.data != null).toBe(true), {
+          timeout: 5000,
+        });
+        expect(result.current.data!.length > 0).toBe(true);
+        result.current.data?.forEach((x) => {
+          const sortableId = x.sortableId ?? 0;
+          expect(sortableId < 100).toBe(true);
+        });
+        unmount();
+      });
     });
   });
   describe("with queryConstraints", () => {
@@ -208,7 +295,7 @@ describe("useCollectionGroup", () => {
         createdAt: serverTimestamp(),
       });
       const { result, unmount } = renderHook(() =>
-        useCollectionGroup<Post>({
+        useCollectionGroup<Comment>({
           path: SUB_COLLECTION,
           queryConstraints: [
             or(where("content", "==", "foo"), where("content", "==", "bar")),
@@ -226,7 +313,7 @@ describe("useCollectionGroup", () => {
   describe("with swr config", () => {
     it("should fetch data from Firestore", async () => {
       const { result, unmount } = renderHook(() =>
-        useCollectionGroup<Post>(
+        useCollectionGroup<Comment>(
           {
             path: SUB_COLLECTION,
           },
@@ -257,7 +344,7 @@ describe("useCollectionGroup", () => {
         createdAt: serverTimestamp(),
       });
       const { result, unmount } = renderHook(() =>
-        useCollectionGroup<Post>({
+        useCollectionGroup<Comment>({
           path: ERR_SUB_COLLECTION,
         })
       );

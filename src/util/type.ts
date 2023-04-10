@@ -1,8 +1,12 @@
 import type {
+  endAt,
+  endBefore,
   orderBy,
   QueryCompositeFilterConstraint,
   QueryConstraint,
   QueryNonFilterConstraint,
+  startAfter,
+  startAt,
   where,
 } from "firebase/firestore";
 import type { QueryDocumentSnapshot } from "firebase/firestore";
@@ -56,6 +60,10 @@ export type ValueOf<T> = T[keyof T];
 export type QueryParams<T> = {
   where?: [Paths<T>, Parameters<typeof where>[1], ValueOf<T> | unknown][];
   orderBy?: [Paths<T>, Parameters<typeof orderBy>[1]][];
+  startAt?: Parameters<typeof startAt>;
+  startAfter?: Parameters<typeof startAfter>;
+  endAt?: Parameters<typeof endAt>;
+  endBefore?: Parameters<typeof endBefore>;
   limit?: number;
 };
 
@@ -76,7 +84,7 @@ export type KeyParams<T> = BaseParams<T> &
   (QueryParams<T> | QueryConstraintParams);
 
 export type KeyParamsForCount<T> = BaseParams<T> &
-  (Omit<QueryParams<T>, "orderBy" | "parseDates"> | QueryConstraintParams);
+  (Omit<QueryParams<T>, "parseDates"> | QueryConstraintParams);
 
 export type GetDocKeyParams<T> = KeyParams<T> & { useOfflineCache?: boolean };
 

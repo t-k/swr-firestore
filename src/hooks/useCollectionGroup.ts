@@ -7,11 +7,15 @@ import type { DocumentData, KeyParams } from "../util/type";
 import useSWRSubscription from "swr/subscription";
 import {
   collectionGroup,
+  endAt,
+  endBefore,
   getFirestore,
   limit,
   onSnapshot,
   orderBy,
   query,
+  startAfter,
+  startAt,
   where,
 } from "firebase/firestore";
 import { getFirestoreConverter } from "../util/getConverter";
@@ -39,11 +43,23 @@ const useCollectionGroup = <T>(
       if (isQueryConstraintParams(params)) {
         q = query(ref, ...(params.queryConstraints as QueryConstraint[]));
       } else {
-        const { where: w, orderBy: o, limit: l } = params;
+        const {
+          where: w,
+          orderBy: o,
+          startAt: s,
+          startAfter: sa,
+          endAt: e,
+          endBefore: eb,
+          limit: l,
+        } = params;
         q = query(
           ref,
           ...(w ? w : []).map((q) => where(...q)),
           ...(o ? o : []).map((q) => orderBy(...q)),
+          ...(s ? [startAt(...(Array.isArray(s) ? s : [s]))] : []),
+          ...(sa ? [startAfter(...(Array.isArray(sa) ? sa : [sa]))] : []),
+          ...(e ? [endAt(...(Array.isArray(e) ? e : [e]))] : []),
+          ...(eb ? [endBefore(...(Array.isArray(eb) ? eb : [eb]))] : []),
           ...(l ? [limit(l)] : [])
         );
       }

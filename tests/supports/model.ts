@@ -5,6 +5,7 @@ export type Post = {
   content: string;
   status: PostStatus;
   createdAt: Date;
+  sortableId?: number;
   author?: {
     name: string;
     createdAt: Date;
@@ -14,4 +15,5 @@ export type Post = {
 export type Comment = {
   content: string;
   createdAt: Date;
+  sortableId?: number;
 };
