@@ -12,15 +12,14 @@ import { useCollectionGroup } from "../../src";
 import emptyMiddleware from "../supports/emptyMiddleware";
 import { db } from "../supports/fb";
 import { deleteCollection } from "../supports/fbUtil";
-import type { Post } from "../supports/model";
+import type { Comment } from "../supports/model";
 
 const COLLECTION = "CollectionGroupTest";
 const SUB_COLLECTION = "SubCollectionTest";
 const ERR_SUB_COLLECTION = "SubCollectionErrTest";
 describe("useCollectionGroup", () => {
   beforeEach(async () => {
-    await deleteCollection(COLLECTION, SUB_COLLECTION);
-    await deleteCollection(COLLECTION, ERR_SUB_COLLECTION);
+    await deleteCollection(COLLECTION, [SUB_COLLECTION, ERR_SUB_COLLECTION]);
     const ref = collection(db, COLLECTION);
     const doc = await addDoc(ref, {
       content: "hello",
@@ -39,8 +38,7 @@ describe("useCollectionGroup", () => {
     );
   });
   afterEach(async () => {
-    await deleteCollection(COLLECTION, SUB_COLLECTION);
-    await deleteCollection(COLLECTION, ERR_SUB_COLLECTION);
+    await deleteCollection(COLLECTION, [SUB_COLLECTION, ERR_SUB_COLLECTION]);
   });
   describe("without option", () => {
     it("should fetch data from Firestore", async () => {
@@ -50,7 +48,7 @@ describe("useCollectionGroup", () => {
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
       });
-      expect(result.current.data?.length > 0).toBe(true);
+      expect(result.current.data!.length > 0).toBe(true);
       const el = result.current.data![0];
       expect(el.id).toBeDefined();
       expect(el.exists).toBeDefined();
@@ -72,7 +70,7 @@ describe("useCollectionGroup", () => {
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
       });
-      expect(result.current.data?.length > 0).toBe(true);
+      expect(result.current.data!.length > 0).toBe(true);
       const el = result.current.data![0];
       expect(el.id).toBeDefined();
       expect(el.exists).toBeDefined();

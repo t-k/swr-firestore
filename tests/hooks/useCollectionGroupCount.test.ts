@@ -11,7 +11,7 @@ import { useCollectionGroupCount } from "../../src";
 import emptyMiddleware from "../supports/emptyMiddleware";
 import { db } from "../supports/fb";
 import { deleteCollection } from "../supports/fbUtil";
-import type { Post } from "../supports/model";
+import type { Comment } from "../supports/model";
 
 const COLLECTION = "CollectionGroupCountTest";
 const SUB_COLLECTION = "SubCollectionCountTest";
@@ -19,8 +19,7 @@ const ERR_SUB_COLLECTION = "SubCollectionCountErrTest";
 
 describe("useCollectionGroupCount", () => {
   beforeEach(async () => {
-    await deleteCollection(COLLECTION, SUB_COLLECTION);
-    await deleteCollection(COLLECTION, ERR_SUB_COLLECTION);
+    await deleteCollection(COLLECTION, [SUB_COLLECTION, ERR_SUB_COLLECTION]);
     const ref = collection(db, COLLECTION);
     const doc = await addDoc(ref, {
       content: "hello",
@@ -39,8 +38,7 @@ describe("useCollectionGroupCount", () => {
     );
   });
   afterEach(async () => {
-    await deleteCollection(COLLECTION, SUB_COLLECTION);
-    await deleteCollection(COLLECTION, ERR_SUB_COLLECTION);
+    await deleteCollection(COLLECTION, [SUB_COLLECTION, ERR_SUB_COLLECTION]);
   });
   describe("without option", () => {
     it("should fetch data from Firestore", async () => {
@@ -52,7 +50,7 @@ describe("useCollectionGroupCount", () => {
       });
       expect(result.current.isLoading).toBe(false);
       expect(result.current.data != null).toBe(true);
-      expect(result.current.data).toBe(1);
+      expect(result.current.data).toBe(4);
       unmount();
     });
   });
@@ -121,65 +119,73 @@ describe("useCollectionGroupCount", () => {
   });
 
   describe("with query cursor", () => {
-    describe("with startAt", async () => {
-      const { result, unmount } = renderHook(() =>
-        useCollectionGroupCount<Comment>({
-          path: SUB_COLLECTION,
-          orderBy: [["sortableId", "asc"]],
-          startAt: [10],
-        })
-      );
-      await waitFor(() => expect(result.current.isLoading).toBe(false), {
-        timeout: 5000,
+    describe("with startAt", () => {
+      it("should fetch data from Firestore", async () => {
+        const { result, unmount } = renderHook(() =>
+          useCollectionGroupCount<Comment>({
+            path: SUB_COLLECTION,
+            orderBy: [["sortableId", "asc"]],
+            startAt: [10],
+          })
+        );
+        await waitFor(() => expect(result.current.isLoading).toBe(false), {
+          timeout: 5000,
+        });
+        expect(result.current.isLoading).toBe(false);
+        expect(result.current.data).toBe(3);
+        unmount();
       });
-      expect(result.current.isLoading).toBe(false);
-      expect(result.current.data).toBe(3);
-      unmount();
     });
-    describe("with startAfter", async () => {
-      const { result, unmount } = renderHook(() =>
-        useCollectionGroupCount<Comment>({
-          path: SUB_COLLECTION,
-          orderBy: [["sortableId", "asc"]],
-          startAfter: [10],
-        })
-      );
-      await waitFor(() => expect(result.current.isLoading).toBe(false), {
-        timeout: 5000,
+    describe("with startAfter", () => {
+      it("should fetch data from Firestore", async () => {
+        const { result, unmount } = renderHook(() =>
+          useCollectionGroupCount<Comment>({
+            path: SUB_COLLECTION,
+            orderBy: [["sortableId", "asc"]],
+            startAfter: [10],
+          })
+        );
+        await waitFor(() => expect(result.current.isLoading).toBe(false), {
+          timeout: 5000,
+        });
+        expect(result.current.isLoading).toBe(false);
+        expect(result.current.data).toBe(2);
+        unmount();
       });
-      expect(result.current.isLoading).toBe(false);
-      expect(result.current.data).toBe(2);
-      unmount();
     });
-    describe("with endAt", async () => {
-      const { result, unmount } = renderHook(() =>
-        useCollectionGroupCount<Comment>({
-          path: SUB_COLLECTION,
-          orderBy: [["sortableId", "asc"]],
-          endAt: [100],
-        })
-      );
-      await waitFor(() => expect(result.current.isLoading).toBe(false), {
-        timeout: 5000,
+    describe("with endAt", () => {
+      it("should fetch data from Firestore", async () => {
+        const { result, unmount } = renderHook(() =>
+          useCollectionGroupCount<Comment>({
+            path: SUB_COLLECTION,
+            orderBy: [["sortableId", "asc"]],
+            endAt: [100],
+          })
+        );
+        await waitFor(() => expect(result.current.isLoading).toBe(false), {
+          timeout: 5000,
+        });
+        expect(result.current.isLoading).toBe(false);
+        expect(result.current.data).toBe(3);
+        unmount();
       });
-      expect(result.current.isLoading).toBe(false);
-      expect(result.current.data).toBe(3);
-      unmount();
     });
-    describe("with endBefore", async () => {
-      const { result, unmount } = renderHook(() =>
-        useCollectionGroupCount<Comment>({
-          path: SUB_COLLECTION,
-          orderBy: [["sortableId", "asc"]],
-          startAt: [100],
-        })
-      );
-      await waitFor(() => expect(result.current.isLoading).toBe(false), {
-        timeout: 5000,
+    describe("with endBefore", () => {
+      it("should fetch data from Firestore", async () => {
+        const { result, unmount } = renderHook(() =>
+          useCollectionGroupCount<Comment>({
+            path: SUB_COLLECTION,
+            orderBy: [["sortableId", "asc"]],
+            endBefore: [100],
+          })
+        );
+        await waitFor(() => expect(result.current.isLoading).toBe(false), {
+          timeout: 5000,
+        });
+        expect(result.current.isLoading).toBe(false);
+        expect(result.current.data).toBe(2);
+        unmount();
       });
-      expect(result.current.isLoading).toBe(false);
-      expect(result.current.data).toBe(2);
-      unmount();
     });
   });
   describe("with queryConstraints", () => {

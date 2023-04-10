@@ -16,6 +16,7 @@ import emptyMiddleware from "../supports/emptyMiddleware";
 
 const COLLECTION = "CountTest";
 const ERR_COLLECTION = "CountErrTest";
+
 describe("useCollectionCount", () => {
   beforeAll(async () => {
     await deleteCollection(COLLECTION);
@@ -114,8 +115,8 @@ describe("useCollectionCount", () => {
       unmount();
     });
   });
-  describe("with query cursor", () => {
-    describe("with startAt", async () => {
+  describe("with startAt", () => {
+    it("should fetch data from Firestore", async () => {
       const { result, unmount } = renderHook(() =>
         useCollectionCount<Post>({
           path: COLLECTION,
@@ -127,54 +128,62 @@ describe("useCollectionCount", () => {
         timeout: 5000,
       });
       expect(result.current.isLoading).toBe(false);
-      console.log("erro", result.current.error);
       expect(result.current.data).toBe(3);
       unmount();
     });
-    describe("with startAfter", async () => {
-      const { result, unmount } = renderHook(() =>
-        useCollectionCount<Post>({
-          path: COLLECTION,
-          orderBy: [["sortableId", "asc"]],
-          startAfter: [10],
-        })
-      );
-      await waitFor(() => expect(result.current.isLoading).toBe(false), {
-        timeout: 5000,
+  });
+
+  describe("with query cursor", () => {
+    describe("with startAfter", () => {
+      it("should fetch data from Firestore", async () => {
+        const { result, unmount } = renderHook(() =>
+          useCollectionCount<Post>({
+            path: COLLECTION,
+            orderBy: [["sortableId", "asc"]],
+            startAfter: [10],
+          })
+        );
+        await waitFor(() => expect(result.current.isLoading).toBe(false), {
+          timeout: 5000,
+        });
+        expect(result.current.isLoading).toBe(false);
+        expect(result.current.data).toBe(2);
+        unmount();
       });
-      expect(result.current.isLoading).toBe(false);
-      expect(result.current.data).toBe(2);
-      unmount();
     });
-    describe("with endAt", async () => {
-      const { result, unmount } = renderHook(() =>
-        useCollectionCount<Post>({
-          path: COLLECTION,
-          orderBy: [["sortableId", "asc"]],
-          endAt: [100],
-        })
-      );
-      await waitFor(() => expect(result.current.isLoading).toBe(false), {
-        timeout: 5000,
+    describe("with endAt", () => {
+      it("should fetch data from Firestore", async () => {
+        const { result, unmount } = renderHook(() =>
+          useCollectionCount<Post>({
+            path: COLLECTION,
+            orderBy: [["sortableId", "asc"]],
+            endAt: [100],
+          })
+        );
+        await waitFor(() => expect(result.current.isLoading).toBe(false), {
+          timeout: 5000,
+        });
+        expect(result.current.isLoading).toBe(false);
+        expect(result.current.data).toBe(3);
+        unmount();
       });
-      expect(result.current.isLoading).toBe(false);
-      expect(result.current.data).toBe(3);
-      unmount();
     });
     describe("with endBefore", async () => {
-      const { result, unmount } = renderHook(() =>
-        useCollectionCount<Post>({
-          path: COLLECTION,
-          orderBy: [["sortableId", "asc"]],
-          startAt: [100],
-        })
-      );
-      await waitFor(() => expect(result.current.isLoading).toBe(false), {
-        timeout: 5000,
+      it("should fetch data from Firestore", async () => {
+        const { result, unmount } = renderHook(() =>
+          useCollectionCount<Post>({
+            path: COLLECTION,
+            orderBy: [["sortableId", "asc"]],
+            endBefore: [100],
+          })
+        );
+        await waitFor(() => expect(result.current.isLoading).toBe(false), {
+          timeout: 5000,
+        });
+        expect(result.current.isLoading).toBe(false);
+        expect(result.current.data).toBe(2);
+        unmount();
       });
-      expect(result.current.isLoading).toBe(false);
-      expect(result.current.data).toBe(2);
-      unmount();
     });
   });
 

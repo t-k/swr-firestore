@@ -24,6 +24,7 @@ const ERR_COLLECTION = "useGetDocsErrTest";
 describe("useGetDocs", () => {
   beforeAll(async () => {
     await deleteCollection(COLLECTION);
+    await deleteCollection(ERR_COLLECTION);
     const ref = collection(db, COLLECTION) as CollectionReference<Post>;
     await addDoc(ref, {
       content: "foo",
@@ -68,6 +69,7 @@ describe("useGetDocs", () => {
   });
   afterAll(async () => {
     await deleteCollection(COLLECTION);
+    await deleteCollection(ERR_COLLECTION);
   });
   describe("without option", () => {
     it("should fetch data from Firestore", async () => {

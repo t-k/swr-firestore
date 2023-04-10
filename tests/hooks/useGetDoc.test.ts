@@ -20,9 +20,11 @@ const ERR_COLLECTION = "useGetDocErrTest";
 describe("useGetDoc", () => {
   beforeEach(async () => {
     await deleteCollection(COLLECTION);
+    await deleteCollection(ERR_COLLECTION);
   });
   afterEach(async () => {
     await deleteCollection(COLLECTION);
+    await deleteCollection(ERR_COLLECTION);
   });
   describe("without option", () => {
     it("should fetch data from Firestore", async () => {
