@@ -24,10 +24,6 @@ const useGetDocs = <T>(
   params: GetDocKeyParams<T> | null,
   swrOptions?: Omit<SWRConfiguration, "fetcher">
 ) => {
-  let swrKey = params;
-  if (params != null && isQueryConstraintParams(params)) {
-    swrKey = JSON.parse(JSON.stringify(params));
-  }
   const fetcher = async (): Promise<DocumentData<T>[] | undefined> => {
     if (params == null) {
       return;
@@ -63,7 +59,7 @@ const useGetDocs = <T>(
     const sn = await getFn(q.withConverter(converter));
     return sn.docs.map((x) => x.data());
   };
-  return useSWR(swrKey, fetcher, {
+  return useSWR(params, fetcher, {
     ...swrOptions,
     use: [serializeMiddleware, ...(swrOptions?.use ?? [])],
   });

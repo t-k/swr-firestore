@@ -22,10 +22,6 @@ const useCollectionGroupCount = <T>(
   params: KeyParamsForCount<T> | null,
   swrOptions?: Omit<SWRConfiguration, "fetcher">
 ) => {
-  let swrKey = params;
-  if (params != null && isQueryConstraintParams(params)) {
-    swrKey = JSON.parse(JSON.stringify(params));
-  }
   const fetcher = async () => {
     if (params == null) {
       return;
@@ -59,7 +55,7 @@ const useCollectionGroupCount = <T>(
     const sn = await getCountFromServer(q);
     return sn.data().count;
   };
-  return useSWR(swrKey, fetcher, {
+  return useSWR(params, fetcher, {
     ...swrOptions,
     use: [serializeMiddleware, ...(swrOptions?.use ?? [])],
   });
