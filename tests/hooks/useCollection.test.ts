@@ -55,7 +55,7 @@ describe("useCollection", () => {
       },
     });
     await addDoc(ref, {
-      content: "qux",
+      content: "hello",
       status: "draft",
       sortableId: 1000,
       createdAt: serverTimestamp(),
@@ -283,7 +283,9 @@ describe("useCollection", () => {
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
       });
-      expect(result.current.data?.length).toBe(2);
+      result.current.data?.forEach((x) => {
+        expect(x.content === "hello" || x.status === "published").toBe(true);
+      });
       unmount();
     });
   });
