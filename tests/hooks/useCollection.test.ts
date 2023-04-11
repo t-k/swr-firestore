@@ -72,7 +72,7 @@ describe("useCollection", () => {
   describe("key is null", () => {
     it("should fetch no data", async () => {
       const { result, unmount } = renderHook(() => useCollection<Post>(null));
-      expect(result.current.data != null);
+      expect(result.current.data == null).toBe(true);
       unmount();
     });
   });
