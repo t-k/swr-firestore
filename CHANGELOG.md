@@ -1,3 +1,56 @@
+## [2.0.0] - 2023-04-13
+
+### Breaking change
+
+- Add count property to SWR key for counting functions.
+  This means that the SWR key has changed for the `useCollectionCount` and `useCollectionGroupCount` functions.
+
+### Feature
+- Add support CollectionGroup on `useGetDocs`. Add `isCollectionGroup` parameter.
+- Add server module. This may be useful for SSG and SSR. You can import from `@tatsuokaniwa/swr-firestore/server`.
+
+```tsx
+import { useCollection, useGetDocs } from "@tatsuokaniwa/swr-firestore"
+import { getCollection } from "@tatsuokaniwa/swr-firestore/server"
+
+export async function getStaticProps() {
+  const params = {
+    path: "posts",
+    where: [["status", "==", "published"]],
+  }
+  const { key, data } = await getCollection<Post>({
+    ...params,
+    isSubscription: true, // Add the prefix `$sub$` to the SWR key
+  })
+  const { key: useGetDocsKey, data: useGetDocsData } = await getCollection<Post>(params)
+  return {
+    props: {
+      fallback: {
+        [key]: data,
+        [useGetDocsKey]: useGetDocsData,
+      }
+    }
+  }
+}
+
+export default function Page({ fallback }) {
+  const { data } = useCollection<Post>({
+    path: "posts",
+    where: [["status", "==", "published"]],
+  })
+  const { data: useGetDocsData } = useGetDocs<Post>({
+    path: "posts",
+    where: [["status", "==", "published"]],
+  })
+  return (
+    <SWRConfig value={{ fallback }}>
+      {data?.map((x, i) => <div key={i}>{x.content}}</div>)}
+    </SWRConfig>
+  )
+}
+
+```
+
 ## [1.2.0] - 2023-04-10
 
 - Update `useCollection`, `useCollectionCount`, `useCollectionGroup`, `useCollectionGroupCount`, and `useGetDocs` hooks to include query cursor parameters: `startAt`, `startAfter`, `endAt`, and `endBefore`
