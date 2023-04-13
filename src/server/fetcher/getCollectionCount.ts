@@ -56,6 +56,9 @@ const getCollectionCount = async <T>(
     queryRef = (queryRef ?? collectionRef).limit(l);
   }
   const sn = await (queryRef ?? collectionRef).count().get();
-  return { key: createSwrKey(params), data: sn.data().count };
+  return {
+    key: createSwrKey({ ...params, count: true }),
+    data: sn.data().count,
+  };
 };
 export default getCollectionCount;

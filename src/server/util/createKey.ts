@@ -4,7 +4,9 @@ import { unstable_serialize } from "swr";
 // https://github.com/vercel/swr/blob/main/subscription/index.ts
 const SUBSCRIPTION_PREFIX = "$sub$";
 
-const createSwrKey = <T>(params: KeyParams<T>): string => {
+const createSwrKey = <T>(
+  params: KeyParams<T> & { count?: boolean }
+): string => {
   const { isSubscription, ...rest } = params;
   return `${isSubscription ? SUBSCRIPTION_PREFIX : ""}${unstable_serialize(
     JSON.parse(JSON.stringify(rest))

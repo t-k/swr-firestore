@@ -55,7 +55,7 @@ const useCollectionCount = <T>(
     const sn = await getCountFromServer(q);
     return sn.data().count;
   };
-  return useSWR(params, fetcher, {
+  return useSWR({ ...params, count: true }, fetcher, {
     ...swrOptions,
     use: [serializeMiddleware, ...(swrOptions?.use ?? [])],
   });
