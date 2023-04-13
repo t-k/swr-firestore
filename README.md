@@ -66,26 +66,65 @@ export default function App() {
 ```
 
 ### For more complex queries
+
 To perform complex queries like using `OR` queries or raw `QueryConstraint`, use the `queryConstraints` parameter.
 However, this method does not provide input completion for field names from type definitions.
 
 ```tsx
-import {
-  or,
-  orderBy,
-  where,
-} from "firebase/firestore";
+import { or, orderBy, where } from "firebase/firestore";
 
 useCollection<City>({
   path: "cities",
   queryConstraints: [
-    or(
-      where('capital', '==', true),
-      where('population', '>=', 1000000)
-    ),
+    or(where("capital", "==", true), where("population", ">=", 1000000)),
     orderBy("createdAt", "desc"),
   ],
-})
+});
+```
+
+### SSG and SSR
+
+You can use the server module to get the SWR key and data.
+
+```tsx
+import { useCollection, useGetDocs } from "@tatsuokaniwa/swr-firestore"
+import { getCollection } from "@tatsuokaniwa/swr-firestore/server"
+
+export async function getStaticProps() {
+  const params = {
+    path: "posts",
+    where: [["status", "==", "published"]],
+  }
+  const { key, data } = await getCollection<Post>({
+    ...params,
+    isSubscription: true, // Add the prefix `$sub$` to the SWR key
+  })
+  const { key: useGetDocsKey, data: useGetDocsData } = await getCollection<Post>(params)
+  return {
+    props: {
+      fallback: {
+        [key]: data,
+        [useGetDocsKey]: useGetDocsData,
+      }
+    }
+  }
+}
+
+export default function Page({ fallback }) {
+  const { data } = useCollection<Post>({
+    path: "posts",
+    where: [["status", "==", "published"]],
+  })
+  const { data: useGetDocsData } = useGetDocs<Post>({
+    path: "posts",
+    where: [["status", "==", "published"]],
+  })
+  return (
+    <SWRConfig value={{ fallback }}>
+      {data?.map((x, i) => <div key={i}>{x.content}}</div>)}
+    </SWRConfig>
+  )
+}
 ```
 
 ## API
@@ -100,40 +139,55 @@ import {
   useGetDocs, // Fetch documents with firestore's getDocs
   useGetDoc, // Fetch document with firestore's getDoc
 } from "@tatsuokaniwa/swr-firestore";
+
+import {
+  getCollection, // Get the SWR key and data for useCollection, useGetDocs
+  getCollectionCount, // for useCollectionCount
+  getCollectionGroup, // for useCollectionGroup, useGetDocs
+  getCollectionGroupCount, // for useCollectionGroupCount
+  getDoc, // for useDoc, useGetDoc
+} from "@tatsuokaniwa/swr-firestore/server";
 ```
 
 ### Type definitions for parameters
 
 ```ts
-import type { orderBy, where } from "firebase/firestore";
+import type {
+  endAt,
+  endBefore,
+  limit,
+  orderBy,
+  startAfter,
+  startAt,
+  where,
+} from "firebase/firestore";
 // First argument of hook, specifies options to firestore, and is also used as a key for SWR.
 type KeyParams<T> =
   | {
       // The path to the collection or document of Firestore.
-      path: string
+      path: string;
       // `Paths` means object's property path, including nested object
-      where?: [Paths<T>, Parameters<typeof where>[1], ValueOf<T> | unknown][]
-      orderBy?: [Paths<T>, Parameters<typeof orderBy>[1]][]
+      where?: [Paths<T>, Parameters<typeof where>[1], ValueOf<T> | unknown][];
+      orderBy?: [Paths<T>, Parameters<typeof orderBy>[1]][];
       startAt?: Parameters<typeof startAt>;
       startAfter?: Parameters<typeof startAfter>;
       endAt?: Parameters<typeof endAt>;
       endBefore?: Parameters<typeof endBefore>;
-      limit?: number
+      limit?: number;
       // Array of field names that should be parsed as dates.
-      parseDates?: Paths<T>[]
+      parseDates?: Paths<T>[];
     }
   // OR for more complex query
   | {
       // The path to the collection or document of Firestore.
-      path: string
+      path: string;
       // raw query constraints from `firebase/firestore`
       queryConstraints?:
         | [QueryCompositeFilterConstraint, ...Array<QueryNonFilterConstraint>]
-        | QueryConstraint[]
+        | QueryConstraint[];
       // Array of field names that should be parsed as dates.
-      parseDates?: Paths<T>[]
-    }
-
+      parseDates?: Paths<T>[];
+    };
 ```
 
 ### Type definitions for return data
@@ -162,7 +216,7 @@ Subscription for collection
 import { useCollection } from "@tatsuokaniwa/swr-firestore";
 
 const { data, error } = useCollection<Post>({
-  path: "Posts",
+  path: "posts",
 });
 ```
 
@@ -193,7 +247,7 @@ const {
   error,
   isLoading,
 } = useCollectionCount<Post>({
-  path: "Posts",
+  path: "posts",
 });
 ```
 
@@ -248,7 +302,7 @@ Subscription for document
 import { useDoc } from "@tatsuokaniwa/swr-firestore";
 
 const { data, error } = useDoc<Post>({
-  path: `Posts/${postId}`,
+  path: `posts/${postId}`,
 });
 ```
 
@@ -258,7 +312,10 @@ Fetch documents with firestore's [getDocs](https://firebase.google.com/docs/refe
 
 #### Parameters
 
-- `params`: KeyParams | null
+- `params`: KeyParams & { useOfflineCache?: boolean; isCollectionGroup?: boolean } | null
+
+  set `isCollectionGroup: true` to get data from collectionGroup
+
 - `swrOptions`: [Options for SWR hook](https://swr.vercel.app/docs/api#options) except `fetcher`
 
 #### Return values
@@ -275,7 +332,12 @@ Returns [`SWRResponse`](https://swr.vercel.app/docs/api#return-values)
 import { useGetDocs } from "@tatsuokaniwa/swr-firestore";
 
 const { data, error } = useGetDocs<Post>({
-  path: `Posts`,
+  path: `posts`,
+});
+// for collectionGroup
+const { data, error } = useGetDocs<Comment>({
+  path: `comments`,
+  isCollectionGroup: true,
 });
 ```
 
@@ -285,7 +347,7 @@ Fetch the document with firestore's [getDoc](https://firebase.google.com/docs/re
 
 #### Parameters
 
-- `params`: KeyParams except `where`, `orderBy`, `limit` | null
+- `params`: (KeyParams & { useOfflineCache?: boolean }) except `where`, `orderBy`, `limit` | null
 - `swrOptions`: [Options for SWR hook](https://swr.vercel.app/docs/api#options) except `fetcher`
 
 #### Return values
@@ -302,8 +364,152 @@ Returns [`SWRResponse`](https://swr.vercel.app/docs/api#return-values)
 import { useGetDoc } from "@tatsuokaniwa/swr-firestore";
 
 const { data, error } = useGetDoc<Post>({
-  path: `Posts/${postId}`,
+  path: `posts/${postId}`,
 });
+```
+
+## Server module
+
+### `getCollection(params)`
+
+Fetch documents using the Firebase Admin SDK and return the SWR key and data
+
+#### Parameters
+
+- `params`: KeyParams
+
+#### Return values
+
+Returns `Promise<{
+  key: string;
+  data: DocumentData<T>[];
+}>`
+
+- `key`: SWR Key
+- `data`: documents in the collection for the given path
+
+```ts
+import { getCollection } from "@tatsuokaniwa/swr-firestore/server";
+
+// For useCollection
+const { key, data } = await getCollection<Post>({
+  path: "posts",
+  isSubscription: true, // Add the prefix `$sub$` to the SWR key
+});
+// For useGetDocs
+const { key, data } = await getCollection<Post>({ path: "posts" });
+```
+
+### `getCollectionCount(params)`
+
+Fetch document's count using the Firebase Admin SDK and return the SWR key and data
+
+#### Parameters
+
+- `params`: KeyParams except `parseDates`
+
+#### Return values
+
+Returns `Promise<{
+  key: string;
+  data: number;
+}>`
+
+- `key`: SWR Key
+- `data`: number of documents in the collection for the given path.
+
+```ts
+import { getCollection } from "@tatsuokaniwa/swr-firestore/server";
+
+// For useCollectionCount
+const { key, data } = await getCollectionCount<Post>({ path: "posts" });
+```
+
+### `getCollectionGroup(params)`
+
+Fetch documents using the Firebase Admin SDK and return the SWR key and data
+
+#### Parameters
+
+- `params`: KeyParams
+
+#### Return values
+
+Returns `Promise<{
+  key: string;
+  data: DocumentData<T>[];
+}>`
+
+- `key`: SWR Key
+- `data`: documents in the collectionGroup for the given path
+
+```ts
+import { getCollectionGroup } from "@tatsuokaniwa/swr-firestore/server";
+
+// For useCollectionGroup
+const { key, data } = await getCollectionGroup<Comment>({
+  path: "comments",
+  isSubscription: true, // Add the prefix `$sub$` to the SWR key
+});
+// For useGetDocs with isCollectionGroup
+const { key, data } = await getCollectionGroup<Comment>({ path: "comments" });
+```
+
+### `getCollectionGroupCount(params)`
+
+Fetch document's count using the Firebase Admin SDK and return the SWR key and data
+
+#### Parameters
+
+- `params`: KeyParams except `parseDates`
+
+#### Return values
+
+Returns `Promise<{
+  key: string;
+  data: number;
+}>`
+
+- `key`: SWR Key
+- `data`: number of documents in the collection group for the given path
+
+```ts
+import { getCollectionGroupCount } from "@tatsuokaniwa/swr-firestore/server";
+
+// For useCollectionGroupCount
+const { key, data } = await getCollectionGroupCount<Comment>({
+  path: "comments",
+});
+```
+
+### `getDoc(params)`
+
+Fetch the document using the Firebase Admin SDK and return the SWR key and data
+
+#### Parameters
+
+- `params`: KeyParams
+
+#### Return values
+
+Returns `Promise<{
+  key: string;
+  data: DocumentData<T>;
+}>`
+
+- `key`: SWR Key
+- `data`: data for given path's document
+
+```ts
+import { getDoc } from "@tatsuokaniwa/swr-firestore/server";
+
+// For useDoc
+const { key, data } = await getDoc<Post>({
+  path: `posts/${postId}`,
+  isSubscription: true, // Add the prefix `$sub$` to the SWR key
+});
+// For useGetDoc
+const { key, data } = await getDoc<Post>({ path: `posts/${postId}` });
 ```
 
 ## Testing

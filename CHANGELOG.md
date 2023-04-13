@@ -6,6 +6,7 @@
   This means that the SWR key has changed for the `useCollectionCount` and `useCollectionGroupCount` functions.
 
 ### Feature
+
 - Add support CollectionGroup on `useGetDocs`. Add `isCollectionGroup` parameter.
 - Add server module. This may be useful for SSG and SSR. You can import from `@tatsuokaniwa/swr-firestore/server`.
 
