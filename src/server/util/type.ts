@@ -29,7 +29,5 @@ export type KeyParams<T> = BaseParams<T> & QueryParams<T>;
 export type KeyParamsForCount<T> = BaseParams<T> &
   Omit<QueryParams<T>, "parseDates" | "isSubscription">;
 
-export type GetDocKeyParams<T> = KeyParams<T> & { useOfflineCache?: boolean };
-
 export type DocumentData<T> = T &
   Pick<QueryDocumentSnapshot, "exists" | "id" | "ref">;
