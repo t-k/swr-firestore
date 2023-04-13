@@ -5,7 +5,7 @@ service cloud.firestore {
       allow read: if false;
       allow write: if true;
     }
-    
+
     match /CollectionTest/{resourceId} {
       allow read: if true;
       allow write: if true;
@@ -14,6 +14,7 @@ service cloud.firestore {
       allow read: if false;
       allow write: if true;
     }
+
     match /CountTest/{resourceId} {
       allow read: if true;
       allow write: if true;
@@ -38,6 +39,11 @@ service cloud.firestore {
     }
     match /{path=**}/SubCollectionCountErrTest/{resourceId} {
       allow read: if false;
+      allow write: if true;
+    }
+
+    match /{path=**}/useGetDocsCollectionGroupTest/{resourceId} {
+      allow read: if true;
       allow write: if true;
     }
 
