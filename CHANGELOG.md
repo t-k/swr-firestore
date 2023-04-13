@@ -1,3 +1,7 @@
+## [2.0.1] - 2023-04-13
+
+- Fix peerDependencies for firebase-admin.
+
 ## [2.0.0] - 2023-04-13
 
 ### Breaking change
