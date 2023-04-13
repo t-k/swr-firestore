@@ -19,10 +19,10 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "ESNext",
-    "types": ["vite/client", "node"]
+    "types": ["vite/client", "node"],
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
   ],
   "include": [
     "./src"

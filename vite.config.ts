@@ -12,11 +12,20 @@ export default defineConfig({
     manifest: true,
     minify: false,
     lib: {
-      entry: resolve("src", "index.ts"),
+      entry: [resolve("src", "index.ts"), resolve("src", "server")],
       name: "SwrFirestore",
-      fileName: "index",
+      fileName: (format, entryName) => {
+        const ext = format === "cjs" ? "umd.cjs" : "js";
+        return entryName === "server"
+          ? `server/index.${ext}`
+          : `${entryName}.${ext}`;
+      },
     },
     rollupOptions: {
+      input: {
+        index: resolve(__dirname, "src/index.ts"),
+        server: resolve(__dirname, "src/server/index.ts"),
+      },
       external: [
         "firebase",
         "firebase/firestore",
@@ -25,6 +34,9 @@ export default defineConfig({
         "react-dom",
         "swr",
         "swr/subscription",
+        "firebase-admin/firestore",
+        "lodash/get.js",
+        "lodash/fp/set.js",
       ],
       output: {
         globals: {
@@ -34,6 +46,9 @@ export default defineConfig({
           "react-dom": "ReactDOM",
           swr: "useSWR",
           "swr/subscription": "useSWRSubscription",
+          "firebase-admin/firestore": "firestore",
+          "lodash/get.js": "get$2",
+          "lodash/fp/set.js": "set",
         },
       },
       plugins: [

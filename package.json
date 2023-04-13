@@ -28,10 +28,21 @@
       "import": "./dist/index.js",
       "require": "./dist/index.umd.cjs",
       "types": "./dist/index.d.ts"
+    },
+    "./server": {
+      "import": "./dist/server/index.js",
+      "require": "./dist/server/index.umd.cjs",
+      "types": "./dist/server/index.d.ts"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "server": ["dist/server/index.d.ts"]
     }
   },
   "scripts": {
     "build": "tsc --noEmit && vite build",
+    "build:server": "tsc --noEmit --project tsconfig.server.json && vite --config vite.config.server.ts --outDir dist/server build",
     "emulator": "firebase emulators:start --project swr-firestore-project --only firestore",
     "test": "vitest",
     "test:ci": "firebase emulators:exec --only auth,firestore,storage 'vitest run --coverage'",
@@ -41,6 +52,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
+    "lodash": "^4.17.21",
     "lodash-es": "^4.17.21"
   },
   "devDependencies": {
@@ -48,6 +60,7 @@
     "@rollup/plugin-typescript": "^11.0.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
+    "@types/lodash": "^4.14.192",
     "@types/lodash-es": "^4.17.7",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
@@ -70,6 +83,7 @@
   },
   "peerDependencies": {
     "firebase": "^9.11.0 < 10.0.0",
+    "firebase-admin": "^10.0.0 < 12.0.0",
     "swr": "^2.1.0 <3.0.0"
   }
 }
