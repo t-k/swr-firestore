@@ -13,17 +13,18 @@ import {
 } from "firebase/firestore";
 import { useGetDocs } from "../../src";
 import { db } from "../supports/fb";
-import type { Post } from "../supports/model";
+import type { Comment, Post } from "../supports/model";
 import { faker } from "@faker-js/faker";
 import { deleteCollection } from "../supports/fbUtil";
 import { FirebaseError } from "firebase/app";
 import emptyMiddleware from "../supports/emptyMiddleware";
 
 const COLLECTION = "useGetDocsTest";
+const SUB_COLLECTION = "useGetDocsCollectionGroupTest";
 const ERR_COLLECTION = "useGetDocsErrTest";
 describe("useGetDocs", () => {
   beforeAll(async () => {
-    await deleteCollection(COLLECTION);
+    await deleteCollection(COLLECTION, [SUB_COLLECTION]);
     await deleteCollection(ERR_COLLECTION);
     const ref = collection(db, COLLECTION) as CollectionReference<Post>;
     await addDoc(ref, {
@@ -68,7 +69,7 @@ describe("useGetDocs", () => {
     });
   });
   afterAll(async () => {
-    await deleteCollection(COLLECTION);
+    await deleteCollection(COLLECTION, [SUB_COLLECTION]);
     await deleteCollection(ERR_COLLECTION);
   });
   describe("without option", () => {
@@ -312,6 +313,46 @@ describe("useGetDocs", () => {
       });
       expect(result.current.error != null).toBe(true);
       expect(result.current.error instanceof FirebaseError).toBe(true);
+      unmount();
+    });
+  });
+  describe("with isCollectionGroup option", () => {
+    it("should fetch data from Firestore", async () => {
+      const ref = collection(db, COLLECTION);
+      const doc = await addDoc(ref, {
+        content: "hello",
+        status: "draft",
+        createdAt: serverTimestamp(),
+      });
+      const subRef = collection(
+        db,
+        `${COLLECTION}/${doc.id}/${SUB_COLLECTION}`
+      );
+      await Promise.all(
+        [1, 10, 100, 1000].map((x) => {
+          return addDoc(subRef, {
+            content: "hello",
+            createdAt: serverTimestamp(),
+            sortableId: x,
+          });
+        })
+      );
+      const { result, unmount } = renderHook(() =>
+        useGetDocs<Comment>({
+          path: `${SUB_COLLECTION}`,
+          isCollectionGroup: true,
+        })
+      );
+      await waitFor(() => expect(result.current.data != null).toBe(true), {
+        timeout: 5000,
+      });
+      const el = result.current.data![0];
+      expect(el.id).toBeDefined();
+      expect(el.exists).toBeDefined();
+      expect(el.ref).toBeDefined();
+      expect(el.content).toBeDefined();
+      expect(el.createdAt).toBeDefined();
+      expect(el.createdAt instanceof Timestamp).toBe(true);
       unmount();
     });
   });

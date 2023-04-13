@@ -20,7 +20,18 @@ const useGetDoc = <T>(
     const sn = await getFn(ref.withConverter(converter));
     return sn.data();
   };
-  return useSWR(params, fetcher, {
+  const scrubKey = (params: GetDocKeyParams<T> | null) => {
+    if (params == null) {
+      return null;
+    }
+    const {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      useOfflineCache: _useOfflineCache,
+      ...rest
+    } = params;
+    return rest;
+  };
+  return useSWR(scrubKey(params), fetcher, {
     ...swrOptions,
     use: [serializeMiddleware, ...(swrOptions?.use ?? [])],
   });
