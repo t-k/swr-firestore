@@ -71,16 +71,6 @@ describe("getCollectionCount", () => {
       expect(data).toBe(4);
     });
   });
-  describe("with isSubscription option", () => {
-    it("should return key with subscription prefix", async () => {
-      const { key, data } = await getCollectionCount<Post>({
-        path: COLLECTION,
-        isSubscription: true,
-      });
-      expect(data != null).toBe(true);
-      expect(key).toEqual("$sub$" + unstable_serialize({ path: COLLECTION }));
-    });
-  });
   describe("with where option", () => {
     it("should fetch data from Firestore", async () => {
       const { key, data } = await getCollectionCount<Post>({

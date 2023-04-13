@@ -27,7 +27,7 @@ type BaseParams<T> = {
 export type KeyParams<T> = BaseParams<T> & QueryParams<T>;
 
 export type KeyParamsForCount<T> = BaseParams<T> &
-  Omit<QueryParams<T>, "parseDates">;
+  Omit<QueryParams<T>, "parseDates" | "isSubscription">;
 
 export type GetDocKeyParams<T> = KeyParams<T> & { useOfflineCache?: boolean };
 

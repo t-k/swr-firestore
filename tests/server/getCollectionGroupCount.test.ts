@@ -42,19 +42,8 @@ describe("getCollectionGroupCountCount", () => {
       expect(key).toEqual(
         unstable_serialize({
           path: SUB_COLLECTION,
+          count: true,
         })
-      );
-    });
-  });
-  describe("with isSubscription option", () => {
-    it("should return key with subscription prefix", async () => {
-      const { key, data } = await getCollectionGroupCount<Comment>({
-        path: SUB_COLLECTION,
-        isSubscription: true,
-      });
-      expect(data != null).toBe(true);
-      expect(key).toEqual(
-        "$sub$" + unstable_serialize({ path: SUB_COLLECTION })
       );
     });
   });
