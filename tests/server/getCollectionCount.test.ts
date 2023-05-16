@@ -89,6 +89,16 @@ describe("getCollectionCount", () => {
       expect(data).toBe(1);
     });
   });
+  describe("with limitToLast option", () => {
+    it("should fetch data from Firestore", async () => {
+      const { key, data } = await getCollectionCount<Post>({
+        path: COLLECTION,
+        limitToLast: 1,
+        orderBy: [["createdAt", "asc"]],
+      });
+      expect(data).toBe(1);
+    });
+  });
   describe("with query cursor", () => {
     describe("with startAt", () => {
       it("should fetch data from Firestore", async () => {

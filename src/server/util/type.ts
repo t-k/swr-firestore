@@ -14,6 +14,7 @@ export type QueryParams<T> = {
   endAt?: Parameters<Query["endAt"]>;
   endBefore?: Parameters<Query["endBefore"]>;
   limit?: number;
+  limitToLast?: number;
 };
 
 type BaseParams<T> = {

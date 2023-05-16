@@ -190,6 +190,41 @@ describe("useCollectionGroup", () => {
       unmount();
     });
   });
+
+  describe("with limitToLast option", () => {
+    it("should fetch data from Firestore", async () => {
+      const ref = collection(db, COLLECTION);
+      const doc = await addDoc(ref, {
+        content: "hello",
+        status: "draft",
+        createdAt: serverTimestamp(),
+      });
+      const subRef = collection(
+        db,
+        `${COLLECTION}/${doc.id}/${SUB_COLLECTION}`
+      );
+      await addDoc(subRef, {
+        content: "foo",
+        createdAt: serverTimestamp(),
+      });
+      await addDoc(subRef, {
+        content: "bar",
+        createdAt: serverTimestamp(),
+      });
+      const { result, unmount } = renderHook(() =>
+        useCollectionGroup<Comment>({
+          path: SUB_COLLECTION,
+          limitToLast: 1,
+          orderBy: [["createdAt", "asc"]],
+        })
+      );
+      await waitFor(() => expect(result.current.data != null).toBe(true), {
+        timeout: 5000,
+      });
+      expect(result.current.data?.length).toBe(1);
+      unmount();
+    });
+  });
   describe("with query cursor", () => {
     describe("with startAt", () => {
       it("should fetch data from Firestore", async () => {

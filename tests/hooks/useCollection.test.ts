@@ -165,6 +165,22 @@ describe("useCollection", () => {
       unmount();
     });
   });
+  describe("with limitToLast option", () => {
+    it("should fetch data from Firestore", async () => {
+      const { result, unmount } = renderHook(() =>
+        useCollection<Post>({
+          path: COLLECTION,
+          limitToLast: 1,
+          orderBy: [["createdAt", "asc"]],
+        })
+      );
+      await waitFor(() => expect(result.current.data != null).toBe(true), {
+        timeout: 5000,
+      });
+      expect(result.current.data?.length).toBe(1);
+      unmount();
+    });
+  });
   describe("with nested object", () => {
     it("should fetch data from Firestore", async () => {
       const { result, unmount } = renderHook(() =>

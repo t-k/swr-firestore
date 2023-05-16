@@ -75,6 +75,16 @@ describe("getCollectionGroupCountCount", () => {
       expect(data).toBe(1);
     });
   });
+  describe("with limitToLast option", () => {
+    it("should fetch data from Firestore", async () => {
+      const { key, data } = await getCollectionGroupCount<Comment>({
+        path: SUB_COLLECTION,
+        limitToLast: 1,
+        orderBy: [["createdAt", "asc"]],
+      });
+      expect(data).toBe(1);
+    });
+  });
   describe("with query cursor", () => {
     describe("with startAt", () => {
       it("should fetch data from Firestore", async () => {

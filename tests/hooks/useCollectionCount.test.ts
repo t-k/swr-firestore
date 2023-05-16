@@ -115,6 +115,24 @@ describe("useCollectionCount", () => {
       unmount();
     });
   });
+
+  describe("with limitToLast option", () => {
+    it("should fetch data from Firestore", async () => {
+      const { result, unmount } = renderHook(() =>
+        useCollectionCount<Post>({
+          path: COLLECTION,
+          limitToLast: 1,
+          orderBy: [["createdAt", "asc"]],
+        })
+      );
+      await waitFor(() => expect(result.current.isLoading).toBe(false), {
+        timeout: 5000,
+      });
+      expect(result.current.isLoading).toBe(false);
+      expect(result.current.data).toBe(1);
+      unmount();
+    });
+  });
   describe("with startAt", () => {
     it("should fetch data from Firestore", async () => {
       const { result, unmount } = renderHook(() =>

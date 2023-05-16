@@ -65,6 +65,7 @@ export type QueryParams<T> = {
   endAt?: Parameters<typeof endAt>;
   endBefore?: Parameters<typeof endBefore>;
   limit?: number;
+  limitToLast?: number;
 };
 
 export type QueryConstraintParams = {

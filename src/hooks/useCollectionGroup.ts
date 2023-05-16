@@ -11,6 +11,7 @@ import {
   endBefore,
   getFirestore,
   limit,
+  limitToLast,
   onSnapshot,
   orderBy,
   query,
@@ -51,6 +52,7 @@ const useCollectionGroup = <T>(
           endAt: e,
           endBefore: eb,
           limit: l,
+          limitToLast: ltl,
         } = params;
         q = query(
           ref,
@@ -60,7 +62,8 @@ const useCollectionGroup = <T>(
           ...(sa ? [startAfter(...(Array.isArray(sa) ? sa : [sa]))] : []),
           ...(e ? [endAt(...(Array.isArray(e) ? e : [e]))] : []),
           ...(eb ? [endBefore(...(Array.isArray(eb) ? eb : [eb]))] : []),
-          ...(l ? [limit(l)] : [])
+          ...(l ? [limit(l)] : []),
+          ...(ltl ? [limitToLast(ltl)] : [])
         );
       }
       const unsub = onSnapshot<DocumentData<T>>(

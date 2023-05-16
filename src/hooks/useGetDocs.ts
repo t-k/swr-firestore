@@ -11,6 +11,7 @@ import {
   getDocsFromCache,
   getFirestore,
   limit,
+  limitToLast,
   orderBy,
   query,
   startAfter,
@@ -46,6 +47,7 @@ const useGetDocs = <T>(
         endAt: e,
         endBefore: eb,
         limit: l,
+        limitToLast: ltl,
       } = params;
       q = query(
         ref,
@@ -55,7 +57,8 @@ const useGetDocs = <T>(
         ...(sa ? [startAfter(...(Array.isArray(sa) ? sa : [sa]))] : []),
         ...(e ? [endAt(...(Array.isArray(e) ? e : [e]))] : []),
         ...(eb ? [endBefore(...(Array.isArray(eb) ? eb : [eb]))] : []),
-        ...(l ? [limit(l)] : [])
+        ...(l ? [limit(l)] : []),
+        ...(ltl ? [limitToLast(ltl)] : [])
       );
     }
     const getFn = params.useOfflineCache ? getDocsFromCache : getDocs;

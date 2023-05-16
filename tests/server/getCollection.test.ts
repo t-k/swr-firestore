@@ -127,6 +127,17 @@ describe("getCollection", () => {
       expect(data?.length).toBe(1);
     });
   });
+
+  describe("with limitToLast option", () => {
+    it("should fetch data from Firestore", async () => {
+      const { key, data } = await getCollection<Post>({
+        path: COLLECTION,
+        limitToLast: 1,
+        orderBy: [["createdAt", "asc"]],
+      });
+      expect(data?.length).toBe(1);
+    });
+  });
   describe("with nested object", () => {
     it("should fetch data from Firestore", async () => {
       const { key, data } = await getCollection<Post>({

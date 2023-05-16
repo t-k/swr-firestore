@@ -23,6 +23,7 @@ const getCollection = async <T>(
     endAt: e,
     endBefore: eb,
     limit: l,
+    limitToLast: ltl,
   } = params;
   if (w) {
     w.forEach((q) => {
@@ -56,6 +57,9 @@ const getCollection = async <T>(
   }
   if (l) {
     queryRef = (queryRef ?? collectionRef).limit(l);
+  }
+  if (ltl) {
+    queryRef = (queryRef ?? collectionRef).limitToLast(ltl);
   }
   const sn = await (queryRef ?? collectionRef).get();
   return {

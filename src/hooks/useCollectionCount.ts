@@ -9,6 +9,7 @@ import {
   getCountFromServer,
   getFirestore,
   limit,
+  limitToLast,
   orderBy,
   query,
   startAfter,
@@ -40,6 +41,7 @@ const useCollectionCount = <T>(
         endAt: e,
         endBefore: eb,
         limit: l,
+        limitToLast: ltl,
       } = params;
       q = query(
         ref,
@@ -49,7 +51,8 @@ const useCollectionCount = <T>(
         ...(sa ? [startAfter(...(Array.isArray(sa) ? sa : [sa]))] : []),
         ...(e ? [endAt(...(Array.isArray(e) ? e : [e]))] : []),
         ...(eb ? [endBefore(...(Array.isArray(eb) ? eb : [eb]))] : []),
-        ...(l ? [limit(l)] : [])
+        ...(l ? [limit(l)] : []),
+        ...(ltl ? [limitToLast(ltl)] : [])
       );
     }
     const sn = await getCountFromServer(q);

@@ -160,6 +160,23 @@ describe("useGetDocs", () => {
     });
   });
 
+  describe("with limitToLast option", () => {
+    it("should fetch data from Firestore", async () => {
+      const { result, unmount } = renderHook(() =>
+        useGetDocs<Post>({
+          path: `${COLLECTION}`,
+          limitToLast: 1,
+          orderBy: [["createdAt", "asc"]],
+        })
+      );
+      await waitFor(() => expect(result.current.data != null).toBe(true), {
+        timeout: 5000,
+      });
+      expect(result.current.data?.length).toBe(1);
+      unmount();
+    });
+  });
+
   describe("with query cursor", () => {
     describe("with startAt", () => {
       it("should fetch data from Firestore", async () => {
