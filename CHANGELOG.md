@@ -1,3 +1,7 @@
+## [2.0.2] - 2023-05-16
+
+- Add `limitToLast` params.
+
 ## [2.0.1] - 2023-04-13
 
 - Fix peerDependencies for firebase-admin.

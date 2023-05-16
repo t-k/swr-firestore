@@ -174,6 +174,7 @@ type KeyParams<T> =
       endAt?: Parameters<typeof endAt>;
       endBefore?: Parameters<typeof endBefore>;
       limit?: number;
+      limitToLast?: number;
       // Array of field names that should be parsed as dates.
       parseDates?: Paths<T>[];
     }
