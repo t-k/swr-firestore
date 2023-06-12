@@ -91,3 +91,20 @@ export type GetDocKeyParams<T> = KeyParams<T> & { useOfflineCache?: boolean };
 
 export type DocumentData<T> = T &
   Pick<QueryDocumentSnapshot, "exists" | "id" | "ref">;
+
+// ChildKeys<Keys> extracts the child key from the path specified in Keys.
+// e.g.
+// ChildKeys<"foo.bar.baz"> is "bar.baz"
+type ChildKeys<Keys> = Keys extends `${infer _}.${infer ChildKey}` ? ChildKey : never
+
+// ParseDate<T, Keys> converts the type of the fields specified in Keys to Date.
+// e.g.
+// ParseDate<{ a: string, foo: { bar: { baz: string } } }, "a" | "foo.bar.baz"> is
+// { a: Date, foo: { bar: { baz: Date } } }
+export type ParseDate<T, Keys extends Paths<T> = never> = keyof T extends never ? T : {
+  [key in keyof T]: key extends Keys ?
+    Date :
+    T[key] extends object ?
+      ChildKeys<Keys> extends Paths<T[key]> ? ParseDate<T[key], ChildKeys<Keys>> : never :
+      T[key];
+};
