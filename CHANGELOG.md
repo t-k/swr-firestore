@@ -1,4 +1,9 @@
-## [2.0.3] - 2023-05-16
+## [2.0.4] - 2023-06-18
+### Fixed
+
+- Fixed an issue `id` in `where` and `orderBy` was not converted to `documentId`. This issue was introduced in version 2.0.3 and caused the feature to not work as intended.
+
+## [2.0.3] - 2023-06-18
 
 - Modify type `QueryParams` to allow `id` in `where`, `orderBy`.
 

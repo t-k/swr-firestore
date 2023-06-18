@@ -170,7 +170,7 @@ type KeyParams<T> =
       path: string;
       // `Paths` means object's property path, including nested object
       where?: [
-        Paths<T> | DocumentId,
+        Paths<T> | DocumentId, // "id" is internally converted to documentId()
         Parameters<typeof where>[1],
         ValueOf<T> | unknown
       ][];
