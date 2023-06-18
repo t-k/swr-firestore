@@ -2,6 +2,7 @@ import {
   CollectionReference,
   addDoc,
   collection,
+  getDocs,
   serverTimestamp,
 } from "firebase/firestore";
 import { getCollection } from "../../src/server";
@@ -103,6 +104,19 @@ describe("getCollection", () => {
       });
       data?.forEach((x) => {
         expect(x.status).toBe("draft");
+      });
+    });
+
+    it("should fetch specified id data from Firestore", async () => {
+      const ref = collection(db, COLLECTION) as CollectionReference<Post>;
+      const docs = await getDocs(ref);
+      const targetId = docs.docs[0].id;
+      const { key, data } = await getCollection<Post>({
+        path: COLLECTION,
+        where: [["id", "==", targetId]],
+      });
+      data?.forEach((x) => {
+        expect(x.id).toBe(targetId);
       });
     });
   });

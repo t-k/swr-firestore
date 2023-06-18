@@ -161,14 +161,20 @@ import type {
   startAt,
   where,
 } from "firebase/firestore";
+
+type DocumentId = "id";
 // First argument of hook, specifies options to firestore, and is also used as a key for SWR.
 type KeyParams<T> =
   | {
       // The path to the collection or document of Firestore.
       path: string;
       // `Paths` means object's property path, including nested object
-      where?: [Paths<T>, Parameters<typeof where>[1], ValueOf<T> | unknown][];
-      orderBy?: [Paths<T>, Parameters<typeof orderBy>[1]][];
+      where?: [
+        Paths<T> | DocumentId,
+        Parameters<typeof where>[1],
+        ValueOf<T> | unknown
+      ][];
+      orderBy?: [Paths<T> | DocumentId, Parameters<typeof orderBy>[1]][];
       startAt?: Parameters<typeof startAt>;
       startAfter?: Parameters<typeof startAfter>;
       endAt?: Parameters<typeof endAt>;

@@ -45,6 +45,8 @@ type Prev = [
   ...0[]
 ];
 
+export type DocumentId = "id";
+
 export type Paths<T, D extends number = 3> = [D] extends [never]
   ? never
   : T extends object
@@ -58,8 +60,12 @@ export type Paths<T, D extends number = 3> = [D] extends [never]
 export type ValueOf<T> = T[keyof T];
 
 export type QueryParams<T> = {
-  where?: [Paths<T>, Parameters<typeof where>[1], ValueOf<T> | unknown][];
-  orderBy?: [Paths<T>, Parameters<typeof orderBy>[1]][];
+  where?: [
+    Paths<T> | DocumentId,
+    Parameters<typeof where>[1],
+    ValueOf<T> | unknown
+  ][];
+  orderBy?: [Paths<T> | DocumentId, Parameters<typeof orderBy>[1]][];
   startAt?: Parameters<typeof startAt>;
   startAfter?: Parameters<typeof startAfter>;
   endAt?: Parameters<typeof endAt>;

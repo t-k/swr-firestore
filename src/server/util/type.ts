@@ -6,9 +6,11 @@ import type {
 } from "firebase-admin/firestore";
 import type { Paths, ValueOf } from "../../util/type.js";
 
+export type DocumentId = "id";
+
 export type QueryParams<T> = {
-  where?: [Paths<T>, WhereFilterOp, ValueOf<T> | unknown][];
-  orderBy?: [Paths<T>, OrderByDirection][];
+  where?: [Paths<T> | DocumentId, WhereFilterOp, ValueOf<T> | unknown][];
+  orderBy?: [Paths<T> | DocumentId, OrderByDirection][];
   startAt?: Parameters<Query["startAt"]>;
   startAfter?: Parameters<Query["startAfter"]>;
   endAt?: Parameters<Query["endAt"]>;

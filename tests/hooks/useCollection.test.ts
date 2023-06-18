@@ -9,6 +9,7 @@ import {
   or,
   where,
   orderBy,
+  getDocs,
 } from "firebase/firestore";
 import { useCollection } from "../../src";
 import emptyMiddleware from "../supports/emptyMiddleware";
@@ -128,6 +129,24 @@ describe("useCollection", () => {
       });
       result.current.data?.forEach((x) => {
         expect(x.status).toBe("draft");
+      });
+      unmount();
+    });
+    it("should fetch specified id data from Firestore", async () => {
+      const ref = collection(db, COLLECTION) as CollectionReference<Post>;
+      const docs = await getDocs(ref);
+      const targetId = docs.docs[0].id;
+      const { result, unmount } = renderHook(() =>
+        useCollection<Post>({
+          path: COLLECTION,
+          where: [["id", "==", targetId]],
+        })
+      );
+      await waitFor(() => expect(result.current.data != null).toBe(true), {
+        timeout: 5000,
+      });
+      result.current.data?.forEach((x) => {
+        expect(x.id).toBe(targetId);
       });
       unmount();
     });
