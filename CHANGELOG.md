@@ -1,3 +1,7 @@
+## [2.0.3] - 2023-05-16
+
+- Modify type `QueryParams` to allow `id` in `where`, `orderBy`.
+
 ## [2.0.2] - 2023-05-16
 
 - Add `limitToLast` params.
