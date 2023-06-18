@@ -108,10 +108,11 @@ describe("getCollection", () => {
     });
 
     it("should fetch specified id data from Firestore", async () => {
-      const ref = collection(db, COLLECTION) as CollectionReference<Post>;
-      const docs = await getDocs(ref);
-      const targetId = docs.docs[0].id;
-      const { key, data } = await getCollection<Post>({
+      const { data: targetData } = await getCollection<Post>({
+        path: COLLECTION,
+      });
+      const targetId = targetData[0].id;
+      const { data } = await getCollection<Post>({
         path: COLLECTION,
         where: [["id", "==", targetId]],
       });
