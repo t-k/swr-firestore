@@ -4,12 +4,11 @@ import {
   collection,
   serverTimestamp,
 } from "firebase/firestore";
-import { getCollectionCount } from "../../src/server";
+import { getCollection, getCollectionCount } from "../../src/server";
 
 import { db } from "../supports/fb";
 import { deleteCollection } from "../supports/fbUtil";
 import type { Post } from "../supports/model";
-import { unstable_serialize } from "swr";
 
 const COLLECTION = "GetCollectionCountTest";
 
@@ -78,6 +77,18 @@ describe("getCollectionCount", () => {
         where: [["status", "==", "draft"]],
       });
       expect(data).toBe(2);
+    });
+
+    it("should fetch specified id data from Firestore", async () => {
+      const { data: targetData } = await getCollection<Post>({
+        path: COLLECTION,
+      });
+      const targetId = targetData[0].id;
+      const { key, data } = await getCollectionCount<Post>({
+        path: COLLECTION,
+        where: [["id", "==", targetId]],
+      });
+      expect(data).toBe(1);
     });
   });
   describe("with limit option", () => {

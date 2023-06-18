@@ -1,6 +1,6 @@
 import type { SWRConfiguration } from "swr";
 import type { QueryConstraint } from "firebase/firestore";
-import type { KeyParamsForCount } from "../util/type";
+import type { KeyParamsForCollectionGroupCount } from "../util/type";
 import useSWR from "swr";
 import {
   collectionGroup,
@@ -20,7 +20,7 @@ import { isQueryConstraintParams } from "../util/typeGuard";
 import serializeMiddleware from "../middleware/serializeMiddleware";
 
 const useCollectionGroupCount = <T>(
-  params: KeyParamsForCount<T> | null,
+  params: KeyParamsForCollectionGroupCount<T> | null,
   swrOptions?: Omit<SWRConfiguration, "fetcher">
 ) => {
   const fetcher = async () => {

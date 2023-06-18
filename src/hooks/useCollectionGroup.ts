@@ -3,7 +3,7 @@ import type {
   SWRSubscriptionResponse,
 } from "swr/subscription";
 import type { FirestoreError, QueryConstraint } from "firebase/firestore";
-import type { DocumentData, KeyParams } from "../util/type";
+import type { DocumentData, KeyParamsForCollectionGroup } from "../util/type";
 import useSWRSubscription from "swr/subscription";
 import {
   collectionGroup,
@@ -25,7 +25,7 @@ import type { Key, SWRConfiguration } from "swr";
 import serializeMiddleware from "../middleware/serializeMiddleware";
 
 const useCollectionGroup = <T>(
-  params: KeyParams<T> | null,
+  params: KeyParamsForCollectionGroup<T> | null,
   swrOptions?: Omit<SWRConfiguration, "fetcher">
 ): SWRSubscriptionResponse<DocumentData<T>[], FirestoreError> => {
   return useSWRSubscription(

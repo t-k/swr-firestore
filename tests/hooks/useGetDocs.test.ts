@@ -10,6 +10,7 @@ import {
   where,
   or,
   orderBy,
+  getDocs,
 } from "firebase/firestore";
 import { useGetDocs } from "../../src";
 import { db } from "../supports/fb";
@@ -127,6 +128,25 @@ describe("useGetDocs", () => {
       });
       unmount();
     });
+    it("should fetch specified id data from Firestore", async () => {
+      const ref = collection(db, COLLECTION) as CollectionReference<Post>;
+      const docs = await getDocs(ref);
+      const targetId = docs.docs[0].id;
+
+      const { result, unmount } = renderHook(() =>
+        useGetDocs<Post>({
+          path: `${COLLECTION}`,
+          where: [["id", "==", targetId]],
+        })
+      );
+      await waitFor(() => expect(result.current.data != null).toBe(true), {
+        timeout: 5000,
+      });
+      result.current.data?.forEach((x) => {
+        expect(x.id).toBe(targetId);
+      });
+      unmount();
+    });
   });
 
   describe("with orderBy option", () => {
@@ -143,6 +163,19 @@ describe("useGetDocs", () => {
       const data1 = result.current!.data![0];
       const data2 = result.current!.data![1];
       expect(data1.createdAt > data2.createdAt).toBe(true);
+      unmount();
+    });
+    it("should fetch data from Firestore", async () => {
+      const { result, unmount } = renderHook(() =>
+        useGetDocs<Post>({
+          path: `${COLLECTION}`,
+          orderBy: [["id", "asc"]],
+        })
+      );
+      await waitFor(() => expect(result.current.data != null).toBe(true), {
+        timeout: 5000,
+      });
+      expect(result.current!.data).toBeDefined();
       unmount();
     });
   });

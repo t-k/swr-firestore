@@ -6,6 +6,7 @@ import {
   serverTimestamp,
   where,
   or,
+  getDocs,
 } from "firebase/firestore";
 import { useCollectionCount } from "../../src";
 import { db } from "../supports/fb";
@@ -95,6 +96,24 @@ describe("useCollectionCount", () => {
       expect(result.current.isLoading).toBe(false);
       expect(result.current.data != null).toBe(true);
       expect(result.current.data).toBe(2);
+      unmount();
+    });
+    it("should fetch specified id data count from Firestore", async () => {
+      const ref = collection(db, COLLECTION) as CollectionReference<Post>;
+      const docs = await getDocs(ref);
+      const targetId = docs.docs[0].id;
+      const { result, unmount } = renderHook(() =>
+        useCollectionCount<Post>({
+          path: COLLECTION,
+          where: [["id", "==", targetId]],
+        })
+      );
+      await waitFor(() => expect(result.current.isLoading).toBe(false), {
+        timeout: 5000,
+      });
+      expect(result.current.isLoading).toBe(false);
+      expect(result.current.data != null).toBe(true);
+      expect(result.current.data).toBe(1);
       unmount();
     });
   });

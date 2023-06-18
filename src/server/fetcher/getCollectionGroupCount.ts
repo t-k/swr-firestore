@@ -1,10 +1,10 @@
 import { getFirestore } from "firebase-admin/firestore";
 import type { Query } from "firebase-admin/firestore";
-import type { KeyParamsForCount } from "../util/type.js";
+import type { KeyParamsForCollectionGroupCount } from "../util/type.js";
 import createSwrKey from "../util/createKey.js";
 
 const getCollectionGroupCount = async <T>(
-  params: KeyParamsForCount<T>
+  params: KeyParamsForCollectionGroupCount<T>
 ): Promise<{
   key: string;
   data: number;

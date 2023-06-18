@@ -19,6 +19,17 @@ export type QueryParams<T> = {
   limitToLast?: number;
 };
 
+export type QueryParamsForCollectionGroup<T> = {
+  where?: [Paths<T>, WhereFilterOp, ValueOf<T> | unknown][];
+  orderBy?: [Paths<T>, OrderByDirection][];
+  startAt?: Parameters<Query["startAt"]>;
+  startAfter?: Parameters<Query["startAfter"]>;
+  endAt?: Parameters<Query["endAt"]>;
+  endBefore?: Parameters<Query["endBefore"]>;
+  limit?: number;
+  limitToLast?: number;
+};
+
 type BaseParams<T> = {
   // The path to the collection or document of Firestore.
   path: string;
@@ -29,8 +40,14 @@ type BaseParams<T> = {
 
 export type KeyParams<T> = BaseParams<T> & QueryParams<T>;
 
+export type KeyParamsForCollectionGroup<T> = BaseParams<T> &
+  QueryParamsForCollectionGroup<T>;
+
 export type KeyParamsForCount<T> = BaseParams<T> &
   Omit<QueryParams<T>, "parseDates" | "isSubscription">;
+
+export type KeyParamsForCollectionGroupCount<T> = BaseParams<T> &
+  Omit<QueryParamsForCollectionGroup<T>, "parseDates" | "isSubscription">;
 
 export type DocumentData<T> = T &
   Pick<QueryDocumentSnapshot, "exists" | "id" | "ref">;

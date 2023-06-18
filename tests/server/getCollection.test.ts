@@ -2,7 +2,6 @@ import {
   CollectionReference,
   addDoc,
   collection,
-  getDocs,
   serverTimestamp,
 } from "firebase/firestore";
 import { getCollection } from "../../src/server";
@@ -130,6 +129,17 @@ describe("getCollection", () => {
       const data1 = data![0];
       const data2 = data![1];
       expect(data1.createdAt > data2.createdAt).toBe(true);
+    });
+
+    it("should fetch data from Firestore", async () => {
+      const { key, data } = await getCollection<Post>({
+        path: COLLECTION,
+        orderBy: [["id", "asc"]],
+      });
+      const data1 = data![0];
+      const data2 = data![1];
+      expect(data1).toBeDefined();
+      expect(data2).toBeDefined();
     });
   });
 

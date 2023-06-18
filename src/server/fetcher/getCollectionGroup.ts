@@ -1,11 +1,14 @@
 import { getFirestore } from "firebase-admin/firestore";
 import type { Query } from "firebase-admin/firestore";
-import type { DocumentData, KeyParams } from "../util/type.js";
+import type {
+  DocumentData,
+  KeyParamsForCollectionGroup,
+} from "../util/type.js";
 import { getFirestoreConverter } from "../util/getConverter.js";
 import createSwrKey from "../util/createKey.js";
 
 const getCollectionGroup = async <T>(
-  params: KeyParams<T>
+  params: KeyParamsForCollectionGroup<T>
 ): Promise<{
   key: string;
   data: DocumentData<T>[];

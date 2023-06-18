@@ -74,6 +74,17 @@ export type QueryParams<T> = {
   limitToLast?: number;
 };
 
+export type QueryParamsForCollectionGroup<T> = {
+  where?: [Paths<T>, Parameters<typeof where>[1], ValueOf<T> | unknown][];
+  orderBy?: [Paths<T>, Parameters<typeof orderBy>[1]][];
+  startAt?: Parameters<typeof startAt>;
+  startAfter?: Parameters<typeof startAfter>;
+  endAt?: Parameters<typeof endAt>;
+  endBefore?: Parameters<typeof endBefore>;
+  limit?: number;
+  limitToLast?: number;
+};
+
 export type QueryConstraintParams = {
   queryConstraints?:
     | [QueryCompositeFilterConstraint, ...Array<QueryNonFilterConstraint>]
@@ -90,8 +101,17 @@ type BaseParams<T> = {
 export type KeyParams<T> = BaseParams<T> &
   (QueryParams<T> | QueryConstraintParams);
 
+export type KeyParamsForCollectionGroup<T> = BaseParams<T> &
+  (QueryParamsForCollectionGroup<T> | QueryConstraintParams);
+
 export type KeyParamsForCount<T> = BaseParams<T> &
   (Omit<QueryParams<T>, "parseDates"> | QueryConstraintParams);
+
+export type KeyParamsForCollectionGroupCount<T> = BaseParams<T> &
+  (
+    | Omit<QueryParamsForCollectionGroup<T>, "parseDates">
+    | QueryConstraintParams
+  );
 
 export type GetDocKeyParams<T> = KeyParams<T> & { useOfflineCache?: boolean };
 

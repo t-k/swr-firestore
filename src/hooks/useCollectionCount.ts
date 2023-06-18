@@ -4,6 +4,7 @@ import type { KeyParamsForCount } from "../util/type";
 import useSWR from "swr";
 import {
   collection,
+  documentId,
   endAt,
   endBefore,
   getCountFromServer,
@@ -45,8 +46,12 @@ const useCollectionCount = <T>(
       } = params;
       q = query(
         ref,
-        ...(w ? w : []).map((q) => where(...q)),
-        ...(o ? o : []).map((q) => orderBy(...q)),
+        ...(w ? w : []).map((q) =>
+          q[0] === "id" ? where(documentId(), q[1], q[2]) : where(...q)
+        ),
+        ...(o ? o : []).map((q) =>
+          q[0] === "id" ? orderBy(documentId(), q[1]) : orderBy(...q)
+        ),
         ...(s ? [startAt(...(Array.isArray(s) ? s : [s]))] : []),
         ...(sa ? [startAfter(...(Array.isArray(sa) ? sa : [sa]))] : []),
         ...(e ? [endAt(...(Array.isArray(e) ? e : [e]))] : []),
