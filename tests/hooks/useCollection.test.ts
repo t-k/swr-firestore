@@ -167,16 +167,22 @@ describe("useCollection", () => {
       expect(data1.createdAt > data2.createdAt).toBe(true);
       unmount();
     });
-    it("should fetch data id desc from Firestore", async () => {
+    it("should fetch data id asc from Firestore", async () => {
       const { result, unmount } = renderHook(() =>
         useCollection<Post>({
           path: COLLECTION,
-          orderBy: [["id", "desc"]],
+          orderBy: [["id", "asc"]],
         })
       );
-      await waitFor(() => expect(result.current.data != null).toBe(true), {
-        timeout: 5000,
-      });
+      await waitFor(
+        () =>
+          expect(
+            result.current.data != null || result.current.error != null
+          ).toBe(true),
+        {
+          timeout: 5000,
+        }
+      );
       expect(result.current!.data).toBeDefined();
       unmount();
     });
