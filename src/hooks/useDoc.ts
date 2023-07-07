@@ -2,7 +2,12 @@ import type { FirestoreError } from "firebase/firestore";
 import type { SWRSubscriptionResponse } from "swr/subscription";
 import type { DocumentData, KeyParams } from "../util/type";
 import useSWRSubscription from "swr/subscription";
-import { doc, getFirestore, onSnapshot } from "firebase/firestore";
+import {
+  doc,
+  getFirestore,
+  onSnapshot,
+  DocumentData as FsDocumentData,
+} from "firebase/firestore";
 import { getFirestoreConverter } from "../util/getConverter";
 import type { SWRConfiguration } from "swr";
 import serializeMiddleware from "../middleware/serializeMiddleware";
@@ -22,7 +27,7 @@ const useDoc = <T>(
       const { path } = params;
       const ref = doc(getFirestore(), path);
       const converter = getFirestoreConverter<T>(params?.parseDates);
-      const unsub = onSnapshot<DocumentData<T>>(
+      const unsub = onSnapshot<DocumentData<T>, FsDocumentData>(
         ref.withConverter(converter),
         (doc) => {
           next(null, doc.data());

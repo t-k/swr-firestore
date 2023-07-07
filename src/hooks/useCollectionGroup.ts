@@ -2,7 +2,11 @@ import type {
   SWRSubscriptionOptions,
   SWRSubscriptionResponse,
 } from "swr/subscription";
-import type { FirestoreError, QueryConstraint } from "firebase/firestore";
+import type {
+  FirestoreError,
+  QueryConstraint,
+  DocumentData as FsDocumentData,
+} from "firebase/firestore";
 import type { DocumentData, KeyParamsForCollectionGroup } from "../util/type";
 import useSWRSubscription from "swr/subscription";
 import {
@@ -66,7 +70,7 @@ const useCollectionGroup = <T>(
           ...(ltl ? [limitToLast(ltl)] : [])
         );
       }
-      const unsub = onSnapshot<DocumentData<T>>(
+      const unsub = onSnapshot<DocumentData<T>, FsDocumentData>(
         q.withConverter(converter),
         (qs) => {
           next(
