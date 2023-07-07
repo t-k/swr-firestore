@@ -1,4 +1,4 @@
-## [2.0.5] - 2023-06-18
+## [2.0.5] - 2023-07-07
 
 - Updated firebase peerDependencies to >=9.11.0 to enable the use of 10.x
 
