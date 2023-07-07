@@ -1,4 +1,9 @@
+## [2.0.5] - 2023-06-18
+
+- Updated firebase peerDependencies to >=9.11.0 to enable the use of 10.x
+
 ## [2.0.4] - 2023-06-18
+
 ### Fixed
 
 - Fixed an issue `id` in `where` and `orderBy` was not converted to `documentId`. This issue was introduced in version 2.0.3 and caused the feature to not work as intended.
