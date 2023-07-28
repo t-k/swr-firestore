@@ -1,7 +1,7 @@
 {
   "name": "@tatsuokaniwa/swr-firestore",
   "description": "React Hooks library for Firestore using SWR's subscription feature.",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/t-k/swr-firestore.git"
