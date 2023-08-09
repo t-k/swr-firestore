@@ -14,9 +14,8 @@ export default defineConfig({
     environment: "jsdom",
     coverage: {
       all: true,
-      provider: "c8",
+      provider: "v8",
       reporter: ["text", "json", "html"],
-      src: ["src"],
       exclude: ["src/util/type.ts", "src/server/util/type.ts", "tests/**"],
     },
     includeSource: ["src/**/*.{ts,tsx}", "tests/**/*.{ts}"],
@@ -27,5 +26,11 @@ export default defineConfig({
     exclude: ["**/node_modules/**"],
     setupFiles: ["tests/setup.ts"],
     testTimeout: 50000,
+    env: {
+      NODE_ENV: "test",
+      FIREBASE_AUTH_EMULATOR_HOST: "localhost:9099",
+      FIRESTORE_EMULATOR_HOST: "localhost:8080",
+      GCLOUD_PROJECT: "swr-firestore-project",
+    }
   },
 });
