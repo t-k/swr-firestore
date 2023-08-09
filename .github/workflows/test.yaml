@@ -31,4 +31,4 @@ jobs:
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         with:
-          node-version: 18.x
+          token: ${{ secrets.CODECOV_TOKEN }}
