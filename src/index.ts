@@ -1,5 +1,6 @@
 import type { DocumentData, KeyParams } from "./util/type";
 import useCollection from "./hooks/useCollection";
+import useCollectionAggregation from "./hooks/useCollectionAggregation";
 import useCollectionCount from "./hooks/useCollectionCount";
 import useCollectionGroup from "./hooks/useCollectionGroup";
 import useCollectionGroupCount from "./hooks/useCollectionGroupCount";
@@ -11,6 +12,7 @@ export type { DocumentData, KeyParams };
 export {
   useCollection,
   useCollectionCount,
+  useCollectionAggregation,
   useCollectionGroup,
   useCollectionGroupCount,
   useDoc,

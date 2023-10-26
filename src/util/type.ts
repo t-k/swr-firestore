@@ -1,4 +1,5 @@
 import type {
+  count,
   endAt,
   endBefore,
   orderBy,
@@ -10,6 +11,8 @@ import type {
   where,
 } from "firebase/firestore";
 import type { QueryDocumentSnapshot } from "firebase/firestore";
+import type sum from "../query/sum";
+import type average from "../query/average";
 
 // Typescript: deep keyof of a nested object
 // https://stackoverflow.com/a/58436959
@@ -42,7 +45,7 @@ type Prev = [
   18,
   19,
   20,
-  ...0[]
+  ...0[],
 ];
 
 export type DocumentId = "id";
@@ -63,7 +66,7 @@ export type QueryParams<T> = {
   where?: [
     Paths<T> | DocumentId,
     Parameters<typeof where>[1],
-    ValueOf<T> | unknown
+    ValueOf<T> | unknown,
   ][];
   orderBy?: [Paths<T> | DocumentId, Parameters<typeof orderBy>[1]][];
   startAt?: Parameters<typeof startAt>;
@@ -107,12 +110,34 @@ export type KeyParamsForCollectionGroup<T> = BaseParams<T> &
 export type KeyParamsForCount<T> = BaseParams<T> &
   (Omit<QueryParams<T>, "parseDates"> | QueryConstraintParams);
 
+export type KeyParamsForAggregate<T> = BaseParams<T> &
+  (Omit<QueryParams<T>, "parseDates"> | QueryConstraintParams) & {
+    aggregateSpec: {
+      [key in string]:
+        | ReturnType<typeof sum<T>>
+        | ReturnType<typeof average<T>>
+        | ReturnType<typeof count>;
+    };
+  };
+
 export type KeyParamsForCollectionGroupCount<T> = BaseParams<T> &
   (
     | Omit<QueryParamsForCollectionGroup<T>, "parseDates">
     | QueryConstraintParams
   );
 
+export type KeyParamsForCollectionGroupAggregate<T> = BaseParams<T> &
+  (
+    | Omit<QueryParamsForCollectionGroup<T>, "parseDates">
+    | QueryConstraintParams
+  ) & {
+    aggregateSpec: {
+      [key in string]:
+        | ReturnType<typeof sum<T>>
+        | ReturnType<typeof average<T>>
+        | ReturnType<typeof count>;
+    };
+  };
 export type GetDocKeyParams<T> = KeyParams<T> & { useOfflineCache?: boolean };
 
 export type DocumentData<T> = T &
