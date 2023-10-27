@@ -6,5 +6,14 @@ export type AggregateFieldBase<T> = {
     offset: number;
     len: number;
   };
-  type: "AggregateField";
+  readonly type: "AggregateField";
+  readonly aggregateType: "sum" | "avg" | "count";
 };
+
+export interface AvgAggregateField<T> extends AggregateFieldBase<T> {
+  readonly aggregateType: "avg";
+}
+
+export interface SumAggregateField<T> extends AggregateFieldBase<T> {
+  readonly aggregateType: "sum";
+}

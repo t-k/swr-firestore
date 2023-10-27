@@ -11,8 +11,7 @@ import type {
   where,
 } from "firebase/firestore";
 import type { QueryDocumentSnapshot } from "firebase/firestore";
-import type sum from "../query/sum";
-import type average from "../query/average";
+import type { AvgAggregateField, SumAggregateField } from "../query/common";
 
 // Typescript: deep keyof of a nested object
 // https://stackoverflow.com/a/58436959
@@ -114,8 +113,8 @@ export type KeyParamsForAggregate<T> = BaseParams<T> &
   (Omit<QueryParams<T>, "parseDates"> | QueryConstraintParams) & {
     aggregateSpec: {
       [key in string]:
-        | ReturnType<typeof sum<T>>
-        | ReturnType<typeof average<T>>
+        | SumAggregateField<T>
+        | AvgAggregateField<T>
         | ReturnType<typeof count>;
     };
   };
@@ -133,8 +132,8 @@ export type KeyParamsForCollectionGroupAggregate<T> = BaseParams<T> &
   ) & {
     aggregateSpec: {
       [key in string]:
-        | ReturnType<typeof sum<T>>
-        | ReturnType<typeof average<T>>
+        | SumAggregateField<T>
+        | AvgAggregateField<T>
         | ReturnType<typeof count>;
     };
   };

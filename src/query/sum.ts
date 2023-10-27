@@ -1,11 +1,5 @@
-import { sum as fsSum } from "firebase/firestore";
+import { sum } from "firebase/firestore";
 import type { Paths } from "../util/type";
-import type { AggregateFieldBase } from "./common";
+import type { SumAggregateField } from "./common";
 
-type SumAggregateField<T> = AggregateFieldBase<T> & {
-  aggregateType: "sum";
-};
-
-const sum = <T>(field: Paths<T>) => fsSum(field) as SumAggregateField<T>;
-
-export default sum;
+export default sum as <T>(field: Paths<T>) => SumAggregateField<T>;
