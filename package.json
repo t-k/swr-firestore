@@ -1,7 +1,7 @@
 {
   "name": "@tatsuokaniwa/swr-firestore",
   "description": "React Hooks library for Firestore using SWR's subscription feature.",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/t-k/swr-firestore.git"
@@ -72,7 +72,7 @@
     "eslint": "^8.36.0",
     "eslint-plugin-react": "^7.25.3",
     "firebase": ">=9.11.0",
-    "firebase-admin": "^11.0.0 <13.0.0",
+    "firebase-admin": ">=11.0.0",
     "jsdom": "^24.0.0",
     "prettier": "^3.0.0",
     "react": "^18.2.0",
@@ -84,7 +84,7 @@
   },
   "peerDependencies": {
     "firebase": ">=9.11.0",
-    "firebase-admin": "^11.0.0 <13.0.0",
+    "firebase-admin": ">=11.0.0",
     "swr": "^2.1.0 <3.0.0"
   }
 }

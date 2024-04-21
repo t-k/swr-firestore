@@ -1,3 +1,7 @@
+## [2.0.7] - 2024-04-21
+
+- Update dependencies to `firebase-admin` >= 11.0.0
+
 ## [2.0.6] - 2023-07-28
 
 - Fix handling null params on `useCollectionCount`, `useCollectionGroupCount`.
