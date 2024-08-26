@@ -73,7 +73,7 @@
     "eslint-plugin-react": "^7.25.3",
     "firebase": ">=9.11.0",
     "firebase-admin": ">=11.0.0",
-    "jsdom": "^24.0.0",
+    "jsdom": "^25.0.0",
     "prettier": "^3.0.0",
     "react": "^18.2.0",
     "rollup-plugin-typescript-paths": "^1.4.0",
