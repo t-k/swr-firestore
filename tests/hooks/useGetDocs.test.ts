@@ -317,7 +317,7 @@ describe("useGetDocs", () => {
   describe("with swr config", () => {
     it("should fetch data from Firestore", async () => {
       const ref = collection(db, COLLECTION) as CollectionReference<Post>;
-      const id = faker.datatype.uuid();
+      const id = faker.string.uuid();
       const docRef = doc(ref, id);
       await setDoc(docRef, {
         content: "hello",
@@ -346,7 +346,7 @@ describe("useGetDocs", () => {
   describe("error", () => {
     it("should return FirebaseError", async () => {
       const ref = collection(db, ERR_COLLECTION) as CollectionReference<Post>;
-      const id = faker.datatype.uuid();
+      const id = faker.string.uuid();
       const docRef = doc(ref, id);
       await setDoc(docRef, {
         content: "hello",

@@ -24,7 +24,7 @@ describe("getDoc", () => {
   describe("without option", () => {
     it("should fetch data from Firestore", async () => {
       const ref = collection(db, COLLECTION) as CollectionReference<Post>;
-      const id = faker.datatype.uuid();
+      const id = faker.string.uuid();
       const docRef = doc(ref, id);
       await setDoc(docRef, {
         content: "hello",
@@ -44,7 +44,7 @@ describe("getDoc", () => {
   describe("with isSubscription option", () => {
     it("should return key with subscription prefix", async () => {
       const ref = collection(db, COLLECTION) as CollectionReference<Post>;
-      const id = faker.datatype.uuid();
+      const id = faker.string.uuid();
       const docRef = doc(ref, id);
       await setDoc(docRef, {
         content: "hello",
@@ -64,7 +64,7 @@ describe("getDoc", () => {
   describe("parseDates option", () => {
     it("should fetch data from Firestore", async () => {
       const ref = collection(db, COLLECTION) as CollectionReference<Post>;
-      const id = faker.datatype.uuid();
+      const id = faker.string.uuid();
       const docRef = doc(ref, id);
       await setDoc(docRef, {
         content: "hello",
@@ -82,7 +82,7 @@ describe("getDoc", () => {
   describe("with nested object", () => {
     it("should fetch data from Firestore", async () => {
       const ref = collection(db, COLLECTION) as CollectionReference<Post>;
-      const id = faker.datatype.uuid();
+      const id = faker.string.uuid();
       const docRef = doc(ref, id);
       await setDoc(docRef, {
         content: "hello",
