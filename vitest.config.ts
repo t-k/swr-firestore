@@ -11,6 +11,9 @@ export default defineConfig({
   },
   test: {
     globals: true,
+    isolate: true,
+    minWorkers: 1,
+    maxWorkers: 1,
     environment: "jsdom",
     coverage: {
       all: true,
