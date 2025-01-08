@@ -11,12 +11,15 @@ export default defineConfig({
   },
   test: {
     globals: true,
+    isolate: true,
+    minWorkers: 1,
+    maxWorkers: 1,
     environment: "jsdom",
     coverage: {
       all: true,
       provider: "v8",
       reporter: ["text", "json", "html"],
-      exclude: ["src/util/type.ts", "src/server/util/type.ts", "tests/**"],
+      exclude: ["src/util/type.ts", "src/server/util/type.ts", "tests/**", "vite.config.ts", "vitest.config.ts"],
     },
     includeSource: ["src/**/*.{ts,tsx}", "tests/**/*.{ts}"],
     include: [
