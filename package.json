@@ -80,7 +80,7 @@
     "swr": "^2.1.0 <3.0.0",
     "typescript": "^5.0.2",
     "vite-tsconfig-paths": "^5.0.1",
-    "vitest": "^2.0.0"
+    "vitest": "^3.0.9"
   },
   "peerDependencies": {
     "firebase": ">=9.11.0",
