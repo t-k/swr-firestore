@@ -6,7 +6,7 @@ import {
   doc,
   getFirestore,
   onSnapshot,
-  DocumentData as FsDocumentData,
+  type DocumentData as FsDocumentData,
 } from "firebase/firestore";
 import { getFirestoreConverter } from "../util/getConverter";
 import type { SWRConfiguration } from "swr";

@@ -42,7 +42,7 @@ type Prev = [
   18,
   19,
   20,
-  ...0[]
+  ...0[],
 ];
 
 export type DocumentId = "id";
@@ -50,12 +50,12 @@ export type DocumentId = "id";
 export type Paths<T, D extends number = 3> = [D] extends [never]
   ? never
   : T extends object
-  ? {
-      [K in keyof T]-?: K extends string | number
-        ? `${K}` | Join<K, Paths<T[K], Prev[D]>>
-        : never;
-    }[keyof T]
-  : "";
+    ? {
+        [K in keyof T]-?: K extends string | number
+          ? `${K}` | Join<K, Paths<T[K], Prev[D]>>
+          : never;
+      }[keyof T]
+    : "";
 
 export type ValueOf<T> = T[keyof T];
 
@@ -63,7 +63,7 @@ export type QueryParams<T> = {
   where?: [
     Paths<T> | DocumentId,
     Parameters<typeof where>[1],
-    ValueOf<T> | unknown
+    ValueOf<T> | unknown,
   ][];
   orderBy?: [Paths<T> | DocumentId, Parameters<typeof orderBy>[1]][];
   startAt?: Parameters<typeof startAt>;
