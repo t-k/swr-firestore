@@ -19,7 +19,13 @@ export default defineConfig({
       all: true,
       provider: "v8",
       reporter: ["text", "json", "html"],
-      exclude: ["src/util/type.ts", "src/server/util/type.ts", "tests/**", "vite.config.ts", "vitest.config.ts"],
+      exclude: [
+        "src/util/type.ts",
+        "src/server/util/type.ts",
+        "tests/**",
+        "vite.config.ts",
+        "vitest.config.ts",
+      ],
     },
     includeSource: ["src/**/*.{ts,tsx}", "tests/**/*.{ts}"],
     include: [
@@ -34,6 +40,6 @@ export default defineConfig({
       FIREBASE_AUTH_EMULATOR_HOST: "localhost:9099",
       FIRESTORE_EMULATOR_HOST: "localhost:8080",
       GCLOUD_PROJECT: "swr-firestore-project",
-    }
+    },
   },
 });
