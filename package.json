@@ -65,7 +65,7 @@
     "@types/lodash-es": "^4.17.7",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@vitejs/plugin-react": "^4.0.0",
+    "@vitejs/plugin-react": "^5.0.0",
     "@vitest/coverage-v8": "^3",
     "firebase": ">=9.11.0",
     "firebase-admin": ">=11.0.0",
