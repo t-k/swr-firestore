@@ -57,7 +57,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.1.4",
-    "@faker-js/faker": "^9.0.3",
+    "@faker-js/faker": "^10.0.0",
     "@rollup/plugin-typescript": "^12.1.0",
     "@testing-library/jest-dom": "^6.0.0",
     "@testing-library/react": "^16.0.0",
