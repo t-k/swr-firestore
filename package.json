@@ -71,6 +71,7 @@
     "firebase-admin": ">=11.0.0",
     "jsdom": "^27.0.0",
     "react": "^19",
+    "react-dom": "^19",
     "rollup-plugin-typescript-paths": "^1.4.0",
     "swr": "^2.1.0 <3.0.0",
     "typescript": "^5.0.2",
