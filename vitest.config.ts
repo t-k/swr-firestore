@@ -16,9 +16,9 @@ export default defineConfig({
     maxWorkers: 1,
     environment: "jsdom",
     coverage: {
-      all: true,
       provider: "v8",
       reporter: ["text", "json", "html"],
+      include: ["src/**/*.{ts,tsx}"],
       exclude: [
         "src/util/type.ts",
         "src/server/util/type.ts",
