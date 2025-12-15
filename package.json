@@ -75,7 +75,7 @@
     "rollup-plugin-typescript-paths": "^1.4.0",
     "swr": "^2.1.0 <3.0.0",
     "typescript": "^5.0.2",
-    "vite-tsconfig-paths": "^5.0.1",
+    "vite-tsconfig-paths": "^6.0.1",
     "vitest": "^4.0.15"
   },
   "peerDependencies": {
