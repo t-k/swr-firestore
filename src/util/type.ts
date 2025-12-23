@@ -117,3 +117,74 @@ export type GetDocKeyParams<T> = KeyParams<T> & { useOfflineCache?: boolean };
 
 export type DocumentData<T> = T &
   Pick<QueryDocumentSnapshot, "exists" | "id" | "ref">;
+
+// Aggregation types
+
+/**
+ * Aggregate field specification
+ * Note: Only string paths are allowed (not FieldPath) to ensure SWR key stability
+ */
+export type AggregateFieldSpec<T> =
+  | { type: "count" }
+  | { type: "sum"; field: Paths<T> }
+  | { type: "average"; field: Paths<T> };
+
+/**
+ * Aggregate specification with custom keys
+ */
+export type SwrAggregateSpec<T> = {
+  [key: string]: AggregateFieldSpec<T>;
+};
+
+/**
+ * Aggregate field specification (simplified for result type)
+ */
+type AggregateFieldSpecBase =
+  | { type: "count" }
+  | { type: "sum"; field: string }
+  | { type: "average"; field: string };
+
+/**
+ * Aggregate specification base (for result type)
+ */
+type SwrAggregateSpecBase = {
+  [key: string]: AggregateFieldSpecBase;
+};
+
+/**
+ * Aggregate result type
+ * - count: always number
+ * - sum: always number (0 if no documents)
+ * - average: number | null (null if no documents)
+ */
+export type AggregateResult<TSpec extends SwrAggregateSpecBase> = {
+  [K in keyof TSpec]: TSpec[K] extends { type: "count" }
+    ? number
+    : TSpec[K] extends { type: "sum" }
+      ? number
+      : TSpec[K] extends { type: "average" }
+        ? number | null
+        : never;
+};
+
+/**
+ * Key params for aggregate queries on collections
+ */
+export type KeyParamsForAggregate<T, TSpec extends SwrAggregateSpec<T>> = Omit<
+  BaseParams<T>,
+  "parseDates"
+> &
+  (QueryParams<T> | QueryConstraintParams) & {
+    aggregate: TSpec;
+  };
+
+/**
+ * Key params for aggregate queries on collection groups
+ */
+export type KeyParamsForCollectionGroupAggregate<
+  T,
+  TSpec extends SwrAggregateSpec<T>,
+> = Omit<BaseParams<T>, "parseDates"> &
+  (QueryParamsForCollectionGroup<T> | QueryConstraintParams) & {
+    aggregate: TSpec;
+  };

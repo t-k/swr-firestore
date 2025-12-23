@@ -19,6 +19,13 @@ yarn add @tatsuokaniwa/swr-firestore
 pnpm i @tatsuokaniwa/swr-firestore
 ```
 
+### Requirements for Aggregation Queries
+
+To use aggregation features (`useAggregate`, `useCollectionGroupAggregate`, `fetchAggregate`, `fetchCollectionGroupAggregate`):
+
+- Client-side: `firebase >= 9.17.0`
+- Server-side: `firebase-admin >= 11.5.0` (recommended)
+
 ## Usage
 
 ```tsx
@@ -131,13 +138,26 @@ export default function Page({ fallback }) {
 
 ```ts
 import {
+  // SWR Hooks
   useCollection, // Subscription for collection
   useCollectionCount, // Wrapper for getCountFromServer for collection
   useCollectionGroup, // Subscription for collectionGroup
   useCollectionGroupCount, // Wrapper for getCountFromServer for collectionGroup
+  useAggregate, // Aggregation queries (count, sum, average) for collection
+  useCollectionGroupAggregate, // Aggregation queries for collectionGroup
   useDoc, // Subscription for document
   useGetDocs, // Fetch documents with firestore's getDocs
   useGetDoc, // Fetch document with firestore's getDoc
+  // Client-side fetchers (without SWR)
+  fetchDoc, // Fetch single document
+  fetchCollection, // Fetch collection
+  fetchCollectionCount, // Count documents in collection
+  fetchCollectionGroup, // Fetch collection group
+  fetchCollectionGroupCount, // Count documents in collection group
+  fetchAggregate, // Aggregation queries for collection
+  fetchCollectionGroupAggregate, // Aggregation queries for collection group
+  // Client-side transaction fetcher
+  fetchDocInTx, // Fetch document within transaction
 } from "@tatsuokaniwa/swr-firestore";
 
 import {
@@ -145,7 +165,15 @@ import {
   getCollectionCount, // for useCollectionCount
   getCollectionGroup, // for useCollectionGroup, useGetDocs
   getCollectionGroupCount, // for useCollectionGroupCount
+  getAggregate, // for useAggregate
+  getCollectionGroupAggregate, // for useCollectionGroupAggregate
   getDoc, // for useDoc, useGetDoc
+  // Transaction-aware fetchers (for use within db.runTransaction)
+  getDocInTx,
+  getCollectionInTx,
+  getCollectionCountInTx,
+  getCollectionGroupInTx,
+  getCollectionGroupCountInTx,
 } from "@tatsuokaniwa/swr-firestore/server";
 ```
 
@@ -291,6 +319,103 @@ Returns [`SWRResponse`](https://swr.vercel.app/docs/api#return-values)
 - `isValidating`: if there's a request or revalidation loading
 - `mutate(data?, options?)`: function to mutate the cached data (details)
 
+### `useAggregate(params, swrOptions)`
+
+Wrapper for getAggregateFromServer for collection. Supports count, sum, and average aggregations in a single query.
+
+#### Parameters
+
+- `params`: KeyParams except `parseDates` & { aggregate: AggregateSpec } | null
+- `swrOptions`: [Options for SWR hook](https://swr.vercel.app/docs/api#options) except `fetcher`
+
+#### Return values
+
+Returns [`SWRResponse`](https://swr.vercel.app/docs/api#return-values)
+
+- `data`: aggregation result object with keys matching the aggregate spec
+- `error`: FirestoreError
+- `isLoading`: if there's an ongoing request and no "loaded data"
+- `isValidating`: if there's a request or revalidation loading
+- `mutate(data?, options?)`: function to mutate the cached data
+
+```ts
+import { useAggregate } from "@tatsuokaniwa/swr-firestore";
+
+type Product = {
+  name: string;
+  category: string;
+  price: number;
+  stock: number;
+};
+
+const { data, error, isLoading } = useAggregate<
+  Product,
+  {
+    totalStock: { type: "sum"; field: "stock" };
+    averagePrice: { type: "average"; field: "price" };
+    productCount: { type: "count" };
+  }
+>({
+  path: "products",
+  where: [["category", "==", "electronics"]],
+  aggregate: {
+    totalStock: { type: "sum", field: "stock" },
+    averagePrice: { type: "average", field: "price" },
+    productCount: { type: "count" },
+  },
+});
+
+if (data) {
+  console.log(data.productCount); // number
+  console.log(data.totalStock); // number
+  console.log(data.averagePrice); // number | null (null when no documents)
+}
+```
+
+### `useCollectionGroupAggregate(params, swrOptions)`
+
+Wrapper for getAggregateFromServer for collectionGroup. Supports count, sum, and average aggregations across subcollections.
+
+#### Parameters
+
+- `params`: KeyParams except `parseDates` & { aggregate: AggregateSpec } | null
+- `swrOptions`: [Options for SWR hook](https://swr.vercel.app/docs/api#options) except `fetcher`
+
+#### Return values
+
+Returns [`SWRResponse`](https://swr.vercel.app/docs/api#return-values)
+
+- `data`: aggregation result object with keys matching the aggregate spec
+- `error`: FirestoreError
+- `isLoading`: if there's an ongoing request and no "loaded data"
+- `isValidating`: if there's a request or revalidation loading
+- `mutate(data?, options?)`: function to mutate the cached data
+
+```ts
+import { useCollectionGroupAggregate } from "@tatsuokaniwa/swr-firestore";
+
+type OrderItem = {
+  productId: string;
+  price: number;
+  quantity: number;
+};
+
+// Aggregate across all "items" subcollections
+const { data } = useCollectionGroupAggregate<
+  OrderItem,
+  {
+    totalRevenue: { type: "sum"; field: "price" };
+    itemCount: { type: "count" };
+  }
+>({
+  path: "items",
+  aggregate: {
+    totalRevenue: { type: "sum", field: "price" },
+    itemCount: { type: "count" },
+  },
+});
+```
+
 ### `useDoc(params, swrOptions)`
 
 Subscription for document
@@ -375,6 +500,146 @@ const { data, error } = useGetDoc<Post>({
 });
 ```
 
+## Client-side fetchers
+
+These functions fetch data directly from Firestore without SWR caching. Useful for one-off data fetching, imperative data loading, or when you don't need SWR's caching and revalidation features.
+
+### `fetchDoc(params)`
+
+Fetch a single document from Firestore
+
+```ts
+import { fetchDoc } from "@tatsuokaniwa/swr-firestore";
+
+const city = await fetchDoc<City>({
+  path: "cities/tokyo",
+  parseDates: ["createdAt"],
+});
+```
+
+### `fetchCollection(params)`
+
+Fetch documents from a collection
+
+```ts
+import { fetchCollection } from "@tatsuokaniwa/swr-firestore";
+
+const cities = await fetchCollection<City>({
+  path: "cities",
+  where: [["population", ">", 1000000]],
+  orderBy: [["population", "desc"]],
+  limit: 10,
+});
+```
+
+### `fetchCollectionCount(params)`
+
+Count documents in a collection
+
+```ts
+import { fetchCollectionCount } from "@tatsuokaniwa/swr-firestore";
+
+const count = await fetchCollectionCount<City>({
+  path: "cities",
+  where: [["population", ">", 1000000]],
+});
+```
+
+### `fetchCollectionGroup(params)`
+
+Fetch documents from a collection group
+
+```ts
+import { fetchCollectionGroup } from "@tatsuokaniwa/swr-firestore";
+
+const comments = await fetchCollectionGroup<Comment>({
+  path: "comments",
+  where: [["authorId", "==", "user123"]],
+  limit: 10,
+});
+```
+
+### `fetchCollectionGroupCount(params)`
+
+Count documents in a collection group
+
+```ts
+import { fetchCollectionGroupCount } from "@tatsuokaniwa/swr-firestore";
+
+const count = await fetchCollectionGroupCount<Comment>({
+  path: "comments",
+  where: [["status", "==", "approved"]],
+});
+```
+
+### `fetchAggregate(params)`
+
+Fetch aggregation result from a collection
+
+```ts
+import { fetchAggregate } from "@tatsuokaniwa/swr-firestore";
+
+const result = await fetchAggregate<
+  Product,
+  {
+    count: { type: "count" };
+    totalStock: { type: "sum"; field: "stock" };
+    avgPrice: { type: "average"; field: "price" };
+  }
+>({
+  path: "products",
+  aggregate: {
+    count: { type: "count" },
+    totalStock: { type: "sum", field: "stock" },
+    avgPrice: { type: "average", field: "price" },
+  },
+});
+```
+
+### `fetchCollectionGroupAggregate(params)`
+
+Fetch aggregation result from a collection group
+
+```ts
+import { fetchCollectionGroupAggregate } from "@tatsuokaniwa/swr-firestore";
+
+const result = await fetchCollectionGroupAggregate<
+  OrderItem,
+  { totalRevenue: { type: "sum"; field: "price" } }
+>({
+  path: "items",
+  aggregate: {
+    totalRevenue: { type: "sum", field: "price" },
+  },
+});
+```
+
+### `fetchDocInTx(transaction, params)`
+
+Fetch a single document within a Firestore transaction (client-side)
+
+Note: Due to Firebase client SDK limitations, only document fetching is supported in transactions. Collection queries within transactions are only available in the server module.
+
+```ts
+import { getFirestore, runTransaction } from "firebase/firestore";
+import { fetchDocInTx } from "@tatsuokaniwa/swr-firestore";
+
+const db = getFirestore();
+
+await runTransaction(db, async (t) => {
+  const city = await fetchDocInTx<City>(t, {
+    path: "cities/tokyo",
+    parseDates: ["createdAt"],
+  });
+
+  if (city) {
+    t.update(doc(db, "cities/tokyo"), {
+      population: city.population + 1,
+    });
+  }
+});
+```
+
 ## Server module
 
 ### `getCollection(params)`
@@ -426,7 +691,7 @@ Returns `Promise<{
 - `data`: number of documents in the collection for the given path.
 
 ```ts
-import { getCollection } from "@tatsuokaniwa/swr-firestore/server";
+import { getCollectionCount } from "@tatsuokaniwa/swr-firestore/server";
 
 // For useCollectionCount
 const { key, data } = await getCollectionCount<Post>({ path: "posts" });
@@ -489,6 +754,80 @@ const { key, data } = await getCollectionGroupCount<Comment>({
 });
 ```
 
+### `getAggregate(params)`
+
+Fetch aggregation result using the Firebase Admin SDK and return the SWR key and data
+
+#### Parameters
+
+- `params`: KeyParams except `parseDates`, `queryConstraints` & { aggregate: AggregateSpec }
+
+Note: `queryConstraints` is not supported on the server side because the Admin SDK uses a different query builder API.
+
+#### Return values
+
+Returns `Promise<{
+  key: string;
+  data: AggregateResult<TSpec>;
+}>`
+
+- `key`: SWR Key
+- `data`: aggregation result object
+
+```ts
+import { getAggregate } from "@tatsuokaniwa/swr-firestore/server";
+
+// For useAggregate
+const { key, data } = await getAggregate<
+  Product,
+  {
+    count: { type: "count" };
+    totalRevenue: { type: "sum"; field: "price" };
+  }
+>({
+  path: "products",
+  aggregate: {
+    count: { type: "count" },
+    totalRevenue: { type: "sum", field: "price" },
+  },
+});
+```
+
+### `getCollectionGroupAggregate(params)`
+
+Fetch aggregation result across subcollections using the Firebase Admin SDK
+
+#### Parameters
+
+- `params`: KeyParams except `parseDates`, `queryConstraints` & { aggregate: AggregateSpec }
+
+Note: `queryConstraints` is not supported on the server side because the Admin SDK uses a different query builder API.
+
+#### Return values
+
+Returns `Promise<{
+  key: string;
+  data: AggregateResult<TSpec>;
+}>`
+
+- `key`: SWR Key
+- `data`: aggregation result object
+
+```ts
+import { getCollectionGroupAggregate } from "@tatsuokaniwa/swr-firestore/server";
+
+// For useCollectionGroupAggregate
+const { key, data } = await getCollectionGroupAggregate<
+  OrderItem,
+  { totalItems: { type: "count" } }
+>({
+  path: "items",
+  aggregate: {
+    totalItems: { type: "count" },
+  },
+});
+```
+
 ### `getDoc(params)`
 
 Fetch the document using the Firebase Admin SDK and return the SWR key and data
@@ -517,6 +856,148 @@ const { key, data } = await getDoc<Post>({
 });
 // For useGetDoc
 const { key, data } = await getDoc<Post>({ path: `posts/${postId}` });
+```
+
+### `getDocInTx(transaction, params)`
+
+Type-safe document fetcher for use within Firestore transactions
+
+#### Parameters
+
+- `transaction`: Firebase Admin SDK Transaction object
+- `params`: KeyParams except `where`, `orderBy`, `limit`
+
+#### Return values
+
+Returns `Promise<DocumentData<T> | undefined>`
+
+- Returns the document data, or undefined if the document does not exist
+
+```ts
+import { getFirestore } from "firebase-admin/firestore";
+import { getDocInTx } from "@tatsuokaniwa/swr-firestore/server";
+
+const db = getFirestore();
+
+await db.runTransaction(async (t) => {
+  const city = await getDocInTx<City>(t, {
+    path: "cities/tokyo",
+    parseDates: ["createdAt"],
+  });
+
+  if (city) {
+    t.update(db.doc("cities/tokyo"), {
+      population: city.population + 1,
+    });
+  }
+});
+```
+
+### `getCollectionInTx(transaction, params)`
+
+Type-safe collection fetcher for use within Firestore transactions
+
+#### Parameters
+
+- `transaction`: Firebase Admin SDK Transaction object
+- `params`: KeyParams
+
+#### Return values
+
+Returns `Promise<DocumentData<T>[]>`
+
+- Returns an array of document data
+
+```ts
+import { getFirestore } from "firebase-admin/firestore";
+import { getCollectionInTx } from "@tatsuokaniwa/swr-firestore/server";
+
+const db = getFirestore();
+
+await db.runTransaction(async (t) => {
+  const cities = await getCollectionInTx<City>(t, {
+    path: "cities",
+    where: [["population", ">", 1000000]],
+    orderBy: [["population", "desc"]],
+    limit: 10,
+  });
+
+  cities.forEach((city) => {
+    t.update(db.doc(`cities/${city.id}`), {
+      isLargeCity: true,
+    });
+  });
+});
+```
+
+### `getCollectionCountInTx(transaction, params)`
+
+Type-safe collection count fetcher for use within Firestore transactions
+
+#### Parameters
+
+- `transaction`: Firebase Admin SDK Transaction object
+- `params`: KeyParams except `parseDates`
+
+#### Return values
+
+Returns `Promise<number>`
+
+```ts
+await db.runTransaction(async (t) => {
+  const count = await getCollectionCountInTx<City>(t, {
+    path: "cities",
+    where: [["population", ">", 1000000]],
+  });
+  console.log(`Found ${count} large cities`);
+});
+```
+
+### `getCollectionGroupInTx(transaction, params)`
+
+Type-safe collection group fetcher for use within Firestore transactions
+
+#### Parameters
+
+- `transaction`: Firebase Admin SDK Transaction object
+- `params`: KeyParams
+
+#### Return values
+
+Returns `Promise<DocumentData<T>[]>`
+
+```ts
+await db.runTransaction(async (t) => {
+  const comments = await getCollectionGroupInTx<Comment>(t, {
+    path: "comments",
+    where: [["authorId", "==", "user123"]],
+    limit: 10,
+  });
+  // comments is DocumentData<Comment>[]
+});
+```
+
+### `getCollectionGroupCountInTx(transaction, params)`
+
+Type-safe collection group count fetcher for use within Firestore transactions
+
+#### Parameters
+
+- `transaction`: Firebase Admin SDK Transaction object
+- `params`: KeyParams except `parseDates`
+
+#### Return values
+
+Returns `Promise<number>`
+
+```ts
+await db.runTransaction(async (t) => {
+  const count = await getCollectionGroupCountInTx<Comment>(t, {
+    path: "comments",
+    where: [["status", "==", "approved"]],
+  });
+  console.log(`Found ${count} approved comments`);
+});
 ```
 
 ## Testing

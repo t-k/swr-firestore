@@ -72,5 +72,116 @@ service cloud.firestore {
       allow read: if false;
       allow write: if true;
     }
+
+    match /AggregateTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /AggregateEmptyTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /CollectionGroupAggregateTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /{path=**}/SubCollectionAggregateTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /GetAggregateTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /GetAggregateEmptyTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /GetCollectionGroupAggregateTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /{path=**}/GetSubCollectionAggregateTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /GetDocInTransactionTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /GetCollectionInTransactionTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /GetCollectionCountInTransactionTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /GetCollectionGroupInTransactionParent/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /{path=**}/GetSubCollectionGroupInTransactionTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /GetCollectionGroupCountInTransactionParent/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /{path=**}/GetSubCollectionGroupCountInTransactionTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /FetchDocTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /FetchCollectionTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /FetchCollectionCountTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /FetchCollectionGroupParent/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /{path=**}/FetchSubCollectionGroupTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /FetchCollectionGroupCountParent/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /{path=**}/FetchSubCollectionGroupCountTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /FetchAggregateTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /FetchCollectionGroupAggregateParent/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /{path=**}/FetchSubCollectionGroupAggregateTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /FetchDocInTransactionTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
   }
 }
