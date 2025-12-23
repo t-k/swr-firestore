@@ -1,3 +1,20 @@
+## [2.0.8] - 2025-12-23
+
+### Feature
+
+- Add `useAggregate` hook for aggregation queries (count, sum, average) on collections
+- Add `useCollectionGroupAggregate` hook for aggregation queries on collection groups
+- Add `getAggregate` server fetcher for SSR/SSG support
+- Add `getCollectionGroupAggregate` server fetcher for SSR/SSG support
+- Add `getDocInTx` for type-safe document fetching within Firestore transactions (server-side)
+- Add `getCollectionInTx` for type-safe collection fetching within Firestore transactions (server-side)
+- Add `getCollectionCountInTx` for type-safe collection count within transactions (server-side)
+- Add `getCollectionGroupInTx` for type-safe collection group fetching within transactions (server-side)
+- Add `getCollectionGroupCountInTx` for type-safe collection group count within transactions (server-side)
+- Add `fetchDocInTx` for type-safe document fetching within Firestore transactions (client-side)
+- Add client-side fetchers (without SWR): `fetchDoc`, `fetchCollection`, `fetchCollectionCount`, `fetchCollectionGroup`, `fetchCollectionGroupCount`, `fetchAggregate`, `fetchCollectionGroupAggregate`
+- All hooks now accept `false` and `undefined` in addition to `null` for conditional fetching (e.g., `isLogin && { path: "posts" }`)
+
 ## [2.0.7] - 2024-04-21
 
 - Update dependencies to `firebase-admin` >= 11.0.0

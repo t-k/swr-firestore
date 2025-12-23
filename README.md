@@ -45,14 +45,12 @@ export default function App() {
   // Conditional Fetching
   const [isLogin, setIsLogin] = useState(false);
   const { data } = useCollection<Post>(
-    isLogin
-      ? {
-          path: "posts",
-          where: [["status", "==", "published"]],
-          orderBy: [["createdAt", "desc"]],
-          parseDates: ["createdAt"],
-        }
-      : null
+    isLogin && {
+      path: "posts",
+      where: [["status", "==", "published"]],
+      orderBy: [["createdAt", "desc"]],
+      parseDates: ["createdAt"],
+    }
   );
   const { data: postCount } = useCollectionCount<Post>({
     path: "posts",
