@@ -264,6 +264,96 @@ describe("useAggregate", () => {
       expect(result.current.isLoading).toBe(false);
       unmount();
     });
+
+    it("should not fetch when params is false", async () => {
+      const { result, unmount } = renderHook(() =>
+        useAggregate<Product, { count: { type: "count" } }>(false)
+      );
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      expect(result.current.data).toBeUndefined();
+      expect(result.current.isLoading).toBe(false);
+      unmount();
+    });
+
+    it("should not fetch when params is undefined", async () => {
+      const { result, unmount } = renderHook(() =>
+        useAggregate<Product, { count: { type: "count" } }>(undefined)
+      );
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      expect(result.current.data).toBeUndefined();
+      expect(result.current.isLoading).toBe(false);
+      unmount();
+    });
+
+    it("should work with && operator when false", async () => {
+      const isLogin = false;
+      const { result, unmount } = renderHook(() =>
+        useAggregate<Product, { count: { type: "count" } }>(
+          isLogin && {
+            path: COLLECTION,
+            aggregate: { count: { type: "count" } },
+          }
+        )
+      );
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      expect(result.current.data).toBeUndefined();
+      expect(result.current.isLoading).toBe(false);
+      unmount();
+    });
+
+    it("should work with && operator when true", async () => {
+      const isLogin = true;
+      const { result, unmount } = renderHook(() =>
+        useAggregate<Product, { count: { type: "count" } }>(
+          isLogin && {
+            path: COLLECTION,
+            aggregate: { count: { type: "count" } },
+          }
+        )
+      );
+      await waitFor(() => expect(result.current.data != null).toBe(true), {
+        timeout: 5000,
+      });
+      expect(result.current.data!.count).toBeGreaterThan(0);
+      unmount();
+    });
+
+    it("should work with ternary operator when false", async () => {
+      const isLogin = false;
+      const { result, unmount } = renderHook(() =>
+        useAggregate<Product, { count: { type: "count" } }>(
+          isLogin
+            ? {
+                path: COLLECTION,
+                aggregate: { count: { type: "count" } },
+              }
+            : null
+        )
+      );
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      expect(result.current.data).toBeUndefined();
+      expect(result.current.isLoading).toBe(false);
+      unmount();
+    });
+
+    it("should work with ternary operator when true", async () => {
+      const isLogin = true;
+      const { result, unmount } = renderHook(() =>
+        useAggregate<Product, { count: { type: "count" } }>(
+          isLogin
+            ? {
+                path: COLLECTION,
+                aggregate: { count: { type: "count" } },
+              }
+            : null
+        )
+      );
+      await waitFor(() => expect(result.current.data != null).toBe(true), {
+        timeout: 5000,
+      });
+      expect(result.current.data!.count).toBeGreaterThan(0);
+      unmount();
+    });
   });
 
   describe("empty collection", () => {

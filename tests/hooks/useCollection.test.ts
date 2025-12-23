@@ -70,10 +70,58 @@ describe("useCollection", () => {
     await deleteCollection(COLLECTION);
     await deleteCollection(ERR_COLLECTION);
   });
-  describe("key is null", () => {
-    it("should fetch no data", async () => {
+  describe("key is falsy", () => {
+    it("should fetch no data when null", async () => {
       const { result, unmount } = renderHook(() => useCollection<Post>(null));
       expect(result.current.data == null).toBe(true);
+      unmount();
+    });
+    it("should fetch no data when false", async () => {
+      const { result, unmount } = renderHook(() => useCollection<Post>(false));
+      expect(result.current.data == null).toBe(true);
+      unmount();
+    });
+    it("should fetch no data when undefined", async () => {
+      const { result, unmount } = renderHook(() => useCollection<Post>(undefined));
+      expect(result.current.data == null).toBe(true);
+      unmount();
+    });
+    it("should work with && operator when false", async () => {
+      const isLogin = false;
+      const { result, unmount } = renderHook(() =>
+        useCollection<Post>(isLogin && { path: COLLECTION })
+      );
+      expect(result.current.data == null).toBe(true);
+      unmount();
+    });
+    it("should work with && operator when true", async () => {
+      const isLogin = true;
+      const { result, unmount } = renderHook(() =>
+        useCollection<Post>(isLogin && { path: COLLECTION })
+      );
+      await waitFor(() => expect(result.current.data != null).toBe(true), {
+        timeout: 5000,
+      });
+      expect(result.current.data!.length > 0).toBe(true);
+      unmount();
+    });
+    it("should work with ternary operator when false", async () => {
+      const isLogin = false;
+      const { result, unmount } = renderHook(() =>
+        useCollection<Post>(isLogin ? { path: COLLECTION } : null)
+      );
+      expect(result.current.data == null).toBe(true);
+      unmount();
+    });
+    it("should work with ternary operator when true", async () => {
+      const isLogin = true;
+      const { result, unmount } = renderHook(() =>
+        useCollection<Post>(isLogin ? { path: COLLECTION } : null)
+      );
+      await waitFor(() => expect(result.current.data != null).toBe(true), {
+        timeout: 5000,
+      });
+      expect(result.current.data!.length > 0).toBe(true);
       unmount();
     });
   });

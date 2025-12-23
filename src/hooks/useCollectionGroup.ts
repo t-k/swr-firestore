@@ -7,7 +7,7 @@ import type {
   QueryConstraint,
   DocumentData as FsDocumentData,
 } from "firebase/firestore";
-import type { DocumentData, KeyParamsForCollectionGroup } from "../util/type";
+import type { DocumentData, Falsy, KeyParamsForCollectionGroup } from "../util/type";
 import useSWRSubscription from "swr/subscription";
 import {
   collectionGroup,
@@ -29,16 +29,16 @@ import type { Key, SWRConfiguration } from "swr";
 import serializeMiddleware from "../middleware/serializeMiddleware";
 
 const useCollectionGroup = <T>(
-  params: KeyParamsForCollectionGroup<T> | null,
+  params: KeyParamsForCollectionGroup<T> | Falsy,
   swrOptions?: Omit<SWRConfiguration, "fetcher">
 ): SWRSubscriptionResponse<DocumentData<T>[], FirestoreError> => {
   return useSWRSubscription(
-    params,
+    params || null,
     (
       _: Key,
       { next }: SWRSubscriptionOptions<DocumentData<T>[], FirestoreError>
     ) => {
-      if (params == null) {
+      if (!params) {
         return;
       }
       const { path, parseDates } = params;

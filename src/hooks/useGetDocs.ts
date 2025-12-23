@@ -1,6 +1,6 @@
 import type { SWRConfiguration } from "swr";
 import type { QueryConstraint } from "firebase/firestore";
-import type { DocumentData, GetDocKeyParams } from "../util/type";
+import type { DocumentData, Falsy, GetDocKeyParams } from "../util/type";
 import useSWR from "swr";
 import {
   collection,
@@ -24,11 +24,11 @@ import { isQueryConstraintParams } from "../util/typeGuard";
 import serializeMiddleware from "../middleware/serializeMiddleware";
 
 const useGetDocs = <T>(
-  params: (GetDocKeyParams<T> & { isCollectionGroup?: boolean }) | null,
+  params: (GetDocKeyParams<T> & { isCollectionGroup?: boolean }) | Falsy,
   swrOptions?: Omit<SWRConfiguration, "fetcher">
 ) => {
   const fetcher = async (): Promise<DocumentData<T>[] | undefined> => {
-    if (params == null) {
+    if (!params) {
       return;
     }
     const { path, parseDates, isCollectionGroup } = params;
@@ -71,9 +71,9 @@ const useGetDocs = <T>(
     return sn.docs.map((x) => x.data());
   };
   const scrubKey = (
-    params: (GetDocKeyParams<T> & { isCollectionGroup?: boolean }) | null
+    params: (GetDocKeyParams<T> & { isCollectionGroup?: boolean }) | Falsy
   ) => {
-    if (params == null) {
+    if (!params) {
       return null;
     }
     const {

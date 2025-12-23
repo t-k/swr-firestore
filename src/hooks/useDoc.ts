@@ -1,6 +1,6 @@
 import type { FirestoreError } from "firebase/firestore";
 import type { SWRSubscriptionResponse } from "swr/subscription";
-import type { DocumentData, KeyParams } from "../util/type";
+import type { DocumentData, Falsy, KeyParams } from "../util/type";
 import useSWRSubscription from "swr/subscription";
 import {
   doc,
@@ -13,13 +13,13 @@ import type { SWRConfiguration } from "swr";
 import serializeMiddleware from "../middleware/serializeMiddleware";
 
 const useDoc = <T>(
-  params: Omit<KeyParams<T>, "where" | "orderBy" | "limit"> | null,
+  params: Omit<KeyParams<T>, "where" | "orderBy" | "limit"> | Falsy,
   swrOptions?: Omit<SWRConfiguration, "fetcher">
 ): SWRSubscriptionResponse<DocumentData<T>, FirestoreError> => {
   return useSWRSubscription(
-    params,
+    params || null,
     (_, { next }) => {
-      if (params == null) {
+      if (!params) {
         return () => {
           // do nothing
         };

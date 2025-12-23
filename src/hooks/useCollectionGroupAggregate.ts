@@ -7,6 +7,7 @@ import {
   getFirestore,
 } from "firebase/firestore";
 import type {
+  Falsy,
   KeyParamsForCollectionGroupAggregate,
   SwrAggregateSpec,
   AggregateResult,
@@ -16,11 +17,11 @@ import { buildAggregateSpec } from "../util/buildAggregateSpec";
 import serializeMiddleware from "../middleware/serializeMiddleware";
 
 const useCollectionGroupAggregate = <T, TSpec extends SwrAggregateSpec<T>>(
-  params: KeyParamsForCollectionGroupAggregate<T, TSpec> | null,
+  params: KeyParamsForCollectionGroupAggregate<T, TSpec> | Falsy,
   swrOptions?: Omit<SWRConfiguration, "fetcher">
 ): SWRResponse<AggregateResult<TSpec> | undefined, FirestoreError> => {
   const fetcher = async (): Promise<AggregateResult<TSpec> | undefined> => {
-    if (params == null) return;
+    if (!params) return;
 
     const { path, aggregate, ...queryParams } = params;
     const ref = collectionGroup(getFirestore(), path);
@@ -32,7 +33,7 @@ const useCollectionGroupAggregate = <T, TSpec extends SwrAggregateSpec<T>>(
     return snapshot.data() as AggregateResult<TSpec>;
   };
 
-  const swrKey = params != null ? { ...params, _aggregate: true } : null;
+  const swrKey = params ? { ...params, _aggregate: true } : null;
 
   return useSWR(swrKey, fetcher, {
     ...swrOptions,

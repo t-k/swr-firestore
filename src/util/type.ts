@@ -188,3 +188,9 @@ export type KeyParamsForCollectionGroupAggregate<
   (QueryParamsForCollectionGroup<T> | QueryConstraintParams) & {
     aggregate: TSpec;
   };
+
+/**
+ * Falsy type for conditional fetching
+ * Allows: null, undefined, false
+ */
+export type Falsy = null | undefined | false;

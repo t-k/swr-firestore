@@ -246,5 +246,25 @@ describe("useCollectionGroupAggregate", () => {
       expect(result.current.isLoading).toBe(false);
       unmount();
     });
+
+    it("should not fetch when params is false", async () => {
+      const { result, unmount } = renderHook(() =>
+        useCollectionGroupAggregate<Item, { count: { type: "count" } }>(false)
+      );
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      expect(result.current.data).toBeUndefined();
+      expect(result.current.isLoading).toBe(false);
+      unmount();
+    });
+
+    it("should not fetch when params is undefined", async () => {
+      const { result, unmount } = renderHook(() =>
+        useCollectionGroupAggregate<Item, { count: { type: "count" } }>(undefined)
+      );
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      expect(result.current.data).toBeUndefined();
+      expect(result.current.isLoading).toBe(false);
+      unmount();
+    });
   });
 });
