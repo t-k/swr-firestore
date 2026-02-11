@@ -41,9 +41,10 @@ const useCollectionGroup = <T>(
       if (!params) {
         return;
       }
-      const { path, parseDates } = params;
+      const { path, parseDates, db: externalDb } = params;
+      const db = externalDb ?? getFirestore();
       const converter = getFirestoreConverter<T>(parseDates);
-      const ref = collectionGroup(getFirestore(), path);
+      const ref = collectionGroup(db, path);
       let q;
       if (isQueryConstraintParams(params)) {
         q = query(ref, ...(params.queryConstraints as QueryConstraint[]));

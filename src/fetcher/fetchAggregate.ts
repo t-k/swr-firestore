@@ -48,8 +48,9 @@ import { buildAggregateSpec } from "../util/buildAggregateSpec";
 const fetchAggregate = async <T, TSpec extends SwrAggregateSpec<T>>(
   params: KeyParamsForAggregate<T, TSpec>
 ): Promise<AggregateResult<TSpec>> => {
-  const { path, aggregate, ...queryParams } = params;
-  const ref = collection(getFirestore(), path);
+  const { path, aggregate, db: externalDb, ...queryParams } = params;
+  const db = externalDb ?? getFirestore();
+  const ref = collection(db, path);
   const q = buildQueryForCollection(ref, queryParams);
 
   const aggregateSpec = buildAggregateSpec(aggregate);

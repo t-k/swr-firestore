@@ -44,8 +44,9 @@ const fetchCollectionGroupAggregate = async <
 >(
   params: KeyParamsForCollectionGroupAggregate<T, TSpec>
 ): Promise<AggregateResult<TSpec>> => {
-  const { path, aggregate, ...queryParams } = params;
-  const ref = collectionGroup(getFirestore(), path);
+  const { path, aggregate, db: externalDb, ...queryParams } = params;
+  const db = externalDb ?? getFirestore();
+  const ref = collectionGroup(db, path);
   const q = buildQueryForCollectionGroup(ref, queryParams);
 
   const aggregateSpec = buildAggregateSpec(aggregate);

@@ -33,9 +33,10 @@ export type FetchCollectionGroupParams<T> = KeyParamsForCollectionGroup<T> & {
 const fetchCollectionGroup = async <T>(
   params: FetchCollectionGroupParams<T>
 ): Promise<DocumentData<T>[]> => {
-  const { path, parseDates, useOfflineCache } = params;
+  const { path, parseDates, useOfflineCache, db: externalDb } = params;
+  const db = externalDb ?? getFirestore();
   const converter = getFirestoreConverter<T>(parseDates);
-  const ref = collectionGroup(getFirestore(), path);
+  const ref = collectionGroup(db, path);
   const q = buildQueryForCollectionGroup(ref, params);
   const getFn = useOfflineCache ? getDocsFromCache : getDocs;
   const sn = await getFn(q.withConverter(converter));

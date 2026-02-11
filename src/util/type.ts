@@ -1,6 +1,7 @@
 import type {
   endAt,
   endBefore,
+  Firestore,
   orderBy,
   QueryCompositeFilterConstraint,
   QueryConstraint,
@@ -96,6 +97,8 @@ type BaseParams<T> = {
   path: string;
   // Array of field names that should be parsed as dates.
   parseDates?: Paths<T>[];
+  // Optional Firestore instance. Falls back to getFirestore() if omitted.
+  db?: Firestore;
 };
 
 export type KeyParams<T> = BaseParams<T> &

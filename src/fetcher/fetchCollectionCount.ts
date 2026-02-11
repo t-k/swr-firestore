@@ -21,8 +21,9 @@ import { buildQueryForCollection } from "../util/buildQuery";
 const fetchCollectionCount = async <T>(
   params: KeyParamsForCount<T>
 ): Promise<number> => {
-  const { path } = params;
-  const ref = collection(getFirestore(), path);
+  const { path, db: externalDb } = params;
+  const db = externalDb ?? getFirestore();
+  const ref = collection(db, path);
   const q = buildQueryForCollection(ref, params);
   const sn = await getCountFromServer(q);
   return sn.data().count;

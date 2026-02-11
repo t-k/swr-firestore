@@ -20,8 +20,8 @@ const getCollectionGroupCountInTx = async <T>(
   transaction: Transaction,
   params: KeyParamsForCollectionGroupCount<T>
 ): Promise<number> => {
-  const { path } = params;
-  const db = getFirestore();
+  const { path, db: externalDb } = params;
+  const db = externalDb ?? getFirestore();
   const collectionRef = db.collectionGroup(path);
   let queryRef: Query | null = null;
   const {

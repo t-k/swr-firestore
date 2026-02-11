@@ -1,3 +1,12 @@
+## [2.1.0] - 2026-02-11
+
+### Feature
+
+- Add optional `db` parameter to all functions and hooks for custom Firestore instance injection
+  - Client-side: accepts `Firestore` from `firebase/firestore`
+  - Server-side: accepts `Firestore` from `firebase-admin/firestore`
+  - When omitted, falls back to `getFirestore()` (no breaking change)
+
 ## [2.0.8] - 2025-12-23
 
 ### Feature

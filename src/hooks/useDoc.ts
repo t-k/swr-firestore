@@ -24,8 +24,9 @@ const useDoc = <T>(
           // do nothing
         };
       }
-      const { path } = params;
-      const ref = doc(getFirestore(), path);
+      const { path, db: externalDb } = params;
+      const db = externalDb ?? getFirestore();
+      const ref = doc(db, path);
       const converter = getFirestoreConverter<T>(params?.parseDates);
       const unsub = onSnapshot<DocumentData<T>, FsDocumentData>(
         ref.withConverter(converter),

@@ -109,6 +109,27 @@ describe("useDoc", () => {
     });
   });
 
+  describe("with explicit db", () => {
+    it("should fetch data from Firestore", async () => {
+      const ref = collection(db, COLLECTION) as CollectionReference<Post>;
+      const id = faker.string.uuid();
+      const docRef = doc(ref, id);
+      await setDoc(docRef, {
+        content: "hello",
+        status: "draft",
+        createdAt: serverTimestamp(),
+      });
+      const { result, unmount } = renderHook(() =>
+        useDoc<Post>({ path: `${COLLECTION}/${id}`, db })
+      );
+      await waitFor(() => expect(result.current.data != null).toBe(true), {
+        timeout: 5000,
+      });
+      expect(result.current.data != null).toBe(true);
+      expect(result.current.data?.content).toBe("hello");
+      unmount();
+    });
+  });
   describe("with swr config", () => {
     it("should fetch data from Firestore", async () => {
       const ref = collection(db, COLLECTION) as CollectionReference<Post>;

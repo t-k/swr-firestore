@@ -9,8 +9,8 @@ const getDoc = async <T>(
   key: string;
   data: DocumentData<T> | undefined;
 }> => {
-  const { path, parseDates } = params;
-  const db = getFirestore();
+  const { path, parseDates, db: externalDb } = params;
+  const db = externalDb ?? getFirestore();
   const converter = getFirestoreConverter<T>(parseDates);
   const docRef = db.doc(path).withConverter(converter);
   const sn = await docRef.get();

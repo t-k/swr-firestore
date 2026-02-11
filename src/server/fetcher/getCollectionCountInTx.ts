@@ -20,8 +20,8 @@ const getCollectionCountInTx = async <T>(
   transaction: Transaction,
   params: KeyParamsForCount<T>
 ): Promise<number> => {
-  const { path } = params;
-  const db = getFirestore();
+  const { path, db: externalDb } = params;
+  const db = externalDb ?? getFirestore();
   const collectionRef = db.collection(path);
   let queryRef: Query | null = null;
   const {

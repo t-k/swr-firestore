@@ -998,6 +998,32 @@ await db.runTransaction(async (t) => {
 });
 ```
 
+### Custom Firestore Instance
+
+All functions and hooks accept an optional `db` parameter to use a specific Firestore instance instead of the default `getFirestore()`.
+
+```typescript
+// Client-side
+const data = await fetchDoc<City>({
+  path: "cities/tokyo",
+  db: getFirestore(secondaryApp),
+});
+
+// Server-side
+const { data } = await getDoc<City>({
+  path: "cities/tokyo",
+  db: getFirestore(adminApp),
+});
+
+// React hooks
+const { data } = useDoc<City>({
+  path: "cities/tokyo",
+  db: getFirestore(secondaryApp),
+});
+```
+
+When `db` is omitted, it falls back to `getFirestore()` as before, so existing code is not affected.
+
 ## Testing
 
 Before running the test, you need to install the [Firebase tools](https://firebase.google.com/docs/cli).

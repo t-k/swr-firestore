@@ -23,8 +23,8 @@ const useAggregate = <T, TSpec extends SwrAggregateSpec<T>>(
   const fetcher = async (): Promise<AggregateResult<TSpec> | undefined> => {
     if (!params) return;
 
-    const { path, aggregate, ...queryParams } = params;
-    const ref = collection(getFirestore(), path);
+    const { path, aggregate, db, ...queryParams } = params;
+    const ref = collection(db ?? getFirestore(), path);
     const q = buildQueryForCollection(ref, queryParams);
 
     const aggregateSpec = buildAggregateSpec(aggregate);

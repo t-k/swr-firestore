@@ -3,6 +3,7 @@ import { doc, getDoc, getDocFromCache, getFirestore } from "firebase/firestore";
 import type { DocumentData, Falsy, GetDocKeyParams } from "../util/type";
 import useSWR from "swr";
 import { getFirestoreConverter } from "../util/getConverter";
+import { toDatabaseIdString } from "../util/databaseId";
 import serializeMiddleware from "../middleware/serializeMiddleware";
 
 const useGetDoc = <T>(
@@ -13,9 +14,9 @@ const useGetDoc = <T>(
     if (!params) {
       return;
     }
-    const { path, parseDates, ...options } = params;
+    const { path, parseDates, db, ...options } = params;
     const converter = getFirestoreConverter<T>(parseDates);
-    const ref = doc(getFirestore(), path);
+    const ref = doc(db ?? getFirestore(), path);
     const getFn = options.useOfflineCache ? getDocFromCache : getDoc;
     const sn = await getFn(ref.withConverter(converter));
     return sn.data();
@@ -27,9 +28,18 @@ const useGetDoc = <T>(
     const {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       useOfflineCache: _useOfflineCache,
+      db,
       ...rest
     } = params;
-    return rest;
+    return db != null
+      ? {
+          ...rest,
+          databaseId: toDatabaseIdString(
+            (db.toJSON() as { databaseId: string | { database: string } })
+              .databaseId
+          ),
+        }
+      : rest;
   };
   return useSWR(scrubKey(params), fetcher, {
     ...swrOptions,

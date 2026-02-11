@@ -30,8 +30,8 @@ const getCollectionGroupInTx = async <T>(
   transaction: Transaction,
   params: KeyParamsForCollectionGroup<T>
 ): Promise<DocumentData<T>[]> => {
-  const { path, parseDates } = params;
-  const db = getFirestore();
+  const { path, parseDates, db: externalDb } = params;
+  const db = externalDb ?? getFirestore();
   const converter = getFirestoreConverter<T>(parseDates);
   const collectionRef = db.collectionGroup(path).withConverter(converter);
   let queryRef: Query<DocumentData<T>> | null = null;

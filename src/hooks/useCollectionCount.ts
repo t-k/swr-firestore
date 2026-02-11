@@ -28,8 +28,8 @@ const useCollectionCount = <T>(
     if (!params) {
       return;
     }
-    const { path } = params;
-    const ref = collection(getFirestore(), path);
+    const { path, db } = params;
+    const ref = collection(db ?? getFirestore(), path);
     let q;
     if (isQueryConstraintParams(params)) {
       q = query(ref, ...(params.queryConstraints as QueryConstraint[]));

@@ -1,9 +1,6 @@
 import { getFirestore } from "firebase-admin/firestore";
-import type {
-  KeyParamsForAggregate,
-  SwrAggregateSpec,
-  AggregateResult,
-} from "../../util/type.js";
+import type { SwrAggregateSpec, AggregateResult } from "../../util/type.js";
+import type { KeyParamsForAggregate } from "../util/type.js";
 import { buildQueryForCollection } from "../util/buildQuery.js";
 import { buildAggregateSpec } from "../util/buildAggregateSpec.js";
 import createSwrKey from "../util/createKey.js";
@@ -17,13 +14,13 @@ import createSwrKey from "../util/createKey.js";
  * Use the typed query params (where, orderBy, etc.) instead.
  */
 const getAggregate = async <T, TSpec extends SwrAggregateSpec<T>>(
-  params: Omit<KeyParamsForAggregate<T, TSpec>, "queryConstraints">
+  params: KeyParamsForAggregate<T, TSpec>
 ): Promise<{
   key: string;
   data: AggregateResult<TSpec>;
 }> => {
-  const { path, aggregate, ...queryParams } = params;
-  const db = getFirestore();
+  const { path, aggregate, db: externalDb, ...queryParams } = params;
+  const db = externalDb ?? getFirestore();
   const collectionRef = db.collection(path);
 
   const queryRef = buildQueryForCollection(collectionRef, queryParams);
@@ -32,7 +29,7 @@ const getAggregate = async <T, TSpec extends SwrAggregateSpec<T>>(
   const snapshot = await queryRef.aggregate(aggregateSpec).get();
 
   return {
-    key: createSwrKey({ ...params, _aggregate: true }),
+    key: createSwrKey({ ...params, db, _aggregate: true }),
     data: snapshot.data() as AggregateResult<TSpec>,
   };
 };

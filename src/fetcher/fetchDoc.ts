@@ -28,9 +28,10 @@ export type FetchDocParams<T> = Omit<
 const fetchDoc = async <T>(
   params: FetchDocParams<T>
 ): Promise<DocumentData<T> | undefined> => {
-  const { path, parseDates, useOfflineCache } = params;
+  const { path, parseDates, useOfflineCache, db: externalDb } = params;
+  const db = externalDb ?? getFirestore();
   const converter = getFirestoreConverter<T>(parseDates);
-  const ref = doc(getFirestore(), path);
+  const ref = doc(db, path);
   const getFn = useOfflineCache ? getDocFromCache : getDoc;
   const sn = await getFn(ref.withConverter(converter));
   return sn.data();

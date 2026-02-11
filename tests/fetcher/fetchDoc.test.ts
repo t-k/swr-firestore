@@ -50,6 +50,18 @@ describe("fetchDoc", () => {
     expect(result?.createdAt.getFullYear()).toBe(2025);
   });
 
+  test("fetch document with explicit db", async () => {
+    const result = await fetchDoc<TestDoc>({
+      path: `${testCollection}/${docId}`,
+      db,
+    });
+
+    expect(result).toBeDefined();
+    expect(result?.title).toBe("Test Document");
+    expect(result?.count).toBe(42);
+    expect(result?.id).toBe(docId);
+  });
+
   test("return undefined for non-existent document", async () => {
     const result = await fetchDoc<TestDoc>({
       path: `${testCollection}/non-existent`,

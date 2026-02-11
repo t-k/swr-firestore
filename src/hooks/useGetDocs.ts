@@ -20,6 +20,7 @@ import {
   where,
 } from "firebase/firestore";
 import { getFirestoreConverter } from "../util/getConverter";
+import { toDatabaseIdString } from "../util/databaseId";
 import { isQueryConstraintParams } from "../util/typeGuard";
 import serializeMiddleware from "../middleware/serializeMiddleware";
 
@@ -31,11 +32,11 @@ const useGetDocs = <T>(
     if (!params) {
       return;
     }
-    const { path, parseDates, isCollectionGroup } = params;
+    const { path, parseDates, isCollectionGroup, db } = params;
     const converter = getFirestoreConverter<T>(parseDates);
     const ref = isCollectionGroup
-      ? collectionGroup(getFirestore(), path)
-      : collection(getFirestore(), path);
+      ? collectionGroup(db ?? getFirestore(), path)
+      : collection(db ?? getFirestore(), path);
     let q;
     if (isQueryConstraintParams(params)) {
       q = query(ref, ...(params.queryConstraints as QueryConstraint[]));
@@ -81,9 +82,18 @@ const useGetDocs = <T>(
       isCollectionGroup: _isCollectionGroup,
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       useOfflineCache: _useOfflineCache,
+      db,
       ...rest
     } = params;
-    return rest;
+    return db != null
+      ? {
+          ...rest,
+          databaseId: toDatabaseIdString(
+            (db.toJSON() as { databaseId: string | { database: string } })
+              .databaseId
+          ),
+        }
+      : rest;
   };
   return useSWR(scrubKey(params), fetcher, {
     ...swrOptions,

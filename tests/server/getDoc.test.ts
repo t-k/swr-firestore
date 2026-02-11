@@ -12,6 +12,7 @@ import { deleteCollection } from "../supports/fbUtil";
 import { getDoc } from "../../src/server";
 import { Timestamp } from "firebase-admin/firestore";
 import { unstable_serialize } from "swr";
+import { db as adminDb } from "../supports/fbAdmin";
 
 const COLLECTION = "GetDocTest";
 describe("getDoc", () => {
@@ -77,6 +78,24 @@ describe("getDoc", () => {
       });
       expect(data != null).toBe(true);
       expect(data?.createdAt instanceof Date).toBe(true);
+    });
+  });
+  describe("with explicit db", () => {
+    it("should fetch data with explicit db", async () => {
+      const ref = collection(db, COLLECTION) as CollectionReference<Post>;
+      const id = faker.string.uuid();
+      const docRef = doc(ref, id);
+      await setDoc(docRef, {
+        content: "hello",
+        status: "draft",
+        createdAt: serverTimestamp(),
+      });
+      const { data } = await getDoc<Post>({
+        path: `${COLLECTION}/${id}`,
+        db: adminDb,
+      });
+      expect(data != null).toBe(true);
+      expect(data?.content).toBe("hello");
     });
   });
   describe("with nested object", () => {

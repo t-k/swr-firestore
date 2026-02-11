@@ -9,8 +9,8 @@ const getCollectionCount = async <T>(
   key: string;
   data: number;
 }> => {
-  const { path } = params;
-  const db = getFirestore();
+  const { path, db: externalDb } = params;
+  const db = externalDb ?? getFirestore();
   const collectionRef = db.collection(path);
   let queryRef: Query | null = null;
   const {

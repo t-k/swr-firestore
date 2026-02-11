@@ -1,10 +1,13 @@
-import type { DocumentData, KeyParams } from "./util/type";
+import type {
+  DocumentData,
+  KeyParams,
+  KeyParamsForAggregate,
+  KeyParamsForCollectionGroupAggregate,
+} from "./util/type";
 import type {
   SwrAggregateSpec,
   AggregateResult,
   AggregateFieldSpec,
-  KeyParamsForAggregate,
-  KeyParamsForCollectionGroupAggregate,
 } from "../util/type";
 import getCollection from "./fetcher/getCollection";
 import getCollectionCount from "./fetcher/getCollectionCount";

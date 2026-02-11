@@ -29,8 +29,8 @@ const fetchDocInTx = async <T>(
   transaction: Transaction,
   params: Omit<KeyParams<T>, "where" | "orderBy" | "limit">
 ): Promise<DocumentData<T> | undefined> => {
-  const { path, parseDates } = params;
-  const db = getFirestore();
+  const { path, parseDates, db: externalDb } = params;
+  const db = externalDb ?? getFirestore();
   const converter = getFirestoreConverter<T>(parseDates);
   const docRef = doc(db, path).withConverter(converter);
   const sn = await transaction.get(docRef);

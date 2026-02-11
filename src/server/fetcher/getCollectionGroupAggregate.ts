@@ -1,9 +1,6 @@
 import { getFirestore } from "firebase-admin/firestore";
-import type {
-  KeyParamsForCollectionGroupAggregate,
-  SwrAggregateSpec,
-  AggregateResult,
-} from "../../util/type.js";
+import type { SwrAggregateSpec, AggregateResult } from "../../util/type.js";
+import type { KeyParamsForCollectionGroupAggregate } from "../util/type.js";
 import { buildQueryForCollectionGroup } from "../util/buildQuery.js";
 import { buildAggregateSpec } from "../util/buildAggregateSpec.js";
 import createSwrKey from "../util/createKey.js";
@@ -20,13 +17,13 @@ const getCollectionGroupAggregate = async <
   T,
   TSpec extends SwrAggregateSpec<T>,
 >(
-  params: Omit<KeyParamsForCollectionGroupAggregate<T, TSpec>, "queryConstraints">
+  params: KeyParamsForCollectionGroupAggregate<T, TSpec>
 ): Promise<{
   key: string;
   data: AggregateResult<TSpec>;
 }> => {
-  const { path, aggregate, ...queryParams } = params;
-  const db = getFirestore();
+  const { path, aggregate, db: externalDb, ...queryParams } = params;
+  const db = externalDb ?? getFirestore();
   const collectionGroupRef = db.collectionGroup(path);
 
   const queryRef = buildQueryForCollectionGroup(collectionGroupRef, queryParams);
@@ -35,7 +32,7 @@ const getCollectionGroupAggregate = async <
   const snapshot = await queryRef.aggregate(aggregateSpec).get();
 
   return {
-    key: createSwrKey({ ...params, _aggregate: true }),
+    key: createSwrKey({ ...params, db, _aggregate: true }),
     data: snapshot.data() as AggregateResult<TSpec>,
   };
 };

@@ -26,8 +26,9 @@ import { buildQueryForCollectionGroup } from "../util/buildQuery";
 const fetchCollectionGroupCount = async <T>(
   params: KeyParamsForCollectionGroupCount<T>
 ): Promise<number> => {
-  const { path } = params;
-  const ref = collectionGroup(getFirestore(), path);
+  const { path, db: externalDb } = params;
+  const db = externalDb ?? getFirestore();
+  const ref = collectionGroup(db, path);
   const q = buildQueryForCollectionGroup(ref, params);
   const sn = await getCountFromServer(q);
   return sn.data().count;
