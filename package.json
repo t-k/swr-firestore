@@ -69,7 +69,7 @@
     "@vitest/coverage-v8": "^4.0.15",
     "firebase": ">=9.17.0",
     "firebase-admin": ">=11.5.0",
-    "jsdom": "^27.0.0",
+    "jsdom": "^28.1.0",
     "react": "^19",
     "react-dom": "^19",
     "rollup-plugin-typescript-paths": "^1.4.0",
