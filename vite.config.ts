@@ -16,9 +16,7 @@ export default defineConfig({
       name: "SwrFirestore",
       fileName: (format, entryName) => {
         const ext = format === "cjs" ? "umd.cjs" : "js";
-        return entryName === "server"
-          ? `server/index.${ext}`
-          : `${entryName}.${ext}`;
+        return entryName === "server" ? `server/index.${ext}` : `${entryName}.${ext}`;
       },
     },
     rollupOptions: {

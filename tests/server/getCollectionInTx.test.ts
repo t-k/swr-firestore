@@ -1,10 +1,5 @@
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
-import {
-  collection,
-  doc,
-  setDoc,
-  Timestamp,
-} from "firebase/firestore";
+import { collection, doc, setDoc, Timestamp } from "firebase/firestore";
 import { getCollectionInTx } from "../../src/server";
 import { db } from "../supports/fb";
 import { db as adminDb } from "../supports/fbAdmin";
@@ -28,11 +23,7 @@ describe("getCollectionInTx", () => {
   ];
 
   beforeAll(async () => {
-    await Promise.all(
-      testData.map((data, i) =>
-        setDoc(doc(db, testCollection, `doc-${i}`), data)
-      )
-    );
+    await Promise.all(testData.map((data, i) => setDoc(doc(db, testCollection, `doc-${i}`), data)));
   });
 
   afterAll(async () => {
@@ -133,10 +124,7 @@ describe("getCollectionInTx", () => {
     });
 
     // Verify the updates
-    const snapshot = await adminDb
-      .collection(testCollection)
-      .where("name", "==", "A")
-      .get();
+    const snapshot = await adminDb.collection(testCollection).where("name", "==", "A").get();
     expect(snapshot.docs[0].data().value).toBe(110);
   });
 });

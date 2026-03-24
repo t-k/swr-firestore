@@ -1,28 +1,35 @@
 {
   "name": "@tatsuokaniwa/swr-firestore",
-  "description": "React Hooks library for Firestore using SWR's subscription feature.",
   "version": "2.1.0",
+  "description": "React Hooks library for Firestore using SWR's subscription feature.",
+  "keywords": [
+    "firestore",
+    "swr"
+  ],
+  "homepage": "https://github.com/t-k/swr-firestore#readme",
+  "bugs": {
+    "url": "https://github.com/t-k/swr-firestore/issues"
+  },
+  "license": "MIT",
+  "author": "t-k (https://github.com/t-k)",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/t-k/swr-firestore.git"
   },
-  "author": "t-k (https://github.com/t-k)",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/t-k/swr-firestore/issues"
-  },
-  "homepage": "https://github.com/t-k/swr-firestore#readme",
   "files": [
     "dist"
-  ],
-  "keywords": [
-    "swr",
-    "firestore"
   ],
   "type": "module",
   "main": "./dist/index.umd.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "server": [
+        "dist/server/index.d.ts"
+      ]
+    }
+  },
   "exports": {
     ".": {
       "import": "./dist/index.js",
@@ -33,13 +40,6 @@
       "import": "./dist/server/index.js",
       "require": "./dist/server/index.umd.cjs",
       "types": "./dist/server/index.d.ts"
-    }
-  },
-  "typesVersions": {
-    "*": {
-      "server": [
-        "dist/server/index.d.ts"
-      ]
     }
   },
   "scripts": {
@@ -56,7 +56,6 @@
     "lodash-es": "^4.17.21"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.1.4",
     "@faker-js/faker": "^10.0.0",
     "@rollup/plugin-typescript": "^12.1.0",
     "@testing-library/jest-dom": "^6.0.0",
@@ -70,6 +69,8 @@
     "firebase": ">=9.17.0",
     "firebase-admin": ">=11.5.0",
     "jsdom": "^29.0.0",
+    "oxfmt": "^0.41.0",
+    "oxlint": "^1.56.0",
     "react": "^19",
     "react-dom": "^19",
     "rollup-plugin-typescript-paths": "^1.4.0",

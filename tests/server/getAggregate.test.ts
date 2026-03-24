@@ -1,9 +1,4 @@
-import {
-  CollectionReference,
-  addDoc,
-  collection,
-  serverTimestamp,
-} from "firebase/firestore";
+import { CollectionReference, addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { getAggregate, getCollection } from "../../src/server";
 
 import { db } from "../supports/fb";
@@ -59,10 +54,7 @@ describe("getAggregate", () => {
 
   describe("count only", () => {
     it("should fetch total count", async () => {
-      const { key, data } = await getAggregate<
-        Product,
-        { total: { type: "count" } }
-      >({
+      const { key, data } = await getAggregate<Product, { total: { type: "count" } }>({
         path: COLLECTION,
         aggregate: {
           total: { type: "count" },
@@ -158,10 +150,7 @@ describe("getAggregate", () => {
       });
       const targetId = products[0].id;
 
-      const { key, data } = await getAggregate<
-        Product,
-        { count: { type: "count" } }
-      >({
+      const { key, data } = await getAggregate<Product, { count: { type: "count" } }>({
         path: COLLECTION,
         where: [["id", "==", targetId]],
         aggregate: {
@@ -174,10 +163,7 @@ describe("getAggregate", () => {
 
   describe("with limit option", () => {
     it("should fetch aggregation with limit", async () => {
-      const { key, data } = await getAggregate<
-        Product,
-        { count: { type: "count" } }
-      >({
+      const { key, data } = await getAggregate<Product, { count: { type: "count" } }>({
         path: COLLECTION,
         orderBy: [["price", "asc"]],
         limit: 2,

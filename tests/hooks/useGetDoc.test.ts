@@ -37,7 +37,7 @@ describe("useGetDoc", () => {
         createdAt: serverTimestamp(),
       });
       const { result, unmount } = renderHook(() =>
-        useGetDoc<Post>({ path: `${COLLECTION}/${id}` })
+        useGetDoc<Post>({ path: `${COLLECTION}/${id}` }),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -66,7 +66,7 @@ describe("useGetDoc", () => {
         useGetDoc<Post>({
           path: `${COLLECTION}/${id}`,
           parseDates: ["createdAt"],
-        })
+        }),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -96,8 +96,8 @@ describe("useGetDoc", () => {
           {
             path: `${COLLECTION}/${id}`,
           },
-          { use: [emptyMiddleware] }
-        )
+          { use: [emptyMiddleware] },
+        ),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -119,7 +119,7 @@ describe("useGetDoc", () => {
       const { result, unmount } = renderHook(() =>
         useGetDoc<Post>({
           path: `${ERR_COLLECTION}/${id}`,
-        })
+        }),
       );
       await waitFor(() => expect(result.current.isLoading).toBe(false), {
         timeout: 5000,

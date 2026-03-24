@@ -21,7 +21,7 @@ import serializeMiddleware from "../middleware/serializeMiddleware";
 
 const useCollectionGroupCount = <T>(
   params: KeyParamsForCollectionGroupCount<T> | Falsy,
-  swrOptions?: Omit<SWRConfiguration, "fetcher">
+  swrOptions?: Omit<SWRConfiguration, "fetcher">,
 ) => {
   const fetcher = async () => {
     if (!params) {
@@ -52,7 +52,7 @@ const useCollectionGroupCount = <T>(
         ...(e ? [endAt(...(Array.isArray(e) ? e : [e]))] : []),
         ...(eb ? [endBefore(...(Array.isArray(eb) ? eb : [eb]))] : []),
         ...(l ? [limit(l)] : []),
-        ...(ltl ? [limitToLast(ltl)] : [])
+        ...(ltl ? [limitToLast(ltl)] : []),
       );
     }
     const sn = await getCountFromServer(q);

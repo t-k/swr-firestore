@@ -1,12 +1,6 @@
 import { renderHook, waitFor } from "@testing-library/react";
 import { FirebaseError } from "firebase/app";
-import {
-  addDoc,
-  collection,
-  or,
-  serverTimestamp,
-  where,
-} from "firebase/firestore";
+import { addDoc, collection, or, serverTimestamp, where } from "firebase/firestore";
 import { useCollectionGroupCount } from "../../src";
 import emptyMiddleware from "../supports/emptyMiddleware";
 import { db } from "../supports/fb";
@@ -34,7 +28,7 @@ describe("useCollectionGroupCount", () => {
           createdAt: serverTimestamp(),
           sortableId: x,
         });
-      })
+      }),
     );
   });
   afterEach(async () => {
@@ -43,7 +37,7 @@ describe("useCollectionGroupCount", () => {
   describe("without option", () => {
     it("should fetch data from Firestore", async () => {
       const { result, unmount } = renderHook(() =>
-        useCollectionGroupCount<Comment>({ path: SUB_COLLECTION })
+        useCollectionGroupCount<Comment>({ path: SUB_COLLECTION }),
       );
       await waitFor(() => expect(result.current.isLoading).toBe(false), {
         timeout: 5000,
@@ -62,10 +56,7 @@ describe("useCollectionGroupCount", () => {
         status: "draft",
         createdAt: serverTimestamp(),
       });
-      const subRef = collection(
-        db,
-        `${COLLECTION}/${doc.id}/${SUB_COLLECTION}`
-      );
+      const subRef = collection(db, `${COLLECTION}/${doc.id}/${SUB_COLLECTION}`);
       await addDoc(subRef, {
         content: "foo",
         createdAt: serverTimestamp(),
@@ -74,7 +65,7 @@ describe("useCollectionGroupCount", () => {
         useCollectionGroupCount<Comment>({
           path: SUB_COLLECTION,
           where: [["content", "==", "foo"]],
-        })
+        }),
       );
       await waitFor(() => expect(result.current.isLoading).toBe(false), {
         timeout: 5000,
@@ -94,10 +85,7 @@ describe("useCollectionGroupCount", () => {
         status: "draft",
         createdAt: serverTimestamp(),
       });
-      const subRef = collection(
-        db,
-        `${COLLECTION}/${doc.id}/${SUB_COLLECTION}`
-      );
+      const subRef = collection(db, `${COLLECTION}/${doc.id}/${SUB_COLLECTION}`);
       await addDoc(subRef, {
         content: "foo",
         createdAt: serverTimestamp(),
@@ -106,7 +94,7 @@ describe("useCollectionGroupCount", () => {
         useCollectionGroupCount<Comment>({
           path: SUB_COLLECTION,
           limit: 1,
-        })
+        }),
       );
       await waitFor(() => expect(result.current.isLoading).toBe(false), {
         timeout: 5000,
@@ -126,10 +114,7 @@ describe("useCollectionGroupCount", () => {
         status: "draft",
         createdAt: serverTimestamp(),
       });
-      const subRef = collection(
-        db,
-        `${COLLECTION}/${doc.id}/${SUB_COLLECTION}`
-      );
+      const subRef = collection(db, `${COLLECTION}/${doc.id}/${SUB_COLLECTION}`);
       await addDoc(subRef, {
         content: "foo",
         createdAt: serverTimestamp(),
@@ -139,7 +124,7 @@ describe("useCollectionGroupCount", () => {
           path: SUB_COLLECTION,
           limitToLast: 1,
           orderBy: [["createdAt", "asc"]],
-        })
+        }),
       );
       await waitFor(() => expect(result.current.isLoading).toBe(false), {
         timeout: 5000,
@@ -159,7 +144,7 @@ describe("useCollectionGroupCount", () => {
             path: SUB_COLLECTION,
             orderBy: [["sortableId", "asc"]],
             startAt: [10],
-          })
+          }),
         );
         await waitFor(() => expect(result.current.isLoading).toBe(false), {
           timeout: 5000,
@@ -176,7 +161,7 @@ describe("useCollectionGroupCount", () => {
             path: SUB_COLLECTION,
             orderBy: [["sortableId", "asc"]],
             startAfter: [10],
-          })
+          }),
         );
         await waitFor(() => expect(result.current.isLoading).toBe(false), {
           timeout: 5000,
@@ -193,7 +178,7 @@ describe("useCollectionGroupCount", () => {
             path: SUB_COLLECTION,
             orderBy: [["sortableId", "asc"]],
             endAt: [100],
-          })
+          }),
         );
         await waitFor(() => expect(result.current.isLoading).toBe(false), {
           timeout: 5000,
@@ -210,7 +195,7 @@ describe("useCollectionGroupCount", () => {
             path: SUB_COLLECTION,
             orderBy: [["sortableId", "asc"]],
             endBefore: [100],
-          })
+          }),
         );
         await waitFor(() => expect(result.current.isLoading).toBe(false), {
           timeout: 5000,
@@ -229,10 +214,7 @@ describe("useCollectionGroupCount", () => {
         status: "draft",
         createdAt: serverTimestamp(),
       });
-      const subRef = collection(
-        db,
-        `${COLLECTION}/${doc.id}/${SUB_COLLECTION}`
-      );
+      const subRef = collection(db, `${COLLECTION}/${doc.id}/${SUB_COLLECTION}`);
       await addDoc(subRef, {
         content: "foo",
         createdAt: serverTimestamp(),
@@ -244,10 +226,8 @@ describe("useCollectionGroupCount", () => {
       const { result, unmount } = renderHook(() =>
         useCollectionGroupCount<Comment>({
           path: SUB_COLLECTION,
-          queryConstraints: [
-            or(where("content", "==", "foo"), where("content", "==", "bar")),
-          ],
-        })
+          queryConstraints: [or(where("content", "==", "foo"), where("content", "==", "bar"))],
+        }),
       );
       await waitFor(() => expect(result.current.isLoading).toBe(false), {
         timeout: 5000,
@@ -264,8 +244,8 @@ describe("useCollectionGroupCount", () => {
           {
             path: SUB_COLLECTION,
           },
-          { use: [emptyMiddleware] }
-        )
+          { use: [emptyMiddleware] },
+        ),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -282,10 +262,7 @@ describe("useCollectionGroupCount", () => {
         status: "draft",
         createdAt: serverTimestamp(),
       });
-      const subRef = collection(
-        db,
-        `${COLLECTION}/${doc.id}/${ERR_SUB_COLLECTION}`
-      );
+      const subRef = collection(db, `${COLLECTION}/${doc.id}/${ERR_SUB_COLLECTION}`);
       await addDoc(subRef, {
         content: "foo",
         createdAt: serverTimestamp(),
@@ -293,7 +270,7 @@ describe("useCollectionGroupCount", () => {
       const { result, unmount } = renderHook(() =>
         useCollectionGroupCount<Comment>({
           path: ERR_SUB_COLLECTION,
-        })
+        }),
       );
       await waitFor(() => expect(result.current.isLoading).toBe(false), {
         timeout: 5000,

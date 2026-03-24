@@ -1,11 +1,5 @@
 import { renderHook, waitFor } from "@testing-library/react";
-import {
-  addDoc,
-  collection,
-  or,
-  serverTimestamp,
-  where,
-} from "firebase/firestore";
+import { addDoc, collection, or, serverTimestamp, where } from "firebase/firestore";
 import { useCollectionGroupAggregate } from "../../src";
 import emptyMiddleware from "../supports/emptyMiddleware";
 import { db } from "../supports/fb";
@@ -77,7 +71,7 @@ describe("useCollectionGroupAggregate", () => {
           aggregate: {
             total: { type: "count" },
           },
-        })
+        }),
       );
       await waitFor(() => expect(result.current.isLoading).toBe(false), {
         timeout: 5000,
@@ -90,15 +84,12 @@ describe("useCollectionGroupAggregate", () => {
   describe("sum only", () => {
     it("should fetch sum across subcollections", async () => {
       const { result, unmount } = renderHook(() =>
-        useCollectionGroupAggregate<
-          Item,
-          { totalPrice: { type: "sum"; field: "price" } }
-        >({
+        useCollectionGroupAggregate<Item, { totalPrice: { type: "sum"; field: "price" } }>({
           path: SUB_COLLECTION,
           aggregate: {
             totalPrice: { type: "sum", field: "price" },
           },
-        })
+        }),
       );
       await waitFor(() => expect(result.current.isLoading).toBe(false), {
         timeout: 5000,
@@ -111,15 +102,12 @@ describe("useCollectionGroupAggregate", () => {
   describe("average only", () => {
     it("should fetch average across subcollections", async () => {
       const { result, unmount } = renderHook(() =>
-        useCollectionGroupAggregate<
-          Item,
-          { avgQuantity: { type: "average"; field: "quantity" } }
-        >({
+        useCollectionGroupAggregate<Item, { avgQuantity: { type: "average"; field: "quantity" } }>({
           path: SUB_COLLECTION,
           aggregate: {
             avgQuantity: { type: "average", field: "quantity" },
           },
-        })
+        }),
       );
       await waitFor(() => expect(result.current.isLoading).toBe(false), {
         timeout: 5000,
@@ -147,7 +135,7 @@ describe("useCollectionGroupAggregate", () => {
             totalPrice: { type: "sum", field: "price" },
             avgPrice: { type: "average", field: "price" },
           },
-        })
+        }),
       );
       await waitFor(() => expect(result.current.isLoading).toBe(false), {
         timeout: 5000,
@@ -177,7 +165,7 @@ describe("useCollectionGroupAggregate", () => {
             count: { type: "count" },
             totalPrice: { type: "sum", field: "price" },
           },
-        })
+        }),
       );
       await waitFor(() => expect(result.current.isLoading).toBe(false), {
         timeout: 5000,
@@ -194,18 +182,13 @@ describe("useCollectionGroupAggregate", () => {
   describe("with queryConstraints", () => {
     it("should fetch aggregation with OR query using queryConstraints", async () => {
       const { result, unmount } = renderHook(() =>
-        useCollectionGroupAggregate<
-          Item,
-          { count: { type: "count" } }
-        >({
+        useCollectionGroupAggregate<Item, { count: { type: "count" } }>({
           path: SUB_COLLECTION,
-          queryConstraints: [
-            or(where("name", "==", "Item A"), where("name", "==", "Item D")),
-          ],
+          queryConstraints: [or(where("name", "==", "Item A"), where("name", "==", "Item D"))],
           aggregate: {
             count: { type: "count" },
           },
-        })
+        }),
       );
       await waitFor(() => expect(result.current.isLoading).toBe(false), {
         timeout: 5000,
@@ -225,8 +208,8 @@ describe("useCollectionGroupAggregate", () => {
               count: { type: "count" },
             },
           },
-          { use: [emptyMiddleware] }
-        )
+          { use: [emptyMiddleware] },
+        ),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -239,7 +222,7 @@ describe("useCollectionGroupAggregate", () => {
   describe("conditional fetching", () => {
     it("should not fetch when params is null", async () => {
       const { result, unmount } = renderHook(() =>
-        useCollectionGroupAggregate<Item, { count: { type: "count" } }>(null)
+        useCollectionGroupAggregate<Item, { count: { type: "count" } }>(null),
       );
       await new Promise((resolve) => setTimeout(resolve, 500));
       expect(result.current.data).toBeUndefined();
@@ -249,7 +232,7 @@ describe("useCollectionGroupAggregate", () => {
 
     it("should not fetch when params is false", async () => {
       const { result, unmount } = renderHook(() =>
-        useCollectionGroupAggregate<Item, { count: { type: "count" } }>(false)
+        useCollectionGroupAggregate<Item, { count: { type: "count" } }>(false),
       );
       await new Promise((resolve) => setTimeout(resolve, 500));
       expect(result.current.data).toBeUndefined();
@@ -259,7 +242,7 @@ describe("useCollectionGroupAggregate", () => {
 
     it("should not fetch when params is undefined", async () => {
       const { result, unmount } = renderHook(() =>
-        useCollectionGroupAggregate<Item, { count: { type: "count" } }>(undefined)
+        useCollectionGroupAggregate<Item, { count: { type: "count" } }>(undefined),
       );
       await new Promise((resolve) => setTimeout(resolve, 500));
       expect(result.current.data).toBeUndefined();

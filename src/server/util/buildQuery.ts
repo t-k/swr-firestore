@@ -1,13 +1,6 @@
 import { FieldPath } from "firebase-admin/firestore";
-import type {
-  CollectionReference,
-  CollectionGroup,
-  Query,
-} from "firebase-admin/firestore";
-import type {
-  QueryParams,
-  QueryParamsForCollectionGroup,
-} from "./type.js";
+import type { CollectionReference, CollectionGroup, Query } from "firebase-admin/firestore";
+import type { QueryParams, QueryParamsForCollectionGroup } from "./type.js";
 
 /**
  * Build query for Collection (Admin SDK)
@@ -15,7 +8,7 @@ import type {
  */
 export const buildQueryForCollection = <T>(
   collectionRef: CollectionReference,
-  params: QueryParams<T>
+  params: QueryParams<T>,
 ): Query => {
   let queryRef: Query | null = null;
   const {
@@ -33,11 +26,7 @@ export const buildQueryForCollection = <T>(
     w.forEach((q) => {
       queryRef =
         q[0] === "id"
-          ? (queryRef ?? collectionRef).where(
-              FieldPath.documentId(),
-              q[1],
-              q[2]
-            )
+          ? (queryRef ?? collectionRef).where(FieldPath.documentId(), q[1], q[2])
           : (queryRef ?? collectionRef).where(...q);
     });
   }
@@ -50,24 +39,16 @@ export const buildQueryForCollection = <T>(
     });
   }
   if (s) {
-    queryRef = (queryRef ?? collectionRef).startAt(
-      ...(Array.isArray(s) ? s : [s])
-    );
+    queryRef = (queryRef ?? collectionRef).startAt(...(Array.isArray(s) ? s : [s]));
   }
   if (sa) {
-    queryRef = (queryRef ?? collectionRef).startAfter(
-      ...(Array.isArray(sa) ? sa : [sa])
-    );
+    queryRef = (queryRef ?? collectionRef).startAfter(...(Array.isArray(sa) ? sa : [sa]));
   }
   if (e) {
-    queryRef = (queryRef ?? collectionRef).endAt(
-      ...(Array.isArray(e) ? e : [e])
-    );
+    queryRef = (queryRef ?? collectionRef).endAt(...(Array.isArray(e) ? e : [e]));
   }
   if (eb) {
-    queryRef = (queryRef ?? collectionRef).endBefore(
-      ...(Array.isArray(eb) ? eb : [eb])
-    );
+    queryRef = (queryRef ?? collectionRef).endBefore(...(Array.isArray(eb) ? eb : [eb]));
   }
   if (l) {
     queryRef = (queryRef ?? collectionRef).limit(l);
@@ -85,7 +66,7 @@ export const buildQueryForCollection = <T>(
  */
 export const buildQueryForCollectionGroup = <T>(
   collectionGroupRef: CollectionGroup,
-  params: QueryParamsForCollectionGroup<T>
+  params: QueryParamsForCollectionGroup<T>,
 ): Query => {
   let queryRef: Query | null = null;
   const {
@@ -110,24 +91,16 @@ export const buildQueryForCollectionGroup = <T>(
     });
   }
   if (s) {
-    queryRef = (queryRef ?? collectionGroupRef).startAt(
-      ...(Array.isArray(s) ? s : [s])
-    );
+    queryRef = (queryRef ?? collectionGroupRef).startAt(...(Array.isArray(s) ? s : [s]));
   }
   if (sa) {
-    queryRef = (queryRef ?? collectionGroupRef).startAfter(
-      ...(Array.isArray(sa) ? sa : [sa])
-    );
+    queryRef = (queryRef ?? collectionGroupRef).startAfter(...(Array.isArray(sa) ? sa : [sa]));
   }
   if (e) {
-    queryRef = (queryRef ?? collectionGroupRef).endAt(
-      ...(Array.isArray(e) ? e : [e])
-    );
+    queryRef = (queryRef ?? collectionGroupRef).endAt(...(Array.isArray(e) ? e : [e]));
   }
   if (eb) {
-    queryRef = (queryRef ?? collectionGroupRef).endBefore(
-      ...(Array.isArray(eb) ? eb : [eb])
-    );
+    queryRef = (queryRef ?? collectionGroupRef).endBefore(...(Array.isArray(eb) ? eb : [eb]));
   }
   if (l) {
     queryRef = (queryRef ?? collectionGroupRef).limit(l);

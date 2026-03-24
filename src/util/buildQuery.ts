@@ -1,8 +1,4 @@
-import type {
-  Query,
-  CollectionReference,
-  QueryConstraint,
-} from "firebase/firestore";
+import type { Query, CollectionReference, QueryConstraint } from "firebase/firestore";
 import {
   documentId,
   endAt,
@@ -15,17 +11,13 @@ import {
   startAt,
   where,
 } from "firebase/firestore";
-import type {
-  QueryParams,
-  QueryParamsForCollectionGroup,
-  QueryConstraintParams,
-} from "./type";
+import type { QueryParams, QueryParamsForCollectionGroup, QueryConstraintParams } from "./type";
 
 /**
  * Type guard for QueryConstraintParams
  */
 const hasQueryConstraints = <T>(
-  params: QueryParams<T> | QueryParamsForCollectionGroup<T> | QueryConstraintParams
+  params: QueryParams<T> | QueryParamsForCollectionGroup<T> | QueryConstraintParams,
 ): params is QueryConstraintParams => {
   return "queryConstraints" in params && params.queryConstraints != null;
 };
@@ -36,7 +28,7 @@ const hasQueryConstraints = <T>(
  */
 export const buildQueryForCollection = <T>(
   ref: CollectionReference,
-  params: QueryParams<T> | QueryConstraintParams
+  params: QueryParams<T> | QueryConstraintParams,
 ): Query => {
   if (hasQueryConstraints(params)) {
     return query(ref, ...(params.queryConstraints as QueryConstraint[]));
@@ -56,17 +48,15 @@ export const buildQueryForCollection = <T>(
   return query(
     ref,
     ...(w ? w : []).map((q) =>
-      q[0] === "id" ? where(documentId(), q[1], q[2]) : where(q[0], q[1], q[2])
+      q[0] === "id" ? where(documentId(), q[1], q[2]) : where(q[0], q[1], q[2]),
     ),
-    ...(o ? o : []).map((q) =>
-      q[0] === "id" ? orderBy(documentId(), q[1]) : orderBy(q[0], q[1])
-    ),
+    ...(o ? o : []).map((q) => (q[0] === "id" ? orderBy(documentId(), q[1]) : orderBy(q[0], q[1]))),
     ...(s ? [startAt(...(Array.isArray(s) ? s : [s]))] : []),
     ...(sa ? [startAfter(...(Array.isArray(sa) ? sa : [sa]))] : []),
     ...(e ? [endAt(...(Array.isArray(e) ? e : [e]))] : []),
     ...(eb ? [endBefore(...(Array.isArray(eb) ? eb : [eb]))] : []),
     ...(l ? [limit(l)] : []),
-    ...(ltl ? [limitToLast(ltl)] : [])
+    ...(ltl ? [limitToLast(ltl)] : []),
   );
 };
 
@@ -76,7 +66,7 @@ export const buildQueryForCollection = <T>(
  */
 export const buildQueryForCollectionGroup = <T>(
   ref: Query,
-  params: QueryParamsForCollectionGroup<T> | QueryConstraintParams
+  params: QueryParamsForCollectionGroup<T> | QueryConstraintParams,
 ): Query => {
   if (hasQueryConstraints(params)) {
     return query(ref, ...(params.queryConstraints as QueryConstraint[]));
@@ -102,6 +92,6 @@ export const buildQueryForCollectionGroup = <T>(
     ...(e ? [endAt(...(Array.isArray(e) ? e : [e]))] : []),
     ...(eb ? [endBefore(...(Array.isArray(eb) ? eb : [eb]))] : []),
     ...(l ? [limit(l)] : []),
-    ...(ltl ? [limitToLast(ltl)] : [])
+    ...(ltl ? [limitToLast(ltl)] : []),
   );
 };

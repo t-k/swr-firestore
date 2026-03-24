@@ -1,13 +1,6 @@
 import { renderHook, waitFor } from "@testing-library/react";
 import { FirebaseError } from "firebase/app";
-import {
-  Timestamp,
-  addDoc,
-  collection,
-  serverTimestamp,
-  where,
-  or,
-} from "firebase/firestore";
+import { Timestamp, addDoc, collection, serverTimestamp, where, or } from "firebase/firestore";
 import { useCollectionGroup } from "../../src";
 import emptyMiddleware from "../supports/emptyMiddleware";
 import { db } from "../supports/fb";
@@ -34,7 +27,7 @@ describe("useCollectionGroup", () => {
           createdAt: serverTimestamp(),
           sortableId: x,
         });
-      })
+      }),
     );
   });
   afterEach(async () => {
@@ -43,7 +36,7 @@ describe("useCollectionGroup", () => {
   describe("without option", () => {
     it("should fetch data from Firestore", async () => {
       const { result, unmount } = renderHook(() =>
-        useCollectionGroup<Comment>({ path: SUB_COLLECTION })
+        useCollectionGroup<Comment>({ path: SUB_COLLECTION }),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -65,7 +58,7 @@ describe("useCollectionGroup", () => {
         useCollectionGroup<Comment>({
           path: SUB_COLLECTION,
           parseDates: ["createdAt"],
-        })
+        }),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -89,10 +82,7 @@ describe("useCollectionGroup", () => {
         status: "draft",
         createdAt: serverTimestamp(),
       });
-      const subRef = collection(
-        db,
-        `${COLLECTION}/${doc.id}/${SUB_COLLECTION}`
-      );
+      const subRef = collection(db, `${COLLECTION}/${doc.id}/${SUB_COLLECTION}`);
       await addDoc(subRef, {
         content: "foo",
         createdAt: serverTimestamp(),
@@ -109,7 +99,7 @@ describe("useCollectionGroup", () => {
         useCollectionGroup<Comment>({
           path: SUB_COLLECTION,
           where: [["content", "==", "foo"]],
-        })
+        }),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -133,10 +123,7 @@ describe("useCollectionGroup", () => {
         status: "draft",
         createdAt: serverTimestamp(),
       });
-      const subRef = collection(
-        db,
-        `${COLLECTION}/${doc.id}/${SUB_COLLECTION}`
-      );
+      const subRef = collection(db, `${COLLECTION}/${doc.id}/${SUB_COLLECTION}`);
       await addDoc(subRef, {
         content: "foo",
         createdAt: serverTimestamp(),
@@ -145,7 +132,7 @@ describe("useCollectionGroup", () => {
         useCollectionGroup<Comment>({
           path: SUB_COLLECTION,
           orderBy: [["createdAt", "desc"]],
-        })
+        }),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -165,10 +152,7 @@ describe("useCollectionGroup", () => {
         status: "draft",
         createdAt: serverTimestamp(),
       });
-      const subRef = collection(
-        db,
-        `${COLLECTION}/${doc.id}/${SUB_COLLECTION}`
-      );
+      const subRef = collection(db, `${COLLECTION}/${doc.id}/${SUB_COLLECTION}`);
       await addDoc(subRef, {
         content: "foo",
         createdAt: serverTimestamp(),
@@ -181,7 +165,7 @@ describe("useCollectionGroup", () => {
         useCollectionGroup<Comment>({
           path: SUB_COLLECTION,
           limit: 1,
-        })
+        }),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -199,10 +183,7 @@ describe("useCollectionGroup", () => {
         status: "draft",
         createdAt: serverTimestamp(),
       });
-      const subRef = collection(
-        db,
-        `${COLLECTION}/${doc.id}/${SUB_COLLECTION}`
-      );
+      const subRef = collection(db, `${COLLECTION}/${doc.id}/${SUB_COLLECTION}`);
       await addDoc(subRef, {
         content: "foo",
         createdAt: serverTimestamp(),
@@ -216,7 +197,7 @@ describe("useCollectionGroup", () => {
           path: SUB_COLLECTION,
           limitToLast: 1,
           orderBy: [["createdAt", "asc"]],
-        })
+        }),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -233,7 +214,7 @@ describe("useCollectionGroup", () => {
             path: SUB_COLLECTION,
             orderBy: [["sortableId", "asc"]],
             startAt: [10],
-          })
+          }),
         );
         await waitFor(() => expect(result.current.data != null).toBe(true), {
           timeout: 5000,
@@ -253,7 +234,7 @@ describe("useCollectionGroup", () => {
             path: SUB_COLLECTION,
             orderBy: [["sortableId", "asc"]],
             startAfter: [10],
-          })
+          }),
         );
         await waitFor(() => expect(result.current.data != null).toBe(true), {
           timeout: 5000,
@@ -273,7 +254,7 @@ describe("useCollectionGroup", () => {
             path: SUB_COLLECTION,
             orderBy: [["sortableId", "asc"]],
             endAt: [100],
-          })
+          }),
         );
         await waitFor(() => expect(result.current.data != null).toBe(true), {
           timeout: 5000,
@@ -293,7 +274,7 @@ describe("useCollectionGroup", () => {
             path: SUB_COLLECTION,
             orderBy: [["sortableId", "asc"]],
             endBefore: [100],
-          })
+          }),
         );
         await waitFor(() => expect(result.current.data != null).toBe(true), {
           timeout: 5000,
@@ -315,10 +296,7 @@ describe("useCollectionGroup", () => {
         status: "draft",
         createdAt: serverTimestamp(),
       });
-      const subRef = collection(
-        db,
-        `${COLLECTION}/${doc.id}/${SUB_COLLECTION}`
-      );
+      const subRef = collection(db, `${COLLECTION}/${doc.id}/${SUB_COLLECTION}`);
       await addDoc(subRef, {
         content: "foo",
         createdAt: serverTimestamp(),
@@ -330,10 +308,8 @@ describe("useCollectionGroup", () => {
       const { result, unmount } = renderHook(() =>
         useCollectionGroup<Comment>({
           path: SUB_COLLECTION,
-          queryConstraints: [
-            or(where("content", "==", "foo"), where("content", "==", "bar")),
-          ],
-        })
+          queryConstraints: [or(where("content", "==", "foo"), where("content", "==", "bar"))],
+        }),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -350,8 +326,8 @@ describe("useCollectionGroup", () => {
           {
             path: SUB_COLLECTION,
           },
-          { use: [emptyMiddleware] }
-        )
+          { use: [emptyMiddleware] },
+        ),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -368,10 +344,7 @@ describe("useCollectionGroup", () => {
         status: "draft",
         createdAt: serverTimestamp(),
       });
-      const subRef = collection(
-        db,
-        `${COLLECTION}/${doc.id}/${ERR_SUB_COLLECTION}`
-      );
+      const subRef = collection(db, `${COLLECTION}/${doc.id}/${ERR_SUB_COLLECTION}`);
       await addDoc(subRef, {
         content: "foo",
         createdAt: serverTimestamp(),
@@ -379,7 +352,7 @@ describe("useCollectionGroup", () => {
       const { result, unmount } = renderHook(() =>
         useCollectionGroup<Comment>({
           path: ERR_SUB_COLLECTION,
-        })
+        }),
       );
       await waitFor(() => expect(result.current.error != null).toBe(true), {
         timeout: 5000,

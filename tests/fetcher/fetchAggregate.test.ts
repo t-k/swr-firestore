@@ -40,10 +40,7 @@ describe("fetchAggregate", () => {
   });
 
   test("sum aggregation", async () => {
-    const result = await fetchAggregate<
-      Product,
-      { totalStock: { type: "sum"; field: "stock" } }
-    >({
+    const result = await fetchAggregate<Product, { totalStock: { type: "sum"; field: "stock" } }>({
       path: COLLECTION,
       aggregate: { totalStock: { type: "sum", field: "stock" } },
     });
@@ -52,13 +49,12 @@ describe("fetchAggregate", () => {
   });
 
   test("average aggregation", async () => {
-    const result = await fetchAggregate<
-      Product,
-      { avgPrice: { type: "average"; field: "price" } }
-    >({
-      path: COLLECTION,
-      aggregate: { avgPrice: { type: "average", field: "price" } },
-    });
+    const result = await fetchAggregate<Product, { avgPrice: { type: "average"; field: "price" } }>(
+      {
+        path: COLLECTION,
+        aggregate: { avgPrice: { type: "average", field: "price" } },
+      },
+    );
 
     expect(result.avgPrice).toBe(145);
   });

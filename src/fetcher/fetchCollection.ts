@@ -1,9 +1,4 @@
-import {
-  collection,
-  getDocs,
-  getDocsFromCache,
-  getFirestore,
-} from "firebase/firestore";
+import { collection, getDocs, getDocsFromCache, getFirestore } from "firebase/firestore";
 import type { DocumentData, KeyParams } from "../util/type";
 import { getFirestoreConverter } from "../util/getConverter";
 import { buildQueryForCollection } from "../util/buildQuery";
@@ -30,9 +25,7 @@ export type FetchCollectionParams<T> = KeyParams<T> & {
  * });
  * ```
  */
-const fetchCollection = async <T>(
-  params: FetchCollectionParams<T>
-): Promise<DocumentData<T>[]> => {
+const fetchCollection = async <T>(params: FetchCollectionParams<T>): Promise<DocumentData<T>[]> => {
   const { path, parseDates, useOfflineCache, db: externalDb } = params;
   const db = externalDb ?? getFirestore();
   const converter = getFirestoreConverter<T>(parseDates);

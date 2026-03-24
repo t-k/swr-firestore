@@ -1,8 +1,4 @@
-import {
-  addDoc,
-  collection,
-  serverTimestamp,
-} from "firebase/firestore";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { getCollectionGroupAggregate } from "../../src/server";
 
 import { db } from "../supports/fb";
@@ -68,10 +64,7 @@ describe("getCollectionGroupAggregate", () => {
 
   describe("count only", () => {
     it("should fetch total count across subcollections", async () => {
-      const { key, data } = await getCollectionGroupAggregate<
-        Item,
-        { total: { type: "count" } }
-      >({
+      const { key, data } = await getCollectionGroupAggregate<Item, { total: { type: "count" } }>({
         path: SUB_COLLECTION,
         aggregate: {
           total: { type: "count" },
@@ -164,10 +157,7 @@ describe("getCollectionGroupAggregate", () => {
 
   describe("with limit option", () => {
     it("should fetch aggregation with limit", async () => {
-      const { key, data } = await getCollectionGroupAggregate<
-        Item,
-        { count: { type: "count" } }
-      >({
+      const { key, data } = await getCollectionGroupAggregate<Item, { count: { type: "count" } }>({
         path: SUB_COLLECTION,
         orderBy: [["price", "asc"]],
         limit: 2,

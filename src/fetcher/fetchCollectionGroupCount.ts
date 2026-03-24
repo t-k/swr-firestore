@@ -1,8 +1,4 @@
-import {
-  collectionGroup,
-  getCountFromServer,
-  getFirestore,
-} from "firebase/firestore";
+import { collectionGroup, getCountFromServer, getFirestore } from "firebase/firestore";
 import type { KeyParamsForCollectionGroupCount } from "../util/type";
 import { buildQueryForCollectionGroup } from "../util/buildQuery";
 
@@ -24,7 +20,7 @@ import { buildQueryForCollectionGroup } from "../util/buildQuery";
  * ```
  */
 const fetchCollectionGroupCount = async <T>(
-  params: KeyParamsForCollectionGroupCount<T>
+  params: KeyParamsForCollectionGroupCount<T>,
 ): Promise<number> => {
   const { path, db: externalDb } = params;
   const db = externalDb ?? getFirestore();

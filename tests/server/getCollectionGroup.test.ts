@@ -27,7 +27,7 @@ describe("getCollectionGroup", () => {
           createdAt: serverTimestamp(),
           sortableId: x,
         });
-      })
+      }),
     );
   });
   afterAll(async () => {
@@ -49,9 +49,7 @@ describe("getCollectionGroup", () => {
         isSubscription: true,
       });
       expect(data != null).toBe(true);
-      expect(key).toEqual(
-        "$sub$" + unstable_serialize({ path: SUB_COLLECTION })
-      );
+      expect(key).toEqual("$sub$" + unstable_serialize({ path: SUB_COLLECTION }));
     });
   });
   describe("with parseDates option", () => {

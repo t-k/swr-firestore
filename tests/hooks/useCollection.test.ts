@@ -89,7 +89,7 @@ describe("useCollection", () => {
     it("should work with && operator when false", async () => {
       const isLogin = false;
       const { result, unmount } = renderHook(() =>
-        useCollection<Post>(isLogin && { path: COLLECTION })
+        useCollection<Post>(isLogin && { path: COLLECTION }),
       );
       expect(result.current.data == null).toBe(true);
       unmount();
@@ -97,7 +97,7 @@ describe("useCollection", () => {
     it("should work with && operator when true", async () => {
       const isLogin = true;
       const { result, unmount } = renderHook(() =>
-        useCollection<Post>(isLogin && { path: COLLECTION })
+        useCollection<Post>(isLogin && { path: COLLECTION }),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -108,7 +108,7 @@ describe("useCollection", () => {
     it("should work with ternary operator when false", async () => {
       const isLogin = false;
       const { result, unmount } = renderHook(() =>
-        useCollection<Post>(isLogin ? { path: COLLECTION } : null)
+        useCollection<Post>(isLogin ? { path: COLLECTION } : null),
       );
       expect(result.current.data == null).toBe(true);
       unmount();
@@ -116,7 +116,7 @@ describe("useCollection", () => {
     it("should work with ternary operator when true", async () => {
       const isLogin = true;
       const { result, unmount } = renderHook(() =>
-        useCollection<Post>(isLogin ? { path: COLLECTION } : null)
+        useCollection<Post>(isLogin ? { path: COLLECTION } : null),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -127,9 +127,7 @@ describe("useCollection", () => {
   });
   describe("without option", () => {
     it("should fetch data from Firestore", async () => {
-      const { result, unmount } = renderHook(() =>
-        useCollection<Post>({ path: COLLECTION })
-      );
+      const { result, unmount } = renderHook(() => useCollection<Post>({ path: COLLECTION }));
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
       });
@@ -148,7 +146,7 @@ describe("useCollection", () => {
   describe("with parseDates option", () => {
     it("should fetch data from Firestore", async () => {
       const { result, unmount } = renderHook(() =>
-        useCollection<Post>({ path: COLLECTION, parseDates: ["createdAt"] })
+        useCollection<Post>({ path: COLLECTION, parseDates: ["createdAt"] }),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -170,7 +168,7 @@ describe("useCollection", () => {
         useCollection<Post>({
           path: COLLECTION,
           where: [["status", "==", "draft"]],
-        })
+        }),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -188,7 +186,7 @@ describe("useCollection", () => {
         useCollection<Post>({
           path: COLLECTION,
           where: [["id", "==", targetId]],
-        })
+        }),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -205,7 +203,7 @@ describe("useCollection", () => {
         useCollection<Post>({
           path: COLLECTION,
           orderBy: [["createdAt", "desc"]],
-        })
+        }),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -220,16 +218,13 @@ describe("useCollection", () => {
         useCollection<Post>({
           path: COLLECTION,
           orderBy: [["id", "asc"]],
-        })
+        }),
       );
       await waitFor(
-        () =>
-          expect(
-            result.current.data != null || result.current.error != null
-          ).toBe(true),
+        () => expect(result.current.data != null || result.current.error != null).toBe(true),
         {
           timeout: 5000,
-        }
+        },
       );
       expect(result.current!.data).toBeDefined();
       unmount();
@@ -242,7 +237,7 @@ describe("useCollection", () => {
         useCollection<Post>({
           path: COLLECTION,
           limit: 1,
-        })
+        }),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -258,7 +253,7 @@ describe("useCollection", () => {
           path: COLLECTION,
           limitToLast: 1,
           orderBy: [["createdAt", "asc"]],
-        })
+        }),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -273,7 +268,7 @@ describe("useCollection", () => {
         useCollection<Post>({
           path: COLLECTION,
           parseDates: ["createdAt", "author.createdAt"],
-        })
+        }),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -294,7 +289,7 @@ describe("useCollection", () => {
             path: COLLECTION,
             orderBy: [["sortableId", "asc"]],
             startAt: [10],
-          })
+          }),
         );
         await waitFor(() => expect(result.current.data != null).toBe(true), {
           timeout: 5000,
@@ -314,7 +309,7 @@ describe("useCollection", () => {
             path: COLLECTION,
             orderBy: [["sortableId", "asc"]],
             startAfter: [10],
-          })
+          }),
         );
         await waitFor(() => expect(result.current.data != null).toBe(true), {
           timeout: 5000,
@@ -334,7 +329,7 @@ describe("useCollection", () => {
             path: COLLECTION,
             orderBy: [["sortableId", "asc"]],
             endAt: [100],
-          })
+          }),
         );
         await waitFor(() => expect(result.current.data != null).toBe(true), {
           timeout: 5000,
@@ -354,7 +349,7 @@ describe("useCollection", () => {
             path: COLLECTION,
             orderBy: [["sortableId", "asc"]],
             endBefore: [100],
-          })
+          }),
         );
         await waitFor(() => expect(result.current.data != null).toBe(true), {
           timeout: 5000,
@@ -374,13 +369,10 @@ describe("useCollection", () => {
         useCollection<Post>({
           path: COLLECTION,
           queryConstraints: [
-            or(
-              where("content", "==", "hello"),
-              where("status", "==", "published")
-            ),
+            or(where("content", "==", "hello"), where("status", "==", "published")),
             orderBy("createdAt", "desc"),
           ],
-        })
+        }),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -398,8 +390,8 @@ describe("useCollection", () => {
           {
             path: COLLECTION,
           },
-          { use: [emptyMiddleware] }
-        )
+          { use: [emptyMiddleware] },
+        ),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -420,22 +412,16 @@ describe("useCollection", () => {
         useCollection<Post>({
           path: ERR_COLLECTION,
           queryConstraints: [
-            or(
-              where("content", "==", "hello"),
-              where("status", "==", "published")
-            ),
+            or(where("content", "==", "hello"), where("status", "==", "published")),
             orderBy("createdAt", "desc"),
           ],
-        })
+        }),
       );
       await waitFor(
-        () =>
-          expect(
-            result.current.error != null || result.current.data != null
-          ).toBe(true),
+        () => expect(result.current.error != null || result.current.data != null).toBe(true),
         {
           timeout: 5000,
-        }
+        },
       );
       expect(result.current.error instanceof FirebaseError).toBe(true);
       unmount();

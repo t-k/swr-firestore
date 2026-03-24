@@ -61,11 +61,7 @@ export type Paths<T, D extends number = 3> = [D] extends [never]
 export type ValueOf<T> = T[keyof T];
 
 export type QueryParams<T> = {
-  where?: [
-    Paths<T> | DocumentId,
-    Parameters<typeof where>[1],
-    ValueOf<T> | unknown,
-  ][];
+  where?: [Paths<T> | DocumentId, Parameters<typeof where>[1], ValueOf<T> | unknown][];
   orderBy?: [Paths<T> | DocumentId, Parameters<typeof orderBy>[1]][];
   startAt?: Parameters<typeof startAt>;
   startAfter?: Parameters<typeof startAfter>;
@@ -101,8 +97,7 @@ type BaseParams<T> = {
   db?: Firestore;
 };
 
-export type KeyParams<T> = BaseParams<T> &
-  (QueryParams<T> | QueryConstraintParams);
+export type KeyParams<T> = BaseParams<T> & (QueryParams<T> | QueryConstraintParams);
 
 export type KeyParamsForCollectionGroup<T> = BaseParams<T> &
   (QueryParamsForCollectionGroup<T> | QueryConstraintParams);
@@ -111,15 +106,11 @@ export type KeyParamsForCount<T> = BaseParams<T> &
   (Omit<QueryParams<T>, "parseDates"> | QueryConstraintParams);
 
 export type KeyParamsForCollectionGroupCount<T> = BaseParams<T> &
-  (
-    | Omit<QueryParamsForCollectionGroup<T>, "parseDates">
-    | QueryConstraintParams
-  );
+  (Omit<QueryParamsForCollectionGroup<T>, "parseDates"> | QueryConstraintParams);
 
 export type GetDocKeyParams<T> = KeyParams<T> & { useOfflineCache?: boolean };
 
-export type DocumentData<T> = T &
-  Pick<QueryDocumentSnapshot, "exists" | "id" | "ref">;
+export type DocumentData<T> = T & Pick<QueryDocumentSnapshot, "exists" | "id" | "ref">;
 
 // Aggregation types
 
@@ -184,10 +175,10 @@ export type KeyParamsForAggregate<T, TSpec extends SwrAggregateSpec<T>> = Omit<
 /**
  * Key params for aggregate queries on collection groups
  */
-export type KeyParamsForCollectionGroupAggregate<
-  T,
-  TSpec extends SwrAggregateSpec<T>,
-> = Omit<BaseParams<T>, "parseDates"> &
+export type KeyParamsForCollectionGroupAggregate<T, TSpec extends SwrAggregateSpec<T>> = Omit<
+  BaseParams<T>,
+  "parseDates"
+> &
   (QueryParamsForCollectionGroup<T> | QueryConstraintParams) & {
     aggregate: TSpec;
   };

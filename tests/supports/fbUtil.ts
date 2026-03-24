@@ -1,9 +1,6 @@
 import { db } from "./fbAdmin";
 
-export const deleteCollection = async (
-  collectionName: string,
-  subCollectionNames?: string[]
-) => {
+export const deleteCollection = async (collectionName: string, subCollectionNames?: string[]) => {
   const collectionRef = db.collection(collectionName);
   const qs = await collectionRef.get();
   await Promise.all(
@@ -12,10 +9,10 @@ export const deleteCollection = async (
         await Promise.all(
           subCollectionNames.map(async (sub) => {
             await deleteCollection(`${collectionName}/${x.id}/${sub}`);
-          })
+          }),
         );
       }
       await x.ref.delete();
-    })
+    }),
   );
 };

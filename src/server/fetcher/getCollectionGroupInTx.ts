@@ -1,9 +1,6 @@
 import { getFirestore } from "firebase-admin/firestore";
 import type { Query, Transaction } from "firebase-admin/firestore";
-import type {
-  DocumentData,
-  KeyParamsForCollectionGroup,
-} from "../util/type.js";
+import type { DocumentData, KeyParamsForCollectionGroup } from "../util/type.js";
 import { getFirestoreConverter } from "../util/getConverter.js";
 
 /**
@@ -28,7 +25,7 @@ import { getFirestoreConverter } from "../util/getConverter.js";
  */
 const getCollectionGroupInTx = async <T>(
   transaction: Transaction,
-  params: KeyParamsForCollectionGroup<T>
+  params: KeyParamsForCollectionGroup<T>,
 ): Promise<DocumentData<T>[]> => {
   const { path, parseDates, db: externalDb } = params;
   const db = externalDb ?? getFirestore();
@@ -56,24 +53,16 @@ const getCollectionGroupInTx = async <T>(
     });
   }
   if (s) {
-    queryRef = (queryRef ?? collectionRef).startAt(
-      ...(Array.isArray(s) ? s : [s])
-    );
+    queryRef = (queryRef ?? collectionRef).startAt(...(Array.isArray(s) ? s : [s]));
   }
   if (sa) {
-    queryRef = (queryRef ?? collectionRef).startAfter(
-      ...(Array.isArray(sa) ? sa : [sa])
-    );
+    queryRef = (queryRef ?? collectionRef).startAfter(...(Array.isArray(sa) ? sa : [sa]));
   }
   if (e) {
-    queryRef = (queryRef ?? collectionRef).endAt(
-      ...(Array.isArray(e) ? e : [e])
-    );
+    queryRef = (queryRef ?? collectionRef).endAt(...(Array.isArray(e) ? e : [e]));
   }
   if (eb) {
-    queryRef = (queryRef ?? collectionRef).endBefore(
-      ...(Array.isArray(eb) ? eb : [eb])
-    );
+    queryRef = (queryRef ?? collectionRef).endBefore(...(Array.isArray(eb) ? eb : [eb]));
   }
   if (l) {
     queryRef = (queryRef ?? collectionRef).limit(l);

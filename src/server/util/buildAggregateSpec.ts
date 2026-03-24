@@ -13,7 +13,7 @@ type AdminAggregateFieldType =
  * Convert SwrAggregateSpec to Admin SDK aggregate spec
  */
 export const buildAggregateSpec = <T>(
-  spec: SwrAggregateSpec<T>
+  spec: SwrAggregateSpec<T>,
 ): Record<string, AdminAggregateFieldType> => {
   const result: Record<string, AdminAggregateFieldType> = {};
 

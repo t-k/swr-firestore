@@ -1,13 +1,5 @@
-import {
-  collection,
-  getAggregateFromServer,
-  getFirestore,
-} from "firebase/firestore";
-import type {
-  KeyParamsForAggregate,
-  SwrAggregateSpec,
-  AggregateResult,
-} from "../util/type";
+import { collection, getAggregateFromServer, getFirestore } from "firebase/firestore";
+import type { KeyParamsForAggregate, SwrAggregateSpec, AggregateResult } from "../util/type";
 import { buildQueryForCollection } from "../util/buildQuery";
 import { buildAggregateSpec } from "../util/buildAggregateSpec";
 
@@ -46,7 +38,7 @@ import { buildAggregateSpec } from "../util/buildAggregateSpec";
  * ```
  */
 const fetchAggregate = async <T, TSpec extends SwrAggregateSpec<T>>(
-  params: KeyParamsForAggregate<T, TSpec>
+  params: KeyParamsForAggregate<T, TSpec>,
 ): Promise<AggregateResult<TSpec>> => {
   const { path, aggregate, db: externalDb, ...queryParams } = params;
   const db = externalDb ?? getFirestore();

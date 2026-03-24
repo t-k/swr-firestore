@@ -69,7 +69,7 @@ describe("useAggregate", () => {
           aggregate: {
             total: { type: "count" },
           },
-        })
+        }),
       );
       await waitFor(() => expect(result.current.isLoading).toBe(false), {
         timeout: 5000,
@@ -87,7 +87,7 @@ describe("useAggregate", () => {
           aggregate: {
             totalPrice: { type: "sum", field: "price" },
           },
-        })
+        }),
       );
       await waitFor(() => expect(result.current.isLoading).toBe(false), {
         timeout: 5000,
@@ -100,15 +100,12 @@ describe("useAggregate", () => {
   describe("average only", () => {
     it("should fetch average of a field", async () => {
       const { result, unmount } = renderHook(() =>
-        useAggregate<
-          Product,
-          { avgPrice: { type: "average"; field: "price" } }
-        >({
+        useAggregate<Product, { avgPrice: { type: "average"; field: "price" } }>({
           path: COLLECTION,
           aggregate: {
             avgPrice: { type: "average", field: "price" },
           },
-        })
+        }),
       );
       await waitFor(() => expect(result.current.isLoading).toBe(false), {
         timeout: 5000,
@@ -135,7 +132,7 @@ describe("useAggregate", () => {
             totalStock: { type: "sum", field: "stock" },
             avgPrice: { type: "average", field: "price" },
           },
-        })
+        }),
       );
       await waitFor(() => expect(result.current.isLoading).toBe(false), {
         timeout: 5000,
@@ -165,7 +162,7 @@ describe("useAggregate", () => {
             count: { type: "count" },
             totalPrice: { type: "sum", field: "price" },
           },
-        })
+        }),
       );
       await waitFor(() => expect(result.current.isLoading).toBe(false), {
         timeout: 5000,
@@ -191,7 +188,7 @@ describe("useAggregate", () => {
           aggregate: {
             count: { type: "count" },
           },
-        })
+        }),
       );
       await waitFor(() => expect(result.current.isLoading).toBe(false), {
         timeout: 5000,
@@ -209,17 +206,12 @@ describe("useAggregate", () => {
           { count: { type: "count" }; totalPrice: { type: "sum"; field: "price" } }
         >({
           path: COLLECTION,
-          queryConstraints: [
-            or(
-              where("category", "==", "electronics"),
-              where("price", ">=", 400)
-            ),
-          ],
+          queryConstraints: [or(where("category", "==", "electronics"), where("price", ">=", 400))],
           aggregate: {
             count: { type: "count" },
             totalPrice: { type: "sum", field: "price" },
           },
-        })
+        }),
       );
       await waitFor(() => expect(result.current.isLoading).toBe(false), {
         timeout: 5000,
@@ -243,8 +235,8 @@ describe("useAggregate", () => {
               count: { type: "count" },
             },
           },
-          { use: [emptyMiddleware] }
-        )
+          { use: [emptyMiddleware] },
+        ),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -257,7 +249,7 @@ describe("useAggregate", () => {
   describe("conditional fetching", () => {
     it("should not fetch when params is null", async () => {
       const { result, unmount } = renderHook(() =>
-        useAggregate<Product, { count: { type: "count" } }>(null)
+        useAggregate<Product, { count: { type: "count" } }>(null),
       );
       await new Promise((resolve) => setTimeout(resolve, 500));
       expect(result.current.data).toBeUndefined();
@@ -267,7 +259,7 @@ describe("useAggregate", () => {
 
     it("should not fetch when params is false", async () => {
       const { result, unmount } = renderHook(() =>
-        useAggregate<Product, { count: { type: "count" } }>(false)
+        useAggregate<Product, { count: { type: "count" } }>(false),
       );
       await new Promise((resolve) => setTimeout(resolve, 500));
       expect(result.current.data).toBeUndefined();
@@ -277,7 +269,7 @@ describe("useAggregate", () => {
 
     it("should not fetch when params is undefined", async () => {
       const { result, unmount } = renderHook(() =>
-        useAggregate<Product, { count: { type: "count" } }>(undefined)
+        useAggregate<Product, { count: { type: "count" } }>(undefined),
       );
       await new Promise((resolve) => setTimeout(resolve, 500));
       expect(result.current.data).toBeUndefined();
@@ -292,8 +284,8 @@ describe("useAggregate", () => {
           isLogin && {
             path: COLLECTION,
             aggregate: { count: { type: "count" } },
-          }
-        )
+          },
+        ),
       );
       await new Promise((resolve) => setTimeout(resolve, 500));
       expect(result.current.data).toBeUndefined();
@@ -308,8 +300,8 @@ describe("useAggregate", () => {
           isLogin && {
             path: COLLECTION,
             aggregate: { count: { type: "count" } },
-          }
-        )
+          },
+        ),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -327,8 +319,8 @@ describe("useAggregate", () => {
                 path: COLLECTION,
                 aggregate: { count: { type: "count" } },
               }
-            : null
-        )
+            : null,
+        ),
       );
       await new Promise((resolve) => setTimeout(resolve, 500));
       expect(result.current.data).toBeUndefined();
@@ -345,8 +337,8 @@ describe("useAggregate", () => {
                 path: COLLECTION,
                 aggregate: { count: { type: "count" } },
               }
-            : null
-        )
+            : null,
+        ),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -383,7 +375,7 @@ describe("useAggregate", () => {
             totalPrice: { type: "sum", field: "price" },
             avgPrice: { type: "average", field: "price" },
           },
-        })
+        }),
       );
       await waitFor(() => expect(result.current.isLoading).toBe(false), {
         timeout: 5000,

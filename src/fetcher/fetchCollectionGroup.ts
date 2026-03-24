@@ -1,9 +1,4 @@
-import {
-  collectionGroup,
-  getDocs,
-  getDocsFromCache,
-  getFirestore,
-} from "firebase/firestore";
+import { collectionGroup, getDocs, getDocsFromCache, getFirestore } from "firebase/firestore";
 import type { DocumentData, KeyParamsForCollectionGroup } from "../util/type";
 import { getFirestoreConverter } from "../util/getConverter";
 import { buildQueryForCollectionGroup } from "../util/buildQuery";
@@ -31,7 +26,7 @@ export type FetchCollectionGroupParams<T> = KeyParamsForCollectionGroup<T> & {
  * ```
  */
 const fetchCollectionGroup = async <T>(
-  params: FetchCollectionGroupParams<T>
+  params: FetchCollectionGroupParams<T>,
 ): Promise<DocumentData<T>[]> => {
   const { path, parseDates, useOfflineCache, db: externalDb } = params;
   const db = externalDb ?? getFirestore();

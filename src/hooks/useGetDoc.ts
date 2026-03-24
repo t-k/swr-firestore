@@ -8,7 +8,7 @@ import serializeMiddleware from "../middleware/serializeMiddleware";
 
 const useGetDoc = <T>(
   params: Omit<GetDocKeyParams<T>, "where" | "orderBy" | "limit"> | Falsy,
-  swrOptions?: Omit<SWRConfiguration, "fetcher">
+  swrOptions?: Omit<SWRConfiguration, "fetcher">,
 ) => {
   const fetcher = async (): Promise<DocumentData<T> | undefined> => {
     if (!params) {
@@ -35,8 +35,7 @@ const useGetDoc = <T>(
       ? {
           ...rest,
           databaseId: toDatabaseIdString(
-            (db.toJSON() as { databaseId: string | { database: string } })
-              .databaseId
+            (db.toJSON() as { databaseId: string | { database: string } }).databaseId,
           ),
         }
       : rest;

@@ -13,11 +13,8 @@ import createSwrKey from "../util/createKey.js";
  * making it impossible to directly pass client-side QueryConstraint objects.
  * Use the typed query params (where, orderBy, etc.) instead.
  */
-const getCollectionGroupAggregate = async <
-  T,
-  TSpec extends SwrAggregateSpec<T>,
->(
-  params: KeyParamsForCollectionGroupAggregate<T, TSpec>
+const getCollectionGroupAggregate = async <T, TSpec extends SwrAggregateSpec<T>>(
+  params: KeyParamsForCollectionGroupAggregate<T, TSpec>,
 ): Promise<{
   key: string;
   data: AggregateResult<TSpec>;

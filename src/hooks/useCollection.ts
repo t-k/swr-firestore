@@ -1,7 +1,4 @@
-import type {
-  SWRSubscriptionOptions,
-  SWRSubscriptionResponse,
-} from "swr/subscription";
+import type { SWRSubscriptionOptions, SWRSubscriptionResponse } from "swr/subscription";
 import type {
   FirestoreError,
   QueryConstraint,
@@ -31,14 +28,11 @@ import type { Key, SWRConfiguration } from "swr";
 
 const useCollection = <T>(
   params: KeyParams<T> | Falsy,
-  swrOptions?: Omit<SWRConfiguration, "fetcher">
+  swrOptions?: Omit<SWRConfiguration, "fetcher">,
 ): SWRSubscriptionResponse<DocumentData<T>[], FirestoreError> => {
   return useSWRSubscription(
     params || null,
-    (
-      _: Key,
-      { next }: SWRSubscriptionOptions<DocumentData<T>[], FirestoreError>
-    ) => {
+    (_: Key, { next }: SWRSubscriptionOptions<DocumentData<T>[], FirestoreError>) => {
       if (!params) {
         return;
       }
@@ -63,17 +57,15 @@ const useCollection = <T>(
         q = query(
           ref,
           ...(w ? w : []).map((q) =>
-            q[0] === "id" ? where(documentId(), q[1], q[2]) : where(...q)
+            q[0] === "id" ? where(documentId(), q[1], q[2]) : where(...q),
           ),
-          ...(o ? o : []).map((q) =>
-            q[0] === "id" ? orderBy(documentId(), q[1]) : orderBy(...q)
-          ),
+          ...(o ? o : []).map((q) => (q[0] === "id" ? orderBy(documentId(), q[1]) : orderBy(...q))),
           ...(s ? [startAt(...(Array.isArray(s) ? s : [s]))] : []),
           ...(sa ? [startAfter(...(Array.isArray(sa) ? sa : [sa]))] : []),
           ...(e ? [endAt(...(Array.isArray(e) ? e : [e]))] : []),
           ...(eb ? [endBefore(...(Array.isArray(eb) ? eb : [eb]))] : []),
           ...(l ? [limit(l)] : []),
-          ...(ltl ? [limitToLast(ltl)] : [])
+          ...(ltl ? [limitToLast(ltl)] : []),
         );
       }
       const unsub = onSnapshot<DocumentData<T>, FsDocumentData>(
@@ -81,16 +73,16 @@ const useCollection = <T>(
         (qs) => {
           next(
             null,
-            qs.docs.map((x) => x.data())
+            qs.docs.map((x) => x.data()),
           );
         },
         (error) => {
           next(error);
-        }
+        },
       );
       return () => unsub && unsub();
     },
-    { ...swrOptions, use: [serializeMiddleware, ...(swrOptions?.use ?? [])] }
+    { ...swrOptions, use: [serializeMiddleware, ...(swrOptions?.use ?? [])] },
   );
 };
 export default useCollection;

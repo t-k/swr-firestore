@@ -43,8 +43,7 @@ type BaseParams<T> = {
 
 export type KeyParams<T> = BaseParams<T> & QueryParams<T>;
 
-export type KeyParamsForCollectionGroup<T> = BaseParams<T> &
-  QueryParamsForCollectionGroup<T>;
+export type KeyParamsForCollectionGroup<T> = BaseParams<T> & QueryParamsForCollectionGroup<T>;
 
 export type KeyParamsForCount<T> = BaseParams<T> &
   Omit<QueryParams<T>, "parseDates" | "isSubscription">;
@@ -52,21 +51,20 @@ export type KeyParamsForCount<T> = BaseParams<T> &
 export type KeyParamsForCollectionGroupCount<T> = BaseParams<T> &
   Omit<QueryParamsForCollectionGroup<T>, "parseDates" | "isSubscription">;
 
-export type DocumentData<T> = T &
-  Pick<QueryDocumentSnapshot, "exists" | "id" | "ref">;
+export type DocumentData<T> = T & Pick<QueryDocumentSnapshot, "exists" | "id" | "ref">;
 
-export type KeyParamsForAggregate<
-  T,
-  TSpec extends SwrAggregateSpec<T>,
-> = Omit<BaseParams<T>, "parseDates" | "isSubscription"> &
+export type KeyParamsForAggregate<T, TSpec extends SwrAggregateSpec<T>> = Omit<
+  BaseParams<T>,
+  "parseDates" | "isSubscription"
+> &
   QueryParams<T> & {
     aggregate: TSpec;
   };
 
-export type KeyParamsForCollectionGroupAggregate<
-  T,
-  TSpec extends SwrAggregateSpec<T>,
-> = Omit<BaseParams<T>, "parseDates" | "isSubscription"> &
+export type KeyParamsForCollectionGroupAggregate<T, TSpec extends SwrAggregateSpec<T>> = Omit<
+  BaseParams<T>,
+  "parseDates" | "isSubscription"
+> &
   QueryParamsForCollectionGroup<T> & {
     aggregate: TSpec;
   };

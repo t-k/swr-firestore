@@ -1,11 +1,7 @@
 import type { SWRConfiguration, SWRResponse } from "swr";
 import type { FirestoreError } from "firebase/firestore";
 import useSWR from "swr";
-import {
-  collectionGroup,
-  getAggregateFromServer,
-  getFirestore,
-} from "firebase/firestore";
+import { collectionGroup, getAggregateFromServer, getFirestore } from "firebase/firestore";
 import type {
   Falsy,
   KeyParamsForCollectionGroupAggregate,
@@ -18,7 +14,7 @@ import serializeMiddleware from "../middleware/serializeMiddleware";
 
 const useCollectionGroupAggregate = <T, TSpec extends SwrAggregateSpec<T>>(
   params: KeyParamsForCollectionGroupAggregate<T, TSpec> | Falsy,
-  swrOptions?: Omit<SWRConfiguration, "fetcher">
+  swrOptions?: Omit<SWRConfiguration, "fetcher">,
 ): SWRResponse<AggregateResult<TSpec> | undefined, FirestoreError> => {
   const fetcher = async (): Promise<AggregateResult<TSpec> | undefined> => {
     if (!params) return;

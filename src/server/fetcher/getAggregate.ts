@@ -14,7 +14,7 @@ import createSwrKey from "../util/createKey.js";
  * Use the typed query params (where, orderBy, etc.) instead.
  */
 const getAggregate = async <T, TSpec extends SwrAggregateSpec<T>>(
-  params: KeyParamsForAggregate<T, TSpec>
+  params: KeyParamsForAggregate<T, TSpec>,
 ): Promise<{
   key: string;
   data: AggregateResult<TSpec>;

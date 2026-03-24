@@ -23,7 +23,7 @@ const serializeMiddleware: Middleware = (useSWRNext: SWRHook) => {
                         databaseId: string | { database: string };
                       };
                     }
-                  ).toJSON().databaseId
+                  ).toJSON().databaseId,
                 ),
               }
             : rest;

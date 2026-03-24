@@ -50,7 +50,7 @@ export default function App() {
       where: [["status", "==", "published"]],
       orderBy: [["createdAt", "desc"]],
       parseDates: ["createdAt"],
-    }
+    },
   );
   const { data: postCount } = useCollectionCount<Post>({
     path: "posts",
@@ -198,7 +198,7 @@ type KeyParams<T> =
       where?: [
         Paths<T> | DocumentId, // "id" is internally converted to documentId()
         Parameters<typeof where>[1],
-        ValueOf<T> | unknown
+        ValueOf<T> | unknown,
       ][];
       orderBy?: [Paths<T> | DocumentId, Parameters<typeof orderBy>[1]][];
       startAt?: Parameters<typeof startAt>;

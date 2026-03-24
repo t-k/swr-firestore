@@ -18,7 +18,7 @@ import type { KeyParamsForCollectionGroupCount } from "../util/type.js";
  */
 const getCollectionGroupCountInTx = async <T>(
   transaction: Transaction,
-  params: KeyParamsForCollectionGroupCount<T>
+  params: KeyParamsForCollectionGroupCount<T>,
 ): Promise<number> => {
   const { path, db: externalDb } = params;
   const db = externalDb ?? getFirestore();
@@ -45,24 +45,16 @@ const getCollectionGroupCountInTx = async <T>(
     });
   }
   if (s) {
-    queryRef = (queryRef ?? collectionRef).startAt(
-      ...(Array.isArray(s) ? s : [s])
-    );
+    queryRef = (queryRef ?? collectionRef).startAt(...(Array.isArray(s) ? s : [s]));
   }
   if (sa) {
-    queryRef = (queryRef ?? collectionRef).startAfter(
-      ...(Array.isArray(sa) ? sa : [sa])
-    );
+    queryRef = (queryRef ?? collectionRef).startAfter(...(Array.isArray(sa) ? sa : [sa]));
   }
   if (e) {
-    queryRef = (queryRef ?? collectionRef).endAt(
-      ...(Array.isArray(e) ? e : [e])
-    );
+    queryRef = (queryRef ?? collectionRef).endAt(...(Array.isArray(e) ? e : [e]));
   }
   if (eb) {
-    queryRef = (queryRef ?? collectionRef).endBefore(
-      ...(Array.isArray(eb) ? eb : [eb])
-    );
+    queryRef = (queryRef ?? collectionRef).endBefore(...(Array.isArray(eb) ? eb : [eb]));
   }
   if (l) {
     queryRef = (queryRef ?? collectionRef).limit(l);

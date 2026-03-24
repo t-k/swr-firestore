@@ -26,7 +26,7 @@ import serializeMiddleware from "../middleware/serializeMiddleware";
 
 const useGetDocs = <T>(
   params: (GetDocKeyParams<T> & { isCollectionGroup?: boolean }) | Falsy,
-  swrOptions?: Omit<SWRConfiguration, "fetcher">
+  swrOptions?: Omit<SWRConfiguration, "fetcher">,
 ) => {
   const fetcher = async (): Promise<DocumentData<T>[] | undefined> => {
     if (!params) {
@@ -53,27 +53,21 @@ const useGetDocs = <T>(
       } = params;
       q = query(
         ref,
-        ...(w ? w : []).map((q) =>
-          q[0] === "id" ? where(documentId(), q[1], q[2]) : where(...q)
-        ),
-        ...(o ? o : []).map((q) =>
-          q[0] === "id" ? orderBy(documentId(), q[1]) : orderBy(...q)
-        ),
+        ...(w ? w : []).map((q) => (q[0] === "id" ? where(documentId(), q[1], q[2]) : where(...q))),
+        ...(o ? o : []).map((q) => (q[0] === "id" ? orderBy(documentId(), q[1]) : orderBy(...q))),
         ...(s ? [startAt(...(Array.isArray(s) ? s : [s]))] : []),
         ...(sa ? [startAfter(...(Array.isArray(sa) ? sa : [sa]))] : []),
         ...(e ? [endAt(...(Array.isArray(e) ? e : [e]))] : []),
         ...(eb ? [endBefore(...(Array.isArray(eb) ? eb : [eb]))] : []),
         ...(l ? [limit(l)] : []),
-        ...(ltl ? [limitToLast(ltl)] : [])
+        ...(ltl ? [limitToLast(ltl)] : []),
       );
     }
     const getFn = params.useOfflineCache ? getDocsFromCache : getDocs;
     const sn = await getFn(q.withConverter(converter));
     return sn.docs.map((x) => x.data());
   };
-  const scrubKey = (
-    params: (GetDocKeyParams<T> & { isCollectionGroup?: boolean }) | Falsy
-  ) => {
+  const scrubKey = (params: (GetDocKeyParams<T> & { isCollectionGroup?: boolean }) | Falsy) => {
     if (!params) {
       return null;
     }
@@ -89,8 +83,7 @@ const useGetDocs = <T>(
       ? {
           ...rest,
           databaseId: toDatabaseIdString(
-            (db.toJSON() as { databaseId: string | { database: string } })
-              .databaseId
+            (db.toJSON() as { databaseId: string | { database: string } }).databaseId,
           ),
         }
       : rest;

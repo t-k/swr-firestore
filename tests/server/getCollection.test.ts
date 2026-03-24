@@ -1,9 +1,4 @@
-import {
-  CollectionReference,
-  addDoc,
-  collection,
-  serverTimestamp,
-} from "firebase/firestore";
+import { CollectionReference, addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { getCollection } from "../../src/server";
 
 import { db } from "../supports/fb";

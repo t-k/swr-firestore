@@ -75,9 +75,7 @@ describe("useGetDocs", () => {
   });
   describe("without option", () => {
     it("should fetch data from Firestore", async () => {
-      const { result, unmount } = renderHook(() =>
-        useGetDocs<Post>({ path: `${COLLECTION}` })
-      );
+      const { result, unmount } = renderHook(() => useGetDocs<Post>({ path: `${COLLECTION}` }));
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
       });
@@ -95,7 +93,7 @@ describe("useGetDocs", () => {
   describe("parseDates option", () => {
     it("should fetch data from Firestore", async () => {
       const { result, unmount } = renderHook(() =>
-        useGetDocs<Post>({ path: `${COLLECTION}`, parseDates: ["createdAt"] })
+        useGetDocs<Post>({ path: `${COLLECTION}`, parseDates: ["createdAt"] }),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -118,7 +116,7 @@ describe("useGetDocs", () => {
         useGetDocs<Post>({
           path: `${COLLECTION}`,
           where: [["status", "==", "draft"]],
-        })
+        }),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -137,7 +135,7 @@ describe("useGetDocs", () => {
         useGetDocs<Post>({
           path: `${COLLECTION}`,
           where: [["id", "==", targetId]],
-        })
+        }),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -155,7 +153,7 @@ describe("useGetDocs", () => {
         useGetDocs<Post>({
           path: `${COLLECTION}`,
           orderBy: [["createdAt", "desc"]],
-        })
+        }),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -170,7 +168,7 @@ describe("useGetDocs", () => {
         useGetDocs<Post>({
           path: `${COLLECTION}`,
           orderBy: [["id", "asc"]],
-        })
+        }),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -183,7 +181,7 @@ describe("useGetDocs", () => {
   describe("with limit option", () => {
     it("should fetch data from Firestore", async () => {
       const { result, unmount } = renderHook(() =>
-        useGetDocs<Post>({ path: `${COLLECTION}`, limit: 1 })
+        useGetDocs<Post>({ path: `${COLLECTION}`, limit: 1 }),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -200,7 +198,7 @@ describe("useGetDocs", () => {
           path: `${COLLECTION}`,
           limitToLast: 1,
           orderBy: [["createdAt", "asc"]],
-        })
+        }),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -218,7 +216,7 @@ describe("useGetDocs", () => {
             path: COLLECTION,
             orderBy: [["sortableId", "asc"]],
             startAt: [10],
-          })
+          }),
         );
         await waitFor(() => expect(result.current.data != null).toBe(true), {
           timeout: 5000,
@@ -238,7 +236,7 @@ describe("useGetDocs", () => {
             path: COLLECTION,
             orderBy: [["sortableId", "asc"]],
             startAfter: [10],
-          })
+          }),
         );
         await waitFor(() => expect(result.current.data != null).toBe(true), {
           timeout: 5000,
@@ -258,7 +256,7 @@ describe("useGetDocs", () => {
             path: COLLECTION,
             orderBy: [["sortableId", "asc"]],
             endAt: [100],
-          })
+          }),
         );
         await waitFor(() => expect(result.current.data != null).toBe(true), {
           timeout: 5000,
@@ -278,7 +276,7 @@ describe("useGetDocs", () => {
             path: COLLECTION,
             orderBy: [["sortableId", "asc"]],
             endBefore: [100],
-          })
+          }),
         );
         await waitFor(() => expect(result.current.data != null).toBe(true), {
           timeout: 5000,
@@ -298,13 +296,10 @@ describe("useGetDocs", () => {
         useGetDocs<Post>({
           path: COLLECTION,
           queryConstraints: [
-            or(
-              where("content", "==", "foo"),
-              where("status", "==", "published")
-            ),
+            or(where("content", "==", "foo"), where("status", "==", "published")),
             orderBy("createdAt", "desc"),
           ],
-        })
+        }),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -333,8 +328,8 @@ describe("useGetDocs", () => {
           {
             path: COLLECTION,
           },
-          { use: [emptyMiddleware] }
-        )
+          { use: [emptyMiddleware] },
+        ),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -356,7 +351,7 @@ describe("useGetDocs", () => {
       const { result, unmount } = renderHook(() =>
         useGetDocs<Post>({
           path: `${ERR_COLLECTION}`,
-        })
+        }),
       );
       await waitFor(() => expect(result.current.isLoading).toBe(false), {
         timeout: 5000,
@@ -374,10 +369,7 @@ describe("useGetDocs", () => {
         status: "draft",
         createdAt: serverTimestamp(),
       });
-      const subRef = collection(
-        db,
-        `${COLLECTION}/${doc.id}/${SUB_COLLECTION}`
-      );
+      const subRef = collection(db, `${COLLECTION}/${doc.id}/${SUB_COLLECTION}`);
       await Promise.all(
         [1, 10, 100, 1000].map((x) => {
           return addDoc(subRef, {
@@ -385,13 +377,13 @@ describe("useGetDocs", () => {
             createdAt: serverTimestamp(),
             sortableId: x,
           });
-        })
+        }),
       );
       const { result, unmount } = renderHook(() =>
         useGetDocs<Comment>({
           path: `${SUB_COLLECTION}`,
           isCollectionGroup: true,
-        })
+        }),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,

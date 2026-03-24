@@ -34,10 +34,7 @@ describe("fetchCollectionGroupAggregate", () => {
   });
 
   test("count aggregation on collection group", async () => {
-    const result = await fetchCollectionGroupAggregate<
-      OrderItem,
-      { total: { type: "count" } }
-    >({
+    const result = await fetchCollectionGroupAggregate<OrderItem, { total: { type: "count" } }>({
       path: SUB_COLLECTION,
       aggregate: { total: { type: "count" } },
     });
@@ -80,10 +77,7 @@ describe("fetchCollectionGroupAggregate", () => {
   });
 
   test("aggregation with where clause on collection group", async () => {
-    const result = await fetchCollectionGroupAggregate<
-      OrderItem,
-      { count: { type: "count" } }
-    >({
+    const result = await fetchCollectionGroupAggregate<OrderItem, { count: { type: "count" } }>({
       path: SUB_COLLECTION,
       where: [["price", ">=", 100]],
       aggregate: { count: { type: "count" } },

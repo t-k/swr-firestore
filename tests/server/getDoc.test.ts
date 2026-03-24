@@ -1,10 +1,4 @@
-import {
-  CollectionReference,
-  collection,
-  doc,
-  serverTimestamp,
-  setDoc,
-} from "firebase/firestore";
+import { CollectionReference, collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { db } from "../supports/fb";
 import type { Post } from "../supports/model";
 import { faker } from "@faker-js/faker";
@@ -57,9 +51,7 @@ describe("getDoc", () => {
         isSubscription: true,
       });
       expect(data != null).toBe(true);
-      expect(key).toEqual(
-        "$sub$" + unstable_serialize({ path: `${COLLECTION}/${id}` })
-      );
+      expect(key).toEqual("$sub$" + unstable_serialize({ path: `${COLLECTION}/${id}` }));
     });
   });
   describe("parseDates option", () => {

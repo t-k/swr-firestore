@@ -1,10 +1,5 @@
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
-import {
-  collection,
-  doc,
-  setDoc,
-  Timestamp,
-} from "firebase/firestore";
+import { collection, doc, setDoc, Timestamp } from "firebase/firestore";
 import { getDocInTx } from "../../src/server";
 import { db } from "../supports/fb";
 import { db as adminDb } from "../supports/fbAdmin";

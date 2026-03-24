@@ -4,7 +4,7 @@ import { getFirestoreConverter } from "../util/getConverter.js";
 import createSwrKey from "../util/createKey.js";
 
 const getDoc = async <T>(
-  params: Omit<KeyParams<T>, "where" | "orderBy" | "limit">
+  params: Omit<KeyParams<T>, "where" | "orderBy" | "limit">,
 ): Promise<{
   key: string;
   data: DocumentData<T> | undefined;

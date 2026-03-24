@@ -24,7 +24,7 @@ import { getFirestoreConverter } from "../util/getConverter.js";
  */
 const getDocInTx = async <T>(
   transaction: Transaction,
-  params: Omit<KeyParams<T>, "where" | "orderBy" | "limit">
+  params: Omit<KeyParams<T>, "where" | "orderBy" | "limit">,
 ): Promise<DocumentData<T> | undefined> => {
   const { path, parseDates, db: externalDb } = params;
   const db = externalDb ?? getFirestore();

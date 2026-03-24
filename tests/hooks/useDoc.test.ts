@@ -37,9 +37,7 @@ describe("useDoc", () => {
         status: "draft",
         createdAt: serverTimestamp(),
       });
-      const { result, unmount } = renderHook(() =>
-        useDoc<Post>({ path: `${COLLECTION}/${id}` })
-      );
+      const { result, unmount } = renderHook(() => useDoc<Post>({ path: `${COLLECTION}/${id}` }));
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
       });
@@ -69,7 +67,7 @@ describe("useDoc", () => {
         createdAt: serverTimestamp(),
       });
       const { result, unmount } = renderHook(() =>
-        useDoc<Post>({ path: `${COLLECTION}/${id}`, parseDates: ["createdAt"] })
+        useDoc<Post>({ path: `${COLLECTION}/${id}`, parseDates: ["createdAt"] }),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -97,7 +95,7 @@ describe("useDoc", () => {
         useDoc<Post>({
           path: `${COLLECTION}/${id}`,
           parseDates: ["createdAt", "author.createdAt"],
-        })
+        }),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -120,7 +118,7 @@ describe("useDoc", () => {
         createdAt: serverTimestamp(),
       });
       const { result, unmount } = renderHook(() =>
-        useDoc<Post>({ path: `${COLLECTION}/${id}`, db })
+        useDoc<Post>({ path: `${COLLECTION}/${id}`, db }),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -149,8 +147,8 @@ describe("useDoc", () => {
           {
             path: `${COLLECTION}/${id}`,
           },
-          { use: [emptyMiddleware] }
-        )
+          { use: [emptyMiddleware] },
+        ),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -177,16 +175,13 @@ describe("useDoc", () => {
         useDoc<Post>({
           path: `${ERR_COLLECTION}/${id}`,
           parseDates: ["createdAt", "author.createdAt"],
-        })
+        }),
       );
       await waitFor(
-        () =>
-          expect(
-            result.current.error != null || result.current.data != null
-          ).toBe(true),
+        () => expect(result.current.error != null || result.current.data != null).toBe(true),
         {
           timeout: 5000,
-        }
+        },
       );
       expect(result.current.error instanceof FirebaseError).toBe(true);
       unmount();

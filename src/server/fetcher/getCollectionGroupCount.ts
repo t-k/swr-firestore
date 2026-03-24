@@ -4,7 +4,7 @@ import type { KeyParamsForCollectionGroupCount } from "../util/type.js";
 import createSwrKey from "../util/createKey.js";
 
 const getCollectionGroupCount = async <T>(
-  params: KeyParamsForCollectionGroupCount<T>
+  params: KeyParamsForCollectionGroupCount<T>,
 ): Promise<{
   key: string;
   data: number;
@@ -34,24 +34,16 @@ const getCollectionGroupCount = async <T>(
     });
   }
   if (s) {
-    queryRef = (queryRef ?? collectionRef).startAt(
-      ...(Array.isArray(s) ? s : [s])
-    );
+    queryRef = (queryRef ?? collectionRef).startAt(...(Array.isArray(s) ? s : [s]));
   }
   if (sa) {
-    queryRef = (queryRef ?? collectionRef).startAfter(
-      ...(Array.isArray(sa) ? sa : [sa])
-    );
+    queryRef = (queryRef ?? collectionRef).startAfter(...(Array.isArray(sa) ? sa : [sa]));
   }
   if (e) {
-    queryRef = (queryRef ?? collectionRef).endAt(
-      ...(Array.isArray(e) ? e : [e])
-    );
+    queryRef = (queryRef ?? collectionRef).endAt(...(Array.isArray(e) ? e : [e]));
   }
   if (eb) {
-    queryRef = (queryRef ?? collectionRef).endBefore(
-      ...(Array.isArray(eb) ? eb : [eb])
-    );
+    queryRef = (queryRef ?? collectionRef).endBefore(...(Array.isArray(eb) ? eb : [eb]));
   }
   if (l) {
     queryRef = (queryRef ?? collectionRef).limit(l);

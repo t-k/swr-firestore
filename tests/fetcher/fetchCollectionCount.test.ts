@@ -21,11 +21,7 @@ describe("fetchCollectionCount", () => {
   ];
 
   beforeAll(async () => {
-    await Promise.all(
-      testData.map((data, i) =>
-        setDoc(doc(db, testCollection, `doc-${i}`), data)
-      )
-    );
+    await Promise.all(testData.map((data, i) => setDoc(doc(db, testCollection, `doc-${i}`), data)));
   });
 
   afterAll(async () => {

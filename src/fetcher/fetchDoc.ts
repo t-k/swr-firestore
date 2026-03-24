@@ -2,10 +2,7 @@ import { doc, getDoc, getDocFromCache, getFirestore } from "firebase/firestore";
 import type { DocumentData, KeyParams } from "../util/type";
 import { getFirestoreConverter } from "../util/getConverter";
 
-export type FetchDocParams<T> = Omit<
-  KeyParams<T>,
-  "where" | "orderBy" | "limit"
-> & {
+export type FetchDocParams<T> = Omit<KeyParams<T>, "where" | "orderBy" | "limit"> & {
   useOfflineCache?: boolean;
 };
 
@@ -25,9 +22,7 @@ export type FetchDocParams<T> = Omit<
  * });
  * ```
  */
-const fetchDoc = async <T>(
-  params: FetchDocParams<T>
-): Promise<DocumentData<T> | undefined> => {
+const fetchDoc = async <T>(params: FetchDocParams<T>): Promise<DocumentData<T> | undefined> => {
   const { path, parseDates, useOfflineCache, db: externalDb } = params;
   const db = externalDb ?? getFirestore();
   const converter = getFirestoreConverter<T>(parseDates);

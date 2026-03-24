@@ -5,9 +5,7 @@ import type { SwrAggregateSpec } from "./type";
 /**
  * Convert SwrAggregateSpec to Firebase AggregateSpec
  */
-export const buildAggregateSpec = <T>(
-  spec: SwrAggregateSpec<T>
-): AggregateSpec => {
+export const buildAggregateSpec = <T>(spec: SwrAggregateSpec<T>): AggregateSpec => {
   const result: AggregateSpec = {};
 
   for (const [key, value] of Object.entries(spec)) {

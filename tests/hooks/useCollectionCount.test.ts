@@ -70,9 +70,7 @@ describe("useCollectionCount", () => {
   });
   describe("without option", () => {
     it("should fetch data from Firestore", async () => {
-      const { result, unmount } = renderHook(() =>
-        useCollectionCount<Post>({ path: COLLECTION })
-      );
+      const { result, unmount } = renderHook(() => useCollectionCount<Post>({ path: COLLECTION }));
       await waitFor(() => expect(result.current.isLoading).toBe(false), {
         timeout: 5000,
       });
@@ -88,7 +86,7 @@ describe("useCollectionCount", () => {
         useCollectionCount<Post>({
           path: COLLECTION,
           where: [["status", "==", "published"]],
-        })
+        }),
       );
       await waitFor(() => expect(result.current.isLoading).toBe(false), {
         timeout: 5000,
@@ -106,7 +104,7 @@ describe("useCollectionCount", () => {
         useCollectionCount<Post>({
           path: COLLECTION,
           where: [["id", "==", targetId]],
-        })
+        }),
       );
       await waitFor(() => expect(result.current.isLoading).toBe(false), {
         timeout: 5000,
@@ -124,7 +122,7 @@ describe("useCollectionCount", () => {
         useCollectionCount<Post>({
           path: COLLECTION,
           limit: 1,
-        })
+        }),
       );
       await waitFor(() => expect(result.current.isLoading).toBe(false), {
         timeout: 5000,
@@ -142,7 +140,7 @@ describe("useCollectionCount", () => {
           path: COLLECTION,
           limitToLast: 1,
           orderBy: [["createdAt", "asc"]],
-        })
+        }),
       );
       await waitFor(() => expect(result.current.isLoading).toBe(false), {
         timeout: 5000,
@@ -159,7 +157,7 @@ describe("useCollectionCount", () => {
           path: COLLECTION,
           orderBy: [["sortableId", "asc"]],
           startAt: [10],
-        })
+        }),
       );
       await waitFor(() => expect(result.current.isLoading).toBe(false), {
         timeout: 5000,
@@ -178,7 +176,7 @@ describe("useCollectionCount", () => {
             path: COLLECTION,
             orderBy: [["sortableId", "asc"]],
             startAfter: [10],
-          })
+          }),
         );
         await waitFor(() => expect(result.current.isLoading).toBe(false), {
           timeout: 5000,
@@ -195,7 +193,7 @@ describe("useCollectionCount", () => {
             path: COLLECTION,
             orderBy: [["sortableId", "asc"]],
             endAt: [100],
-          })
+          }),
         );
         await waitFor(() => expect(result.current.isLoading).toBe(false), {
           timeout: 5000,
@@ -212,7 +210,7 @@ describe("useCollectionCount", () => {
             path: COLLECTION,
             orderBy: [["sortableId", "asc"]],
             endBefore: [100],
-          })
+          }),
         );
         await waitFor(() => expect(result.current.isLoading).toBe(false), {
           timeout: 5000,
@@ -229,13 +227,8 @@ describe("useCollectionCount", () => {
       const { result, unmount } = renderHook(() =>
         useCollectionCount<Post>({
           path: COLLECTION,
-          queryConstraints: [
-            or(
-              where("content", "==", "foo"),
-              where("status", "==", "published")
-            ),
-          ],
-        })
+          queryConstraints: [or(where("content", "==", "foo"), where("status", "==", "published"))],
+        }),
       );
       await waitFor(() => expect(result.current.isLoading).toBe(false), {
         timeout: 5000,
@@ -252,8 +245,8 @@ describe("useCollectionCount", () => {
           {
             path: COLLECTION,
           },
-          { use: [emptyMiddleware] }
-        )
+          { use: [emptyMiddleware] },
+        ),
       );
       await waitFor(() => expect(result.current.data != null).toBe(true), {
         timeout: 5000,
@@ -273,16 +266,13 @@ describe("useCollectionCount", () => {
       const { result, unmount } = renderHook(() =>
         useCollectionCount<Post>({
           path: ERR_COLLECTION,
-        })
+        }),
       );
       await waitFor(
-        () =>
-          expect(
-            result.current.error != null || result.current.data != null
-          ).toBe(true),
+        () => expect(result.current.error != null || result.current.data != null).toBe(true),
         {
           timeout: 5000,
-        }
+        },
       );
       expect(result.current.error instanceof FirebaseError).toBe(true);
       unmount();

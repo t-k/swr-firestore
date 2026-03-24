@@ -5,7 +5,7 @@ import { getFirestoreConverter } from "../util/getConverter.js";
 import createSwrKey from "../util/createKey.js";
 
 const getCollection = async <T>(
-  params: KeyParams<T>
+  params: KeyParams<T>,
 ): Promise<{
   key: string;
   data: DocumentData<T>[];
@@ -29,11 +29,7 @@ const getCollection = async <T>(
     w.forEach((q) => {
       queryRef =
         q[0] === "id"
-          ? (queryRef ?? collectionRef).where(
-              FieldPath.documentId(),
-              q[1],
-              q[2]
-            )
+          ? (queryRef ?? collectionRef).where(FieldPath.documentId(), q[1], q[2])
           : (queryRef ?? collectionRef).where(...q);
     });
   }
@@ -46,24 +42,16 @@ const getCollection = async <T>(
     });
   }
   if (s) {
-    queryRef = (queryRef ?? collectionRef).startAt(
-      ...(Array.isArray(s) ? s : [s])
-    );
+    queryRef = (queryRef ?? collectionRef).startAt(...(Array.isArray(s) ? s : [s]));
   }
   if (sa) {
-    queryRef = (queryRef ?? collectionRef).startAfter(
-      ...(Array.isArray(sa) ? sa : [sa])
-    );
+    queryRef = (queryRef ?? collectionRef).startAfter(...(Array.isArray(sa) ? sa : [sa]));
   }
   if (e) {
-    queryRef = (queryRef ?? collectionRef).endAt(
-      ...(Array.isArray(e) ? e : [e])
-    );
+    queryRef = (queryRef ?? collectionRef).endAt(...(Array.isArray(e) ? e : [e]));
   }
   if (eb) {
-    queryRef = (queryRef ?? collectionRef).endBefore(
-      ...(Array.isArray(eb) ? eb : [eb])
-    );
+    queryRef = (queryRef ?? collectionRef).endBefore(...(Array.isArray(eb) ? eb : [eb]));
   }
   if (l) {
     queryRef = (queryRef ?? collectionRef).limit(l);

@@ -14,7 +14,7 @@ import serializeMiddleware from "../middleware/serializeMiddleware";
 
 const useDoc = <T>(
   params: Omit<KeyParams<T>, "where" | "orderBy" | "limit"> | Falsy,
-  swrOptions?: Omit<SWRConfiguration, "fetcher">
+  swrOptions?: Omit<SWRConfiguration, "fetcher">,
 ): SWRSubscriptionResponse<DocumentData<T>, FirestoreError> => {
   return useSWRSubscription(
     params || null,
@@ -35,11 +35,11 @@ const useDoc = <T>(
         },
         (error) => {
           next(error);
-        }
+        },
       );
       return () => unsub && unsub();
     },
-    { ...swrOptions, use: [serializeMiddleware, ...(swrOptions?.use ?? [])] }
+    { ...swrOptions, use: [serializeMiddleware, ...(swrOptions?.use ?? [])] },
   );
 };
 export default useDoc;

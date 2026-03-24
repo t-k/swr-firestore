@@ -4,11 +4,7 @@ import type {
   KeyParamsForAggregate,
   KeyParamsForCollectionGroupAggregate,
 } from "./util/type";
-import type {
-  SwrAggregateSpec,
-  AggregateResult,
-  AggregateFieldSpec,
-} from "../util/type";
+import type { SwrAggregateSpec, AggregateResult, AggregateFieldSpec } from "../util/type";
 import getCollection from "./fetcher/getCollection";
 import getCollectionCount from "./fetcher/getCollectionCount";
 import getCollectionGroup from "./fetcher/getCollectionGroup";

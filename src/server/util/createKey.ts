@@ -6,16 +6,13 @@ import { toDatabaseIdString } from "../../util/databaseId";
 const SUBSCRIPTION_PREFIX = "$sub$";
 
 const createSwrKey = <T>(
-  params: KeyParams<T> & { count?: boolean; _aggregate?: boolean }
+  params: KeyParams<T> & { count?: boolean; _aggregate?: boolean },
 ): string => {
   const { isSubscription, db, ...rest } = params;
   // Replace Firestore instance with serializable databaseId
-  const cleaned =
-    db != null
-      ? { ...rest, databaseId: toDatabaseIdString(db.databaseId) }
-      : rest;
+  const cleaned = db != null ? { ...rest, databaseId: toDatabaseIdString(db.databaseId) } : rest;
   return `${isSubscription ? SUBSCRIPTION_PREFIX : ""}${unstable_serialize(
-    JSON.parse(JSON.stringify(cleaned))
+    JSON.parse(JSON.stringify(cleaned)),
   )}`;
 };
 
