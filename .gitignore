@@ -8,6 +8,7 @@ firebase-debug.log
 ui-debug.log
 tsconfig.tsbuildinfo
 .vscode
+.worktrees
 *.d.ts
 *.js
 *.js.map
