@@ -43,7 +43,7 @@
     }
   },
   "scripts": {
-    "build": "tsc --noEmit && vite build",
+    "build": "tsc --noEmit && vite build && tsc --emitDeclarationOnly --declaration --rootDir src --outDir dist",
     "build:server": "tsc --noEmit --project tsconfig.server.json && vite --config vite.config.server.ts --outDir dist/server build",
     "emulator": "firebase emulators:start --project swr-firestore-project --only firestore",
     "test": "vitest",

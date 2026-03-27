@@ -3,8 +3,6 @@ import { defineConfig } from "vitest/config";
 import tsconfigPaths from "vite-tsconfig-paths";
 import react from "@vitejs/plugin-react";
 import { resolve } from "path";
-import { typescriptPaths } from "rollup-plugin-typescript-paths";
-import typescript from "@rollup/plugin-typescript";
 
 export default defineConfig({
   plugins: [tsconfigPaths(), react()],
@@ -19,10 +17,10 @@ export default defineConfig({
         return entryName === "server" ? `server/index.${ext}` : `${entryName}.${ext}`;
       },
     },
-    rollupOptions: {
+    rolldownOptions: {
       input: {
-        index: resolve(__dirname, "src/index.ts"),
-        server: resolve(__dirname, "src/server/index.ts"),
+        index: resolve(import.meta.dirname, "src/index.ts"),
+        server: resolve(import.meta.dirname, "src/server/index.ts"),
       },
       external: [
         "firebase",
@@ -49,16 +47,6 @@ export default defineConfig({
           "lodash/fp/set.js": "set",
         },
       },
-      plugins: [
-        typescriptPaths({
-          preserveExtensions: true,
-        }),
-        typescript({
-          sourceMap: false,
-          declaration: true,
-          outDir: "dist",
-        }),
-      ],
     },
   },
 });
