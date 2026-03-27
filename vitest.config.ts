@@ -31,7 +31,7 @@ export default defineConfig({
     },
     includeSource: ["src/**/*.{ts,tsx}", "tests/**/*.{ts}"],
     include: ["**/*.{test,spec}.{js,ts,jsx,tsx}", "./tests/**/*.{test,spec}.{js,ts,jsx,tsx}"],
-    exclude: ["**/node_modules/**"],
+    exclude: ["**/node_modules/**", ".worktrees/**"],
     setupFiles: ["tests/setup.ts"],
     testTimeout: 50000,
     env: {
