@@ -57,7 +57,6 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^10.0.0",
-    "@rollup/plugin-typescript": "^12.1.0",
     "@testing-library/jest-dom": "^6.0.0",
     "@testing-library/react": "^16.0.0",
     "@types/lodash": "^4.14.192",
@@ -65,7 +64,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^6.0.1",
-    "@vitest/coverage-v8": "^4.0.15",
+    "@vitest/coverage-v8": "^4.1.2",
     "firebase": ">=9.17.0",
     "firebase-admin": ">=11.5.0",
     "jsdom": "^29.0.0",
@@ -73,11 +72,11 @@
     "oxlint": "^1.56.0",
     "react": "^19",
     "react-dom": "^19",
-    "rollup-plugin-typescript-paths": "^1.4.0",
     "swr": "^2.1.0 <3.0.0",
-    "typescript": "^5.0.2",
-    "vite-tsconfig-paths": "^6.0.3",
-    "vitest": "^4.0.15"
+    "typescript": "^6.0.2",
+    "vite": "^8.0.3",
+    "vite-tsconfig-paths": "^6.1.1",
+    "vitest": "^4.1.2"
   },
   "peerDependencies": {
     "firebase": ">=9.11.0",

@@ -1,15 +1,13 @@
 {
   "compilerOptions": {
     "allowJs": false,
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
     "jsx": "preserve",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "module": "ESNext",
-    "moduleResolution": "Node",
+    "module": "Preserve",
+    "moduleResolution": "Bundler",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "outDir": "./dist",
