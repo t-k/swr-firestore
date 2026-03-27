@@ -1,3 +1,22 @@
+## [Unreleased]
+
+### Changed
+
+- Upgrade Vite 7 to Vite 8 (migrate to Rolldown-based bundler)
+- Upgrade TypeScript 5 to TypeScript 6
+- Replace `vite-tsconfig-paths` plugin with Vite 8 native `resolve.tsconfigPaths`
+- Replace `@rollup/plugin-typescript` with `tsc --emitDeclarationOnly`
+- Move `types` condition first in `package.json` exports (per TypeScript recommendation)
+- Remove unused `build:server` script
+
+### Performance
+
+- ~60x faster bundling with Vite 8 (Rolldown): ~1.48s -> ~25ms
+
+### Note
+
+- Unminified bundle size is ~15-18% larger due to Rolldown's code generation style (region comments, formatting differences). When minified, output is ~3% smaller than Vite 7. End users bundling this library with their own bundler will see no size regression.
+
 ## [2.1.0] - 2026-02-11
 
 ### Feature
