@@ -32,14 +32,14 @@
   },
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "require": "./dist/index.umd.cjs",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.umd.cjs"
     },
     "./server": {
+      "types": "./dist/server/index.d.ts",
       "import": "./dist/server/index.js",
-      "require": "./dist/server/index.umd.cjs",
-      "types": "./dist/server/index.d.ts"
+      "require": "./dist/server/index.umd.cjs"
     }
   },
   "scripts": {
