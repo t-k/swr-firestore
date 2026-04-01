@@ -1,28 +1,10 @@
 import type { SWRSubscriptionOptions, SWRSubscriptionResponse } from "swr/subscription";
-import type {
-  FirestoreError,
-  QueryConstraint,
-  DocumentData as FsDocumentData,
-} from "firebase/firestore";
+import type { FirestoreError, DocumentData as FsDocumentData } from "firebase/firestore";
 import type { DocumentData, Falsy, KeyParams } from "../util/type";
-import {
-  collection,
-  documentId,
-  endAt,
-  endBefore,
-  getFirestore,
-  limit,
-  limitToLast,
-  onSnapshot,
-  orderBy,
-  query,
-  startAfter,
-  startAt,
-  where,
-} from "firebase/firestore";
+import { collection, getFirestore, onSnapshot } from "firebase/firestore";
 import { getFirestoreConverter } from "../util/getConverter";
 import useSWRSubscription from "swr/subscription";
-import { isQueryConstraintParams } from "../util/typeGuard";
+import { buildQueryForCollection } from "../util/buildQuery";
 import serializeMiddleware from "../middleware/serializeMiddleware";
 import type { Key, SWRConfiguration } from "swr";
 
@@ -40,34 +22,7 @@ const useCollection = <T>(
       const db = externalDb ?? getFirestore();
       const converter = getFirestoreConverter<T>(parseDates);
       const ref = collection(db, path);
-      let q;
-      if (isQueryConstraintParams(params)) {
-        q = query(ref, ...(params.queryConstraints as QueryConstraint[]));
-      } else {
-        const {
-          where: w,
-          orderBy: o,
-          startAt: s,
-          startAfter: sa,
-          endAt: e,
-          endBefore: eb,
-          limit: l,
-          limitToLast: ltl,
-        } = params;
-        q = query(
-          ref,
-          ...(w ? w : []).map((q) =>
-            q[0] === "id" ? where(documentId(), q[1], q[2]) : where(...q),
-          ),
-          ...(o ? o : []).map((q) => (q[0] === "id" ? orderBy(documentId(), q[1]) : orderBy(...q))),
-          ...(s ? [startAt(...(Array.isArray(s) ? s : [s]))] : []),
-          ...(sa ? [startAfter(...(Array.isArray(sa) ? sa : [sa]))] : []),
-          ...(e ? [endAt(...(Array.isArray(e) ? e : [e]))] : []),
-          ...(eb ? [endBefore(...(Array.isArray(eb) ? eb : [eb]))] : []),
-          ...(l ? [limit(l)] : []),
-          ...(ltl ? [limitToLast(ltl)] : []),
-        );
-      }
+      const q = buildQueryForCollection(ref, params);
       const unsub = onSnapshot<DocumentData<T>, FsDocumentData>(
         q.withConverter(converter),
         (qs) => {
