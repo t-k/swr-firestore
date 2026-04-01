@@ -49,7 +49,7 @@ describe("getCollectionGroupCountCount", () => {
   });
   describe("with where option", () => {
     it("should fetch data from Firestore", async () => {
-      const { key, data } = await getCollectionGroupCount<Comment>({
+      const { key: _key, data } = await getCollectionGroupCount<Comment>({
         path: SUB_COLLECTION,
         where: [["content", "==", "foo"]],
       });
@@ -58,7 +58,7 @@ describe("getCollectionGroupCountCount", () => {
   });
   describe("with order option", () => {
     it("should fetch data from Firestore", async () => {
-      const { key, data } = await getCollectionGroupCount<Comment>({
+      const { key: _key, data } = await getCollectionGroupCount<Comment>({
         path: SUB_COLLECTION,
         orderBy: [["createdAt", "desc"]],
       });
@@ -68,7 +68,7 @@ describe("getCollectionGroupCountCount", () => {
 
   describe("with limit option", () => {
     it("should fetch data from Firestore", async () => {
-      const { key, data } = await getCollectionGroupCount<Comment>({
+      const { key: _key, data } = await getCollectionGroupCount<Comment>({
         path: SUB_COLLECTION,
         limit: 1,
       });
@@ -77,7 +77,7 @@ describe("getCollectionGroupCountCount", () => {
   });
   describe("with limitToLast option", () => {
     it("should fetch data from Firestore", async () => {
-      const { key, data } = await getCollectionGroupCount<Comment>({
+      const { key: _key, data } = await getCollectionGroupCount<Comment>({
         path: SUB_COLLECTION,
         limitToLast: 1,
         orderBy: [["createdAt", "asc"]],
@@ -88,7 +88,7 @@ describe("getCollectionGroupCountCount", () => {
   describe("with query cursor", () => {
     describe("with startAt", () => {
       it("should fetch data from Firestore", async () => {
-        const { key, data } = await getCollectionGroupCount<Comment>({
+        const { key: _key, data } = await getCollectionGroupCount<Comment>({
           path: SUB_COLLECTION,
           orderBy: [["sortableId", "asc"]],
           startAt: [10],
@@ -99,7 +99,7 @@ describe("getCollectionGroupCountCount", () => {
     });
     describe("with startAfter", () => {
       it("should fetch data from Firestore", async () => {
-        const { key, data } = await getCollectionGroupCount<Comment>({
+        const { key: _key, data } = await getCollectionGroupCount<Comment>({
           path: SUB_COLLECTION,
           orderBy: [["sortableId", "asc"]],
           startAfter: [10],
@@ -109,7 +109,7 @@ describe("getCollectionGroupCountCount", () => {
     });
     describe("with endAt", () => {
       it("should fetch data from Firestore", async () => {
-        const { key, data } = await getCollectionGroupCount<Comment>({
+        const { key: _key, data } = await getCollectionGroupCount<Comment>({
           path: SUB_COLLECTION,
           orderBy: [["sortableId", "asc"]],
           endAt: [100],
@@ -119,7 +119,7 @@ describe("getCollectionGroupCountCount", () => {
     });
     describe("with endBefore", () => {
       it("should fetch data from Firestore", async () => {
-        const { key, data } = await getCollectionGroupCount<Comment>({
+        const { key: _key, data } = await getCollectionGroupCount<Comment>({
           path: SUB_COLLECTION,
           orderBy: [["sortableId", "asc"]],
           endBefore: [100],

@@ -26,7 +26,7 @@ describe("getDoc", () => {
         status: "draft",
         createdAt: serverTimestamp(),
       });
-      const { key, data } = await getDoc<Post>({ path: `${COLLECTION}/${id}` });
+      const { key: _key, data } = await getDoc<Post>({ path: `${COLLECTION}/${id}` });
       expect(data != null).toBe(true);
       expect(data?.id).toBeDefined();
       expect(data?.exists).toBeDefined();
@@ -64,7 +64,7 @@ describe("getDoc", () => {
         status: "draft",
         createdAt: serverTimestamp(),
       });
-      const { key, data } = await getDoc<Post>({
+      const { key: _key, data } = await getDoc<Post>({
         path: `${COLLECTION}/${id}`,
         parseDates: ["createdAt"],
       });
@@ -104,7 +104,7 @@ describe("getDoc", () => {
           createdAt: serverTimestamp(),
         },
       });
-      const { key, data } = await getDoc<Post>({
+      const { key: _key, data } = await getDoc<Post>({
         path: `${COLLECTION}/${id}`,
         parseDates: ["createdAt", "author.createdAt"],
       });

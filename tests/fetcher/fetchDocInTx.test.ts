@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
-import { doc, setDoc, Timestamp, getFirestore, runTransaction } from "firebase/firestore";
+import { doc, setDoc, Timestamp, runTransaction } from "firebase/firestore";
 import { fetchDocInTx } from "../../src";
 import { db } from "../supports/fb";
 import { deleteCollection } from "../supports/fbUtil";

@@ -77,7 +77,7 @@ describe("getCollectionGroupAggregate", () => {
 
   describe("sum only", () => {
     it("should fetch sum across subcollections", async () => {
-      const { key, data } = await getCollectionGroupAggregate<
+      const { key: _key, data } = await getCollectionGroupAggregate<
         Item,
         { totalPrice: { type: "sum"; field: "price" } }
       >({
@@ -92,7 +92,7 @@ describe("getCollectionGroupAggregate", () => {
 
   describe("average only", () => {
     it("should fetch average across subcollections", async () => {
-      const { key, data } = await getCollectionGroupAggregate<
+      const { key: _key, data } = await getCollectionGroupAggregate<
         Item,
         { avgQuantity: { type: "average"; field: "quantity" } }
       >({
@@ -108,7 +108,7 @@ describe("getCollectionGroupAggregate", () => {
 
   describe("multiple aggregations", () => {
     it("should fetch multiple aggregations at once", async () => {
-      const { key, data } = await getCollectionGroupAggregate<
+      const { key: _key, data } = await getCollectionGroupAggregate<
         Item,
         {
           count: { type: "count" };
@@ -133,7 +133,7 @@ describe("getCollectionGroupAggregate", () => {
 
   describe("with where option", () => {
     it("should fetch aggregation with where condition", async () => {
-      const { key, data } = await getCollectionGroupAggregate<
+      const { key: _key, data } = await getCollectionGroupAggregate<
         Item,
         {
           count: { type: "count" };
@@ -157,7 +157,7 @@ describe("getCollectionGroupAggregate", () => {
 
   describe("with limit option", () => {
     it("should fetch aggregation with limit", async () => {
-      const { key, data } = await getCollectionGroupAggregate<Item, { count: { type: "count" } }>({
+      const { key: _key, data } = await getCollectionGroupAggregate<Item, { count: { type: "count" } }>({
         path: SUB_COLLECTION,
         orderBy: [["price", "asc"]],
         limit: 2,

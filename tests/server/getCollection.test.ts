@@ -76,7 +76,7 @@ describe("getCollection", () => {
   });
   describe("with parseDates option", () => {
     it("should fetch data from Firestore", async () => {
-      const { key, data } = await getCollection<Post>({
+      const { key: _key, data } = await getCollection<Post>({
         path: COLLECTION,
         parseDates: ["createdAt"],
       });
@@ -92,7 +92,7 @@ describe("getCollection", () => {
   });
   describe("with where option", () => {
     it("should fetch data from Firestore", async () => {
-      const { key, data } = await getCollection<Post>({
+      const { key: _key, data } = await getCollection<Post>({
         path: COLLECTION,
         where: [["status", "==", "draft"]],
       });
@@ -117,7 +117,7 @@ describe("getCollection", () => {
   });
   describe("with order option", () => {
     it("should fetch data from Firestore", async () => {
-      const { key, data } = await getCollection<Post>({
+      const { key: _key, data } = await getCollection<Post>({
         path: COLLECTION,
         orderBy: [["createdAt", "desc"]],
       });
@@ -127,7 +127,7 @@ describe("getCollection", () => {
     });
 
     it("should fetch data from Firestore", async () => {
-      const { key, data } = await getCollection<Post>({
+      const { key: _key, data } = await getCollection<Post>({
         path: COLLECTION,
         orderBy: [["id", "asc"]],
       });
@@ -140,7 +140,7 @@ describe("getCollection", () => {
 
   describe("with limit option", () => {
     it("should fetch data from Firestore", async () => {
-      const { key, data } = await getCollection<Post>({
+      const { key: _key, data } = await getCollection<Post>({
         path: COLLECTION,
         limit: 1,
       });
@@ -150,7 +150,7 @@ describe("getCollection", () => {
 
   describe("with limitToLast option", () => {
     it("should fetch data from Firestore", async () => {
-      const { key, data } = await getCollection<Post>({
+      const { key: _key, data } = await getCollection<Post>({
         path: COLLECTION,
         limitToLast: 1,
         orderBy: [["createdAt", "asc"]],
@@ -160,7 +160,7 @@ describe("getCollection", () => {
   });
   describe("with nested object", () => {
     it("should fetch data from Firestore", async () => {
-      const { key, data } = await getCollection<Post>({
+      const { key: _key, data } = await getCollection<Post>({
         path: COLLECTION,
         parseDates: ["createdAt", "author.createdAt"],
       });
@@ -174,7 +174,7 @@ describe("getCollection", () => {
   describe("with query cursor", () => {
     describe("with startAt", () => {
       it("should fetch data from Firestore", async () => {
-        const { key, data } = await getCollection<Post>({
+        const { key: _key, data } = await getCollection<Post>({
           path: COLLECTION,
           orderBy: [["sortableId", "asc"]],
           startAt: [10],
@@ -189,7 +189,7 @@ describe("getCollection", () => {
     });
     describe("with startAfter", () => {
       it("should fetch data from Firestore", async () => {
-        const { key, data } = await getCollection<Post>({
+        const { key: _key, data } = await getCollection<Post>({
           path: COLLECTION,
           orderBy: [["sortableId", "asc"]],
           startAfter: [10],
@@ -203,7 +203,7 @@ describe("getCollection", () => {
     });
     describe("with endAt", () => {
       it("should fetch data from Firestore", async () => {
-        const { key, data } = await getCollection<Post>({
+        const { key: _key, data } = await getCollection<Post>({
           path: COLLECTION,
           orderBy: [["sortableId", "asc"]],
           endAt: [100],
@@ -217,7 +217,7 @@ describe("getCollection", () => {
     });
     describe("with endBefore", () => {
       it("should fetch data from Firestore", async () => {
-        const { key, data } = await getCollection<Post>({
+        const { key: _key, data } = await getCollection<Post>({
           path: COLLECTION,
           orderBy: [["sortableId", "asc"]],
           endBefore: [100],

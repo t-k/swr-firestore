@@ -67,7 +67,7 @@ describe("getAggregate", () => {
 
   describe("sum only", () => {
     it("should fetch sum of a field", async () => {
-      const { key, data } = await getAggregate<
+      const { key: _key, data } = await getAggregate<
         Product,
         { totalPrice: { type: "sum"; field: "price" } }
       >({
@@ -82,7 +82,7 @@ describe("getAggregate", () => {
 
   describe("average only", () => {
     it("should fetch average of a field", async () => {
-      const { key, data } = await getAggregate<
+      const { key: _key, data } = await getAggregate<
         Product,
         { avgPrice: { type: "average"; field: "price" } }
       >({
@@ -97,7 +97,7 @@ describe("getAggregate", () => {
 
   describe("multiple aggregations", () => {
     it("should fetch multiple aggregations at once", async () => {
-      const { key, data } = await getAggregate<
+      const { key: _key, data } = await getAggregate<
         Product,
         {
           count: { type: "count" };
@@ -122,7 +122,7 @@ describe("getAggregate", () => {
 
   describe("with where option", () => {
     it("should fetch aggregation with where condition", async () => {
-      const { key, data } = await getAggregate<
+      const { key: _key, data } = await getAggregate<
         Product,
         {
           count: { type: "count" };
@@ -150,7 +150,7 @@ describe("getAggregate", () => {
       });
       const targetId = products[0].id;
 
-      const { key, data } = await getAggregate<Product, { count: { type: "count" } }>({
+      const { key: _key, data } = await getAggregate<Product, { count: { type: "count" } }>({
         path: COLLECTION,
         where: [["id", "==", targetId]],
         aggregate: {
@@ -163,7 +163,7 @@ describe("getAggregate", () => {
 
   describe("with limit option", () => {
     it("should fetch aggregation with limit", async () => {
-      const { key, data } = await getAggregate<Product, { count: { type: "count" } }>({
+      const { key: _key, data } = await getAggregate<Product, { count: { type: "count" } }>({
         path: COLLECTION,
         orderBy: [["price", "asc"]],
         limit: 2,
@@ -187,7 +187,7 @@ describe("getAggregate", () => {
     });
 
     it("should return count=0, sum=0, average=null for empty collection", async () => {
-      const { key, data } = await getAggregate<
+      const { key: _key, data } = await getAggregate<
         Product,
         {
           count: { type: "count" };

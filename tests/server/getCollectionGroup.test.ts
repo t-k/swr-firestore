@@ -54,7 +54,7 @@ describe("getCollectionGroup", () => {
   });
   describe("with parseDates option", () => {
     it("should fetch data from Firestore", async () => {
-      const { key, data } = await getCollectionGroup<Comment>({
+      const { key: _key, data } = await getCollectionGroup<Comment>({
         path: SUB_COLLECTION,
         parseDates: ["createdAt"],
       });
@@ -69,7 +69,7 @@ describe("getCollectionGroup", () => {
   });
   describe("with where option", () => {
     it("should fetch data from Firestore", async () => {
-      const { key, data } = await getCollectionGroup<Comment>({
+      const { key: _key, data } = await getCollectionGroup<Comment>({
         path: SUB_COLLECTION,
         where: [["content", "==", "foo"]],
       });
@@ -80,7 +80,7 @@ describe("getCollectionGroup", () => {
   });
   describe("with order option", () => {
     it("should fetch data from Firestore", async () => {
-      const { key, data } = await getCollectionGroup<Comment>({
+      const { key: _key, data } = await getCollectionGroup<Comment>({
         path: SUB_COLLECTION,
         orderBy: [["createdAt", "desc"]],
       });
@@ -92,7 +92,7 @@ describe("getCollectionGroup", () => {
 
   describe("with limit option", () => {
     it("should fetch data from Firestore", async () => {
-      const { key, data } = await getCollectionGroup<Comment>({
+      const { key: _key, data } = await getCollectionGroup<Comment>({
         path: SUB_COLLECTION,
         limit: 1,
       });
@@ -102,7 +102,7 @@ describe("getCollectionGroup", () => {
 
   describe("with limitToLast option", () => {
     it("should fetch data from Firestore", async () => {
-      const { key, data } = await getCollectionGroup<Comment>({
+      const { key: _key, data } = await getCollectionGroup<Comment>({
         path: SUB_COLLECTION,
         limitToLast: 1,
         orderBy: [["createdAt", "asc"]],
@@ -113,7 +113,7 @@ describe("getCollectionGroup", () => {
   describe("with query cursor", () => {
     describe("with startAt", () => {
       it("should fetch data from Firestore", async () => {
-        const { key, data } = await getCollectionGroup<Comment>({
+        const { key: _key, data } = await getCollectionGroup<Comment>({
           path: SUB_COLLECTION,
           orderBy: [["sortableId", "asc"]],
           startAt: [10],
@@ -128,7 +128,7 @@ describe("getCollectionGroup", () => {
     });
     describe("with startAfter", () => {
       it("should fetch data from Firestore", async () => {
-        const { key, data } = await getCollectionGroup<Comment>({
+        const { key: _key, data } = await getCollectionGroup<Comment>({
           path: SUB_COLLECTION,
           orderBy: [["sortableId", "asc"]],
           startAfter: [10],
@@ -142,7 +142,7 @@ describe("getCollectionGroup", () => {
     });
     describe("with endAt", () => {
       it("should fetch data from Firestore", async () => {
-        const { key, data } = await getCollectionGroup<Comment>({
+        const { key: _key, data } = await getCollectionGroup<Comment>({
           path: SUB_COLLECTION,
           orderBy: [["sortableId", "asc"]],
           endAt: [100],
@@ -156,7 +156,7 @@ describe("getCollectionGroup", () => {
     });
     describe("with endBefore", () => {
       it("should fetch data from Firestore", async () => {
-        const { key, data } = await getCollectionGroup<Comment>({
+        const { key: _key, data } = await getCollectionGroup<Comment>({
           path: SUB_COLLECTION,
           orderBy: [["sortableId", "asc"]],
           endBefore: [100],

@@ -58,7 +58,7 @@ describe("getCollectionCount", () => {
   });
   describe("without option", () => {
     it("should fetch data", async () => {
-      const { key, data } = await getCollectionCount<Post>({
+      const { key: _key, data } = await getCollectionCount<Post>({
         path: COLLECTION,
       });
       expect(data != null).toBe(true);
@@ -67,7 +67,7 @@ describe("getCollectionCount", () => {
   });
   describe("with where option", () => {
     it("should fetch data from Firestore", async () => {
-      const { key, data } = await getCollectionCount<Post>({
+      const { key: _key, data } = await getCollectionCount<Post>({
         path: COLLECTION,
         where: [["status", "==", "draft"]],
       });
@@ -79,7 +79,7 @@ describe("getCollectionCount", () => {
         path: COLLECTION,
       });
       const targetId = targetData[0].id;
-      const { key, data } = await getCollectionCount<Post>({
+      const { key: _key, data } = await getCollectionCount<Post>({
         path: COLLECTION,
         where: [["id", "==", targetId]],
       });
@@ -88,7 +88,7 @@ describe("getCollectionCount", () => {
   });
   describe("with limit option", () => {
     it("should fetch data from Firestore", async () => {
-      const { key, data } = await getCollectionCount<Post>({
+      const { key: _key, data } = await getCollectionCount<Post>({
         path: COLLECTION,
         limit: 1,
       });
@@ -97,7 +97,7 @@ describe("getCollectionCount", () => {
   });
   describe("with limitToLast option", () => {
     it("should fetch data from Firestore", async () => {
-      const { key, data } = await getCollectionCount<Post>({
+      const { key: _key, data } = await getCollectionCount<Post>({
         path: COLLECTION,
         limitToLast: 1,
         orderBy: [["createdAt", "asc"]],
@@ -108,7 +108,7 @@ describe("getCollectionCount", () => {
   describe("with query cursor", () => {
     describe("with startAt", () => {
       it("should fetch data from Firestore", async () => {
-        const { key, data } = await getCollectionCount<Post>({
+        const { key: _key, data } = await getCollectionCount<Post>({
           path: COLLECTION,
           orderBy: [["sortableId", "asc"]],
           startAt: [10],
@@ -118,7 +118,7 @@ describe("getCollectionCount", () => {
     });
     describe("with startAfter", () => {
       it("should fetch data from Firestore", async () => {
-        const { key, data } = await getCollectionCount<Post>({
+        const { key: _key, data } = await getCollectionCount<Post>({
           path: COLLECTION,
           orderBy: [["sortableId", "asc"]],
           startAfter: [10],
@@ -128,7 +128,7 @@ describe("getCollectionCount", () => {
     });
     describe("with endAt", () => {
       it("should fetch data from Firestore", async () => {
-        const { key, data } = await getCollectionCount<Post>({
+        const { key: _key, data } = await getCollectionCount<Post>({
           path: COLLECTION,
           orderBy: [["sortableId", "asc"]],
           endAt: [100],
@@ -138,7 +138,7 @@ describe("getCollectionCount", () => {
     });
     describe("with endBefore", () => {
       it("should fetch data from Firestore", async () => {
-        const { key, data } = await getCollectionCount<Post>({
+        const { key: _key, data } = await getCollectionCount<Post>({
           path: COLLECTION,
           orderBy: [["sortableId", "asc"]],
           endBefore: [100],

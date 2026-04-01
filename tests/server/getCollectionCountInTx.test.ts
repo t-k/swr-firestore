@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
-import { collection, doc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { getCollectionCountInTx } from "../../src/server";
 import { db } from "../supports/fb";
 import { db as adminDb } from "../supports/fbAdmin";
