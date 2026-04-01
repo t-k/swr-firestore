@@ -4,9 +4,13 @@ import { getByPath, setByPath } from "./path";
 
 const formatTimestamp = (obj: object, props?: string[]): object => {
   if (props == null) return obj;
-  return props.reduce((result: object, prop: string) => {
-    const value = getByPath(obj, prop);
-    return setByPath(result, prop, value != null && value.toDate ? value.toDate() : value);
+  return props.reduce((result, prop: string) => {
+    const value = getByPath(result, prop);
+    const converted =
+      value != null && typeof value === "object" && "toDate" in value
+        ? (value as { toDate: () => Date }).toDate()
+        : value;
+    return setByPath(result as Record<string, unknown>, prop, converted);
   }, obj);
 };
 
