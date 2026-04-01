@@ -20,16 +20,6 @@
     "dist"
   ],
   "type": "module",
-  "main": "./dist/index.umd.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "typesVersions": {
-    "*": {
-      "server": [
-        "dist/server/index.d.ts"
-      ]
-    }
-  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -48,13 +38,16 @@
     "test": "vitest",
     "test:ci": "firebase emulators:exec --only auth,firestore,storage 'vitest run --coverage'",
     "coverage": "vitest run --coverage",
+    "lint": "oxlint",
+    "format": "oxfmt --write",
+    "format:check": "oxfmt --check",
     "prepublishOnly": "pnpm run build"
   },
   "devDependencies": {
     "@faker-js/faker": "^10.0.0",
     "@testing-library/jest-dom": "^6.0.0",
     "@testing-library/react": "^16.0.0",
-"@types/react": "^19",
+    "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^6.0.1",
     "@vitest/coverage-v8": "^4.1.2",
@@ -70,10 +63,10 @@
     "vite": "^8.0.3",
     "vitest": "^4.1.2"
   },
-  "packageManager": "pnpm@10.19.0",
   "peerDependencies": {
     "firebase": ">=9.11.0",
     "firebase-admin": ">=11.0.0",
     "swr": "^2.1.0 <3.0.0"
-  }
+  },
+  "packageManager": "pnpm@10.19.0"
 }
