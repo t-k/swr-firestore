@@ -50,17 +50,11 @@
     "coverage": "vitest run --coverage",
     "prepublishOnly": "pnpm run build"
   },
-  "dependencies": {
-    "lodash": "^4.17.21",
-    "lodash-es": "^4.17.21"
-  },
   "devDependencies": {
     "@faker-js/faker": "^10.0.0",
     "@testing-library/jest-dom": "^6.0.0",
     "@testing-library/react": "^16.0.0",
-    "@types/lodash": "^4.14.192",
-    "@types/lodash-es": "^4.17.7",
-    "@types/react": "^19",
+"@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^6.0.1",
     "@vitest/coverage-v8": "^4.1.2",

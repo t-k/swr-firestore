@@ -1,12 +1,12 @@
 import type { FirestoreDataConverter, QueryDocumentSnapshot } from "firebase/firestore";
 import type { DocumentData } from "./type";
-import { get, set } from "lodash-es";
+import { getByPath, setByPath } from "./path";
 
 const formatTimestamp = (obj: object, props?: string[]): object => {
   if (props == null) return obj;
   return props.reduce((result: object, prop: string) => {
-    const value = get(obj, prop);
-    return set(result, prop, value != null && value.toDate ? value.toDate() : value);
+    const value = getByPath(obj, prop);
+    return setByPath(result, prop, value != null && value.toDate ? value.toDate() : value);
   }, obj);
 };
 
