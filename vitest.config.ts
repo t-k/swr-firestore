@@ -32,7 +32,7 @@ export default defineConfig({
     includeSource: ["src/**/*.{ts,tsx}", "tests/**/*.{ts}"],
     include: ["**/*.{test,spec}.{js,ts,jsx,tsx}", "./tests/**/*.{test,spec}.{js,ts,jsx,tsx}"],
     exclude: ["**/node_modules/**", ".worktrees/**"],
-testTimeout: 50000,
+    testTimeout: 50000,
     env: {
       NODE_ENV: "test",
       FIREBASE_AUTH_EMULATOR_HOST: "localhost:9099",

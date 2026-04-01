@@ -1,7 +1,6 @@
 export const getByPath = (obj: unknown, path: string): unknown =>
   path.split(".").reduce<unknown>((acc, key) => {
-    if (acc != null && typeof acc === "object")
-      return (acc as Record<string, unknown>)[key];
+    if (acc != null && typeof acc === "object") return (acc as Record<string, unknown>)[key];
     return undefined;
   }, obj);
 

@@ -157,7 +157,10 @@ describe("getCollectionGroupAggregate", () => {
 
   describe("with limit option", () => {
     it("should fetch aggregation with limit", async () => {
-      const { key: _key, data } = await getCollectionGroupAggregate<Item, { count: { type: "count" } }>({
+      const { key: _key, data } = await getCollectionGroupAggregate<
+        Item,
+        { count: { type: "count" } }
+      >({
         path: SUB_COLLECTION,
         orderBy: [["price", "asc"]],
         limit: 2,

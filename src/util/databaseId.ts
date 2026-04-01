@@ -11,8 +11,10 @@ export const toDatabaseIdString = (databaseId: string | { database: string }): s
  */
 export const extractDatabaseId = (db: unknown): string | undefined => {
   if (db == null || typeof db !== "object") return undefined;
-  if (!("toJSON" in db) || typeof (db as Record<string, unknown>).toJSON !== "function") return undefined;
+  if (!("toJSON" in db) || typeof (db as Record<string, unknown>).toJSON !== "function")
+    return undefined;
   const json = (db as { toJSON: () => unknown }).toJSON();
-  if (json == null || typeof json !== "object" || !("databaseId" in (json as object))) return undefined;
+  if (json == null || typeof json !== "object" || !("databaseId" in (json as object)))
+    return undefined;
   return toDatabaseIdString((json as { databaseId: string | { database: string } }).databaseId);
 };
