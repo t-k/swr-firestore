@@ -1,5 +1,5 @@
 import type { Middleware, SWRHook } from "swr";
-import { toDatabaseIdString } from "../util/databaseId";
+import { extractDatabaseId } from "../util/databaseId";
 
 const serializeMiddleware: Middleware = (useSWRNext: SWRHook) => {
   return (key, fetcher, config) => {
@@ -11,22 +11,8 @@ const serializeMiddleware: Middleware = (useSWRNext: SWRHook) => {
 
       if (hasDb || hasSpecial) {
         const { db, ...rest } = keyObj;
-        // Replace Firestore instance with serializable databaseId
-        const cleaned =
-          db != null
-            ? {
-                ...rest,
-                databaseId: toDatabaseIdString(
-                  (
-                    db as {
-                      toJSON: () => {
-                        databaseId: string | { database: string };
-                      };
-                    }
-                  ).toJSON().databaseId,
-                ),
-              }
-            : rest;
+        const databaseId = extractDatabaseId(db);
+        const cleaned = databaseId != null ? { ...rest, databaseId } : rest;
         swrKey = hasSpecial ? JSON.parse(JSON.stringify(cleaned)) : cleaned;
       }
     }

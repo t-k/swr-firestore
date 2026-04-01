@@ -20,7 +20,7 @@ import {
   where,
 } from "firebase/firestore";
 import { getFirestoreConverter } from "../util/getConverter";
-import { toDatabaseIdString } from "../util/databaseId";
+import { scrubKey } from "../util/scrubKey";
 import { isQueryConstraintParams } from "../util/typeGuard";
 import serializeMiddleware from "../middleware/serializeMiddleware";
 
@@ -67,28 +67,7 @@ const useGetDocs = <T>(
     const sn = await getFn(q.withConverter(converter));
     return sn.docs.map((x) => x.data());
   };
-  const scrubKey = (params: (GetDocKeyParams<T> & { isCollectionGroup?: boolean }) | Falsy) => {
-    if (!params) {
-      return null;
-    }
-    const {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      isCollectionGroup: _isCollectionGroup,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      useOfflineCache: _useOfflineCache,
-      db,
-      ...rest
-    } = params;
-    return db != null
-      ? {
-          ...rest,
-          databaseId: toDatabaseIdString(
-            (db.toJSON() as { databaseId: string | { database: string } }).databaseId,
-          ),
-        }
-      : rest;
-  };
-  return useSWR(scrubKey(params), fetcher, {
+  return useSWR(scrubKey(params as Record<string, unknown> | Falsy), fetcher, {
     ...swrOptions,
     use: [serializeMiddleware, ...(swrOptions?.use ?? [])],
   });
