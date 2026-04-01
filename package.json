@@ -48,7 +48,7 @@
     "test": "vitest",
     "test:ci": "firebase emulators:exec --only auth,firestore,storage 'vitest run --coverage'",
     "coverage": "vitest run --coverage",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
     "lodash": "^4.17.21",
@@ -76,6 +76,7 @@
     "vite": "^8.0.3",
     "vitest": "^4.1.2"
   },
+  "packageManager": "pnpm@10.19.0",
   "peerDependencies": {
     "firebase": ">=9.11.0",
     "firebase-admin": ">=11.0.0",

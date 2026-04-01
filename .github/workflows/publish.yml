@@ -18,14 +18,16 @@ jobs:
         with:
           distribution: "temurin"
           java-version: "21"
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           node-version: "24"
           registry-url: "https://registry.npmjs.org"
-      - run: npm ci
-      - run: npm install -g firebase-tools
-      - run: npm run test:ci
+          cache: "pnpm"
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm add -g firebase-tools
+      - run: pnpm run test:ci
       - name: Build
-        run: npm run build
+        run: pnpm run build
       - name: Publish to npm
-        run: npm publish --provenance --access public
+        run: pnpm publish --provenance --access public --no-git-checks

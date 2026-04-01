@@ -28,14 +28,15 @@ jobs:
         with:
           distribution: "temurin"
           java-version: "21"
+      - uses: pnpm/action-setup@v4
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "npm"
-      - run: npm i
-      - run: npm install -g firebase-tools
-      - run: npm run test:ci
+          cache: "pnpm"
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm add -g firebase-tools
+      - run: pnpm run test:ci
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
         with:

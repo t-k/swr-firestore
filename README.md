@@ -1029,7 +1029,7 @@ When `db` is omitted, it falls back to `getFirestore()` as before, so existing c
 Before running the test, you need to install the [Firebase tools](https://firebase.google.com/docs/cli).
 
 ```bash
-npm run test:ci
+pnpm run test:ci
 ```
 
 ## License
