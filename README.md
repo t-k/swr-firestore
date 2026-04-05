@@ -11,17 +11,20 @@ Inspired by [swr-firestore-v9](https://www.npmjs.com/package/swr-firestore-v9)
 ## Installation
 
 ```bash
-# if you use NPM
+pnpm add @tatsuokaniwa/swr-firestore
+# or
 npm i --save @tatsuokaniwa/swr-firestore
-# if you use Yarn
+# or
 yarn add @tatsuokaniwa/swr-firestore
-# if you use pnpm
-pnpm i @tatsuokaniwa/swr-firestore
 ```
 
-### Requirements for Aggregation Queries
+### Requirements
 
-To use aggregation features (`useAggregate`, `useCollectionGroupAggregate`, `fetchAggregate`, `fetchCollectionGroupAggregate`):
+- Node.js >= 12.11 (requires `exports` field support in `package.json`)
+- TypeScript >= 4.7 (requires `exports` field support for type resolution)
+- `firebase >= 9.11.0`, `swr >= 2.1.0 < 3.0.0`
+
+#### For Aggregation Queries
 
 - Client-side: `firebase >= 9.17.0`
 - Server-side: `firebase-admin >= 11.5.0` (recommended)
@@ -134,26 +137,60 @@ export default function Page({ fallback }) {
 
 ## API
 
+### Entry points
+
+This library provides multiple entry points to minimize bundle size. Import only what you need:
+
+```ts
+// All client-side hooks and fetchers (full bundle)
+import { useDoc, useGetDocs, fetchDoc } from "@tatsuokaniwa/swr-firestore";
+
+// Real-time subscription hooks only (depends on swr/subscription)
+import {
+  useCollection,
+  useCollectionGroup,
+  useDoc,
+} from "@tatsuokaniwa/swr-firestore/subscription";
+
+// Aggregation hooks and fetchers only
+import {
+  useAggregate,
+  useCollectionCount,
+  fetchAggregate,
+} from "@tatsuokaniwa/swr-firestore/aggregate";
+
+// Server-side fetchers (Firebase Admin SDK)
+import { getCollection, getDoc } from "@tatsuokaniwa/swr-firestore/server";
+```
+
+### Full export list
+
 ```ts
 import {
-  // SWR Hooks
+  // SWR Hooks (real-time subscription, also available from ./subscription)
   useCollection, // Subscription for collection
-  useCollectionCount, // Wrapper for getCountFromServer for collection
   useCollectionGroup, // Subscription for collectionGroup
+  useDoc, // Subscription for document
+
+  // SWR Hooks (one-time fetch)
+  useGetDocs, // Fetch documents with firestore's getDocs
+  useGetDoc, // Fetch document with firestore's getDoc
+
+  // SWR Hooks (aggregate, also available from ./aggregate)
+  useCollectionCount, // Wrapper for getCountFromServer for collection
   useCollectionGroupCount, // Wrapper for getCountFromServer for collectionGroup
   useAggregate, // Aggregation queries (count, sum, average) for collection
   useCollectionGroupAggregate, // Aggregation queries for collectionGroup
-  useDoc, // Subscription for document
-  useGetDocs, // Fetch documents with firestore's getDocs
-  useGetDoc, // Fetch document with firestore's getDoc
+
   // Client-side fetchers (without SWR)
   fetchDoc, // Fetch single document
   fetchCollection, // Fetch collection
-  fetchCollectionCount, // Count documents in collection
+  fetchCollectionCount, // Count documents in collection (also from ./aggregate)
   fetchCollectionGroup, // Fetch collection group
-  fetchCollectionGroupCount, // Count documents in collection group
-  fetchAggregate, // Aggregation queries for collection
-  fetchCollectionGroupAggregate, // Aggregation queries for collection group
+  fetchCollectionGroupCount, // Count documents in collection group (also from ./aggregate)
+  fetchAggregate, // Aggregation queries for collection (also from ./aggregate)
+  fetchCollectionGroupAggregate, // Aggregation queries for collection group (also from ./aggregate)
+
   // Client-side transaction fetcher
   fetchDocInTx, // Fetch document within transaction
 } from "@tatsuokaniwa/swr-firestore";

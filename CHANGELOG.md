@@ -1,21 +1,43 @@
-## [Unreleased]
+## [3.0.0] - 2026-04-05
+
+### Breaking Changes
+
+- Remove `lodash`/`lodash-es` from dependencies. Internal implementation replaced with custom `getByPath`/`setByPath` helpers. If your project relied on lodash being transitively available through this package, you will need to install it separately.
+- Remove legacy `main`, `module`, `types`, and `typesVersions` fields from `package.json`. Only `exports` field is used. Bundlers or TypeScript versions that do not support `exports` (TypeScript < 4.7, Node.js < 12.11) are no longer supported.
+
+### Features
+
+- Add `./subscription` subpath export for real-time subscription hooks only (`useCollection`, `useCollectionGroup`, `useDoc`). Avoids pulling in `swr/subscription` when not needed.
+- Add `./aggregate` subpath export for aggregation hooks and fetchers only (`useAggregate`, `useCollectionCount`, `useCollectionGroupAggregate`, `useCollectionGroupCount`, `fetchAggregate`, `fetchCollectionCount`, `fetchCollectionGroupAggregate`, `fetchCollectionGroupCount`).
+- Add `sideEffects: false` to `package.json` for reliable tree-shaking in consumer bundlers.
+- Add type-safe `extractDatabaseId` utility function.
 
 ### Changed
 
-- Upgrade Vite 7 to Vite 8 (migrate to Rolldown-based bundler)
-- Upgrade TypeScript 5 to TypeScript 6
-- Replace `vite-tsconfig-paths` plugin with Vite 8 native `resolve.tsconfigPaths`
-- Replace `@rollup/plugin-typescript` with `tsc --emitDeclarationOnly`
-- Move `types` condition first in `package.json` exports (per TypeScript recommendation)
-- Remove unused `build:server` script
+- Migrate from npm to pnpm.
+- Upgrade Vite 7 to Vite 8 (migrate to Rolldown-based bundler).
+- Upgrade TypeScript 5 to TypeScript 6.
+- Replace `vite-tsconfig-paths` plugin with Vite 8 native `resolve.tsconfigPaths`.
+- Replace `@rollup/plugin-typescript` with `tsc --emitDeclarationOnly`.
+- Move `types` condition first in `package.json` exports (per TypeScript recommendation).
+- Convert barrel files (`src/index.ts`, `src/fetcher/index.ts`) to direct re-exports for stable tree-shaking.
+- Add lint (`oxlint`) and format (`oxfmt`) scripts and CI job.
+
+### Refactoring
+
+- Remove `any` from `path.ts`, use `unknown` + type guards.
+- Unify `scrubKey` and `extractDatabaseId`, remove key generation duplication.
+- Deduplicate server query building with shared `buildQuery.ts` across all 8 fetchers.
+- Deduplicate client query building in `useCollection` and `useGetDocs`.
 
 ### Performance
 
-- ~60x faster bundling with Vite 8 (Rolldown): ~1.48s -> ~25ms
+- ~60x faster bundling with Vite 8 (Rolldown): ~1.48s -> ~25ms.
+- Client entry `dist/index.js` reduced from 18.5 KB to 5.89 KB (gzip: 1.43 KB) via code splitting and subpath exports.
 
-### Note
+### Fixed
 
-- Unminified bundle size is ~15-18% larger due to Rolldown's code generation style (region comments, formatting differences). When minified, output is ~3% smaller than Vite 7. End users bundling this library with their own bundler will see no size regression.
+- Resolve all oxlint warnings (57 -> 0).
 
 ## [2.1.0] - 2026-02-11
 
