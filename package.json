@@ -65,7 +65,7 @@
     "firebase": ">=9.17.0",
     "firebase-admin": ">=11.5.0",
     "jsdom": "^29.0.0",
-    "oxfmt": "^0.42.0",
+    "oxfmt": "^0.43.0",
     "oxlint": "^1.57.0",
     "react": "^19",
     "react-dom": "^19",
