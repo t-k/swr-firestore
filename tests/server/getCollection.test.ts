@@ -115,6 +115,41 @@ describe("getCollection", () => {
       });
     });
   });
+  describe("with filter option", () => {
+    it("should fetch data with OR filter", async () => {
+      const { data } = await getCollection<Post>({
+        path: COLLECTION,
+        filter: {
+          type: "or",
+          filters: [
+            { type: "where", field: "status", op: "==", value: "draft" },
+            { type: "where", field: "status", op: "==", value: "published" },
+          ],
+        },
+      });
+
+      expect(data).toHaveLength(4);
+    });
+
+    it("should fetch specified id data with filter", async () => {
+      const { data: targetData } = await getCollection<Post>({
+        path: COLLECTION,
+      });
+      const targetId = targetData[0].id;
+      const { data } = await getCollection<Post>({
+        path: COLLECTION,
+        filter: {
+          type: "where",
+          field: "id",
+          op: "==",
+          value: targetId,
+        },
+      });
+
+      expect(data).toHaveLength(1);
+      expect(data[0].id).toBe(targetId);
+    });
+  });
   describe("with order option", () => {
     it("should fetch data from Firestore", async () => {
       const { key: _key, data } = await getCollection<Post>({

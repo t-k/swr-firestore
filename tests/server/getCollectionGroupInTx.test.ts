@@ -57,6 +57,25 @@ describe("getCollectionGroupInTx", () => {
     expect(result.every((doc) => doc.score >= 20)).toBe(true);
   });
 
+  test("fetch with OR filter", async () => {
+    const result = await adminDb.runTransaction(async (t) => {
+      return await getCollectionGroupInTx<TestDoc>(t, {
+        path: subCollection,
+        filter: {
+          type: "or",
+          filters: [
+            { type: "where", field: "score", op: "==", value: 10 },
+            { type: "where", field: "score", op: "==", value: 30 },
+          ],
+        },
+        orderBy: [["score", "asc"]],
+      });
+    });
+
+    expect(result).toHaveLength(2);
+    expect(result.map((doc) => doc.score)).toEqual([10, 30]);
+  });
+
   test("fetch with orderBy and limit", async () => {
     const result = await adminDb.runTransaction(async (t) => {
       return await getCollectionGroupInTx<TestDoc>(t, {

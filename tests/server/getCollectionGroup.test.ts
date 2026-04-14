@@ -78,6 +78,24 @@ describe("getCollectionGroup", () => {
       });
     });
   });
+  describe("with filter option", () => {
+    it("should fetch data with OR filter", async () => {
+      const { data } = await getCollectionGroup<Comment>({
+        path: SUB_COLLECTION,
+        filter: {
+          type: "or",
+          filters: [
+            { type: "where", field: "content", op: "==", value: "foo" },
+            { type: "where", field: "content", op: "==", value: "bar" },
+          ],
+        },
+        orderBy: [["sortableId", "asc"]],
+      });
+
+      expect(data).toHaveLength(3);
+      expect(data.map((x) => x.content)).toEqual(["foo", "bar", "foo"]);
+    });
+  });
   describe("with order option", () => {
     it("should fetch data from Firestore", async () => {
       const { key: _key, data } = await getCollectionGroup<Comment>({

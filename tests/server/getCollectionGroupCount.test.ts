@@ -56,6 +56,22 @@ describe("getCollectionGroupCountCount", () => {
       expect(data).toBe(2);
     });
   });
+  describe("with filter option", () => {
+    it("should count documents with OR filter", async () => {
+      const { data } = await getCollectionGroupCount<Comment>({
+        path: SUB_COLLECTION,
+        filter: {
+          type: "or",
+          filters: [
+            { type: "where", field: "content", op: "==", value: "foo" },
+            { type: "where", field: "content", op: "==", value: "bar" },
+          ],
+        },
+      });
+
+      expect(data).toBe(3);
+    });
+  });
   describe("with order option", () => {
     it("should fetch data from Firestore", async () => {
       const { key: _key, data } = await getCollectionGroupCount<Comment>({
