@@ -3,6 +3,7 @@ import type {
   KeyParams,
   KeyParamsForAggregate,
   KeyParamsForCollectionGroupAggregate,
+  ServerFilter,
 } from "./util/type";
 import type { SwrAggregateSpec, AggregateResult, AggregateFieldSpec } from "../util/type";
 import getCollection from "./fetcher/getCollection";
@@ -26,6 +27,7 @@ export type {
   AggregateFieldSpec,
   KeyParamsForAggregate,
   KeyParamsForCollectionGroupAggregate,
+  ServerFilter,
 };
 export {
   getCollection,

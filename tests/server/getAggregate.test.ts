@@ -142,6 +142,35 @@ describe("getAggregate", () => {
       });
     });
   });
+  describe("with filter option", () => {
+    it("should fetch aggregation with OR filter", async () => {
+      const { data } = await getAggregate<
+        Product,
+        {
+          count: { type: "count" };
+          totalPrice: { type: "sum"; field: "price" };
+        }
+      >({
+        path: COLLECTION,
+        filter: {
+          type: "or",
+          filters: [
+            { type: "where", field: "category", op: "==", value: "electronics" },
+            { type: "where", field: "price", op: ">=", value: 400 },
+          ],
+        },
+        aggregate: {
+          count: { type: "count" },
+          totalPrice: { type: "sum", field: "price" },
+        },
+      });
+
+      expect(data).toEqual({
+        count: 3,
+        totalPrice: 700,
+      });
+    });
+  });
 
   describe("with documentId", () => {
     it("should fetch aggregation with documentId query", async () => {

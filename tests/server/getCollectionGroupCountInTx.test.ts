@@ -56,6 +56,23 @@ describe("getCollectionGroupCountInTx", () => {
     expect(result).toBe(3);
   });
 
+  test("count with OR filter", async () => {
+    const result = await adminDb.runTransaction(async (t) => {
+      return await getCollectionGroupCountInTx<TestDoc>(t, {
+        path: subCollection,
+        filter: {
+          type: "or",
+          filters: [
+            { type: "where", field: "score", op: "==", value: 10 },
+            { type: "where", field: "score", op: "==", value: 40 },
+          ],
+        },
+      });
+    });
+
+    expect(result).toBe(2);
+  });
+
   test("count with limit", async () => {
     const result = await adminDb.runTransaction(async (t) => {
       return await getCollectionGroupCountInTx<TestDoc>(t, {

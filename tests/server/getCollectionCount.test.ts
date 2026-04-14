@@ -86,6 +86,22 @@ describe("getCollectionCount", () => {
       expect(data).toBe(1);
     });
   });
+  describe("with filter option", () => {
+    it("should count documents with OR filter", async () => {
+      const { data } = await getCollectionCount<Post>({
+        path: COLLECTION,
+        filter: {
+          type: "or",
+          filters: [
+            { type: "where", field: "status", op: "==", value: "draft" },
+            { type: "where", field: "status", op: "==", value: "published" },
+          ],
+        },
+      });
+
+      expect(data).toBe(4);
+    });
+  });
   describe("with limit option", () => {
     it("should fetch data from Firestore", async () => {
       const { key: _key, data } = await getCollectionCount<Post>({

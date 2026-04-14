@@ -154,6 +154,35 @@ describe("getCollectionGroupAggregate", () => {
       });
     });
   });
+  describe("with filter option", () => {
+    it("should fetch aggregation with OR filter", async () => {
+      const { data } = await getCollectionGroupAggregate<
+        Item,
+        {
+          count: { type: "count" };
+          totalPrice: { type: "sum"; field: "price" };
+        }
+      >({
+        path: SUB_COLLECTION,
+        filter: {
+          type: "or",
+          filters: [
+            { type: "where", field: "name", op: "==", value: "Item A" },
+            { type: "where", field: "name", op: "==", value: "Item D" },
+          ],
+        },
+        aggregate: {
+          count: { type: "count" },
+          totalPrice: { type: "sum", field: "price" },
+        },
+      });
+
+      expect(data).toEqual({
+        count: 2,
+        totalPrice: 500,
+      });
+    });
+  });
 
   describe("with limit option", () => {
     it("should fetch aggregation with limit", async () => {

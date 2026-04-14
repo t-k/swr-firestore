@@ -50,6 +50,23 @@ describe("getCollectionCountInTx", () => {
     expect(result).toBe(3);
   });
 
+  test("count with OR filter", async () => {
+    const result = await adminDb.runTransaction(async (t) => {
+      return await getCollectionCountInTx<TestDoc>(t, {
+        path: testCollection,
+        filter: {
+          type: "or",
+          filters: [
+            { type: "where", field: "name", op: "==", value: "A" },
+            { type: "where", field: "name", op: "==", value: "E" },
+          ],
+        },
+      });
+    });
+
+    expect(result).toBe(2);
+  });
+
   test("count with limit", async () => {
     const result = await adminDb.runTransaction(async (t) => {
       return await getCollectionCountInTx<TestDoc>(t, {

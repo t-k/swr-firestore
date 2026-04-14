@@ -1,6 +1,29 @@
-import { FieldPath } from "firebase-admin/firestore";
+import { FieldPath, Filter } from "firebase-admin/firestore";
 import type { CollectionReference, CollectionGroup, Query } from "firebase-admin/firestore";
-import type { QueryParams, QueryParamsForCollectionGroup } from "./type.js";
+import type {
+  DocumentId,
+  QueryParams,
+  QueryParamsForCollectionGroup,
+  ServerFilter,
+} from "./type.js";
+
+const buildServerFilter = <T, TField>(
+  filter: ServerFilter<T, TField>,
+  mapField: (field: TField) => string | FieldPath,
+): Filter => {
+  switch (filter.type) {
+    case "where":
+      return Filter.where(mapField(filter.field), filter.op, filter.value);
+    case "or":
+      return Filter.or(...filter.filters.map((child) => buildServerFilter(child, mapField)));
+    case "and":
+      return Filter.and(...filter.filters.map((child) => buildServerFilter(child, mapField)));
+  }
+};
+
+const mapCollectionField = (field: string | DocumentId): string | FieldPath => {
+  return field === "id" ? FieldPath.documentId() : field;
+};
 
 /**
  * Build query for Collection (Admin SDK)
@@ -13,6 +36,7 @@ export const buildQueryForCollection = <T>(
   let queryRef: Query | null = null;
   const {
     where: w,
+    filter: f,
     orderBy: o,
     startAt: s,
     startAfter: sa,
@@ -22,6 +46,9 @@ export const buildQueryForCollection = <T>(
     limitToLast: ltl,
   } = params;
 
+  if (f) {
+    queryRef = (queryRef ?? collectionRef).where(buildServerFilter(f, mapCollectionField));
+  }
   if (w) {
     w.forEach((q) => {
       queryRef =
@@ -71,6 +98,7 @@ export const buildQueryForCollectionGroup = <T>(
   let queryRef: Query | null = null;
   const {
     where: w,
+    filter: f,
     orderBy: o,
     startAt: s,
     startAfter: sa,
@@ -80,6 +108,9 @@ export const buildQueryForCollectionGroup = <T>(
     limitToLast: ltl,
   } = params;
 
+  if (f) {
+    queryRef = (queryRef ?? collectionGroupRef).where(buildServerFilter(f, (field) => field));
+  }
   if (w) {
     w.forEach((q) => {
       queryRef = (queryRef ?? collectionGroupRef).where(...q);

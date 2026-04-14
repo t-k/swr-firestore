@@ -97,6 +97,25 @@ describe("getCollectionInTx", () => {
     expect(result.every((doc) => doc.value >= 20 && doc.value <= 40)).toBe(true);
   });
 
+  test("fetch with OR filter", async () => {
+    const result = await adminDb.runTransaction(async (t) => {
+      return await getCollectionInTx<TestDoc>(t, {
+        path: testCollection,
+        filter: {
+          type: "or",
+          filters: [
+            { type: "where", field: "name", op: "==", value: "A" },
+            { type: "where", field: "name", op: "==", value: "E" },
+          ],
+        },
+        orderBy: [["value", "asc"]],
+      });
+    });
+
+    expect(result).toHaveLength(2);
+    expect(result.map((doc) => doc.name)).toEqual(["A", "E"]);
+  });
+
   test("return empty array for non-matching query", async () => {
     const result = await adminDb.runTransaction(async (t) => {
       return await getCollectionInTx<TestDoc>(t, {

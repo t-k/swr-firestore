@@ -135,6 +135,25 @@ export default function Page({ fallback }) {
 }
 ```
 
+For `OR` / `AND` queries in the server module, use the server-only `filter` parameter.
+Unlike client-side `queryConstraints`, this API is JSON-serializable and works with SWR fallback keys.
+
+```ts
+import { getCollection } from "@tatsuokaniwa/swr-firestore/server";
+
+const { key, data } = await getCollection<Post>({
+  path: "posts",
+  filter: {
+    type: "or",
+    filters: [
+      { type: "where", field: "status", op: "==", value: "draft" },
+      { type: "where", field: "status", op: "==", value: "published" },
+    ],
+  },
+  orderBy: [["createdAt", "desc"]],
+});
+```
+
 ## API
 
 ### Entry points
@@ -795,9 +814,10 @@ Fetch aggregation result using the Firebase Admin SDK and return the SWR key and
 
 #### Parameters
 
-- `params`: KeyParams except `parseDates`, `queryConstraints` & { aggregate: AggregateSpec }
+- `params`: KeyParams except `parseDates` & { aggregate: AggregateSpec }
 
 Note: `queryConstraints` is not supported on the server side because the Admin SDK uses a different query builder API.
+Use the server-only `filter` parameter when you need `OR` / `AND` conditions.
 
 #### Return values
 
@@ -821,6 +841,13 @@ const { key, data } = await getAggregate<
   }
 >({
   path: "products",
+  filter: {
+    type: "or",
+    filters: [
+      { type: "where", field: "category", op: "==", value: "electronics" },
+      { type: "where", field: "price", op: ">=", value: 400 },
+    ],
+  },
   aggregate: {
     count: { type: "count" },
     totalRevenue: { type: "sum", field: "price" },
@@ -834,9 +861,10 @@ Fetch aggregation result across subcollections using the Firebase Admin SDK
 
 #### Parameters
 
-- `params`: KeyParams except `parseDates`, `queryConstraints` & { aggregate: AggregateSpec }
+- `params`: KeyParams except `parseDates` & { aggregate: AggregateSpec }
 
 Note: `queryConstraints` is not supported on the server side because the Admin SDK uses a different query builder API.
+Use the server-only `filter` parameter when you need `OR` / `AND` conditions.
 
 #### Return values
 
@@ -857,6 +885,13 @@ const { key, data } = await getCollectionGroupAggregate<
   { totalItems: { type: "count" } }
 >({
   path: "items",
+  filter: {
+    type: "or",
+    filters: [
+      { type: "where", field: "name", op: "==", value: "Item A" },
+      { type: "where", field: "name", op: "==", value: "Item D" },
+    ],
+  },
   aggregate: {
     totalItems: { type: "count" },
   },
