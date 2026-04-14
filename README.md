@@ -699,7 +699,8 @@ await runTransaction(db, async (t) => {
 ### Server-only `filter` DSL
 
 The server module does not support client-side `queryConstraints` because it uses the Firebase Admin SDK.
-When you need `OR` / `AND` conditions on the server, use the JSON-serializable `filter` parameter instead.
+Existing server-side parameters such as `where`, `orderBy`, `startAt`, `startAfter`, `endAt`, `endBefore`, `limit`, and `limitToLast` still work as before.
+Use the JSON-serializable `filter` parameter only when you need `OR` / `AND` conditions on the server.
 
 ```ts
 type ServerFilter<T> =
@@ -761,6 +762,8 @@ import { getCollection } from "@tatsuokaniwa/swr-firestore/server";
 // For useCollection
 const { key, data } = await getCollection<Post>({
   path: "posts",
+  where: [["status", "==", "published"]],
+  orderBy: [["createdAt", "desc"]],
   isSubscription: true, // Add the prefix `$sub$` to the SWR key
 });
 // For useGetDocs
@@ -828,6 +831,8 @@ import { getCollectionGroup } from "@tatsuokaniwa/swr-firestore/server";
 // For useCollectionGroup
 const { key, data } = await getCollectionGroup<Comment>({
   path: "comments",
+  where: [["content", "==", "foo"]],
+  orderBy: [["createdAt", "desc"]],
   isSubscription: true, // Add the prefix `$sub$` to the SWR key
 });
 // For useGetDocs with isCollectionGroup
@@ -882,7 +887,8 @@ Fetch aggregation result using the Firebase Admin SDK and return the SWR key and
 - `params`: KeyParams except `parseDates` & { aggregate: AggregateSpec }
 
 Note: `queryConstraints` is not supported on the server side because the Admin SDK uses a different query builder API.
-Use the server-only `filter` parameter when you need `OR` / `AND` conditions.
+Typed parameters such as `where` and `orderBy` still work as before.
+Use the server-only `filter` parameter only when you need `OR` / `AND` conditions.
 
 #### Return values
 
@@ -929,7 +935,8 @@ Fetch aggregation result across subcollections using the Firebase Admin SDK
 - `params`: KeyParams except `parseDates` & { aggregate: AggregateSpec }
 
 Note: `queryConstraints` is not supported on the server side because the Admin SDK uses a different query builder API.
-Use the server-only `filter` parameter when you need `OR` / `AND` conditions.
+Typed parameters such as `where` and `orderBy` still work as before.
+Use the server-only `filter` parameter only when you need `OR` / `AND` conditions.
 
 #### Return values
 
@@ -1052,6 +1059,22 @@ const db = getFirestore();
 await db.runTransaction(async (t) => {
   const cities = await getCollectionInTx<City>(t, {
     path: "cities",
+    where: [["population", ">", 1000000]],
+    orderBy: [["population", "desc"]],
+    limit: 10,
+  });
+
+  cities.forEach((city) => {
+    t.update(db.doc(`cities/${city.id}`), {
+      isLargeCity: true,
+    });
+  });
+});
+
+// OR / AND queries use filter
+await db.runTransaction(async (t) => {
+  const cities = await getCollectionInTx<City>(t, {
+    path: "cities",
     filter: {
       type: "or",
       filters: [
@@ -1108,6 +1131,16 @@ Type-safe collection group fetcher for use within Firestore transactions
 Returns `Promise<DocumentData<T>[]>`
 
 ```ts
+await db.runTransaction(async (t) => {
+  const comments = await getCollectionGroupInTx<Comment>(t, {
+    path: "comments",
+    where: [["authorId", "==", "user123"]],
+    limit: 10,
+  });
+  // comments is DocumentData<Comment>[]
+});
+
+// OR / AND queries use filter
 await db.runTransaction(async (t) => {
   const comments = await getCollectionGroupInTx<Comment>(t, {
     path: "comments",
