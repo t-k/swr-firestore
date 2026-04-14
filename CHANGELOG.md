@@ -1,3 +1,14 @@
+## [Unreleased]
+
+### Features
+
+- Add server-only `filter` DSL for the `@tatsuokaniwa/swr-firestore/server` module to support `OR` / `AND` queries across collection and collectionGroup APIs, including aggregate and transaction-aware fetchers.
+- Support `field: "id"` inside server collection filters by converting it to `documentId()`.
+
+### Documentation
+
+- Document server-side `filter` usage in `README.md`, including SSR/SSG and transaction examples.
+
 ## [3.0.0] - 2026-04-05
 
 ### Breaking Changes

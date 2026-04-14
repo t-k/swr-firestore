@@ -696,6 +696,47 @@ await runTransaction(db, async (t) => {
 
 ## Server module
 
+### Server-only `filter` DSL
+
+The server module does not support client-side `queryConstraints` because it uses the Firebase Admin SDK.
+When you need `OR` / `AND` conditions on the server, use the JSON-serializable `filter` parameter instead.
+
+```ts
+type ServerFilter<T> =
+  | {
+      type: "where";
+      field: Paths<T> | "id"; // collectionGroup does not support "id"
+      op: WhereFilterOp;
+      value: unknown;
+    }
+  | {
+      type: "or";
+      filters: [ServerFilter<T>, ServerFilter<T>, ...ServerFilter<T>[]];
+    }
+  | {
+      type: "and";
+      filters: [ServerFilter<T>, ServerFilter<T>, ...ServerFilter<T>[]];
+    };
+```
+
+Example:
+
+```ts
+import { getCollection } from "@tatsuokaniwa/swr-firestore/server";
+
+const { key, data } = await getCollection<Post>({
+  path: "posts",
+  filter: {
+    type: "or",
+    filters: [
+      { type: "where", field: "status", op: "==", value: "draft" },
+      { type: "where", field: "status", op: "==", value: "published" },
+    ],
+  },
+  orderBy: [["createdAt", "desc"]],
+});
+```
+
 ### `getCollection(params)`
 
 Fetch documents using the Firebase Admin SDK and return the SWR key and data
@@ -724,6 +765,18 @@ const { key, data } = await getCollection<Post>({
 });
 // For useGetDocs
 const { key, data } = await getCollection<Post>({ path: "posts" });
+
+// With OR filter
+const { data: filtered } = await getCollection<Post>({
+  path: "posts",
+  filter: {
+    type: "or",
+    filters: [
+      { type: "where", field: "status", op: "==", value: "draft" },
+      { type: "where", field: "status", op: "==", value: "published" },
+    ],
+  },
+});
 ```
 
 ### `getCollectionCount(params)`
@@ -779,6 +832,18 @@ const { key, data } = await getCollectionGroup<Comment>({
 });
 // For useGetDocs with isCollectionGroup
 const { key, data } = await getCollectionGroup<Comment>({ path: "comments" });
+
+// With OR filter
+const { data: filtered } = await getCollectionGroup<Comment>({
+  path: "comments",
+  filter: {
+    type: "or",
+    filters: [
+      { type: "where", field: "content", op: "==", value: "foo" },
+      { type: "where", field: "content", op: "==", value: "bar" },
+    ],
+  },
+});
 ```
 
 ### `getCollectionGroupCount(params)`
@@ -987,7 +1052,13 @@ const db = getFirestore();
 await db.runTransaction(async (t) => {
   const cities = await getCollectionInTx<City>(t, {
     path: "cities",
-    where: [["population", ">", 1000000]],
+    filter: {
+      type: "or",
+      filters: [
+        { type: "where", field: "country", op: "==", value: "JP" },
+        { type: "where", field: "country", op: "==", value: "US" },
+      ],
+    },
     orderBy: [["population", "desc"]],
     limit: 10,
   });
@@ -1040,7 +1111,13 @@ Returns `Promise<DocumentData<T>[]>`
 await db.runTransaction(async (t) => {
   const comments = await getCollectionGroupInTx<Comment>(t, {
     path: "comments",
-    where: [["authorId", "==", "user123"]],
+    filter: {
+      type: "or",
+      filters: [
+        { type: "where", field: "authorId", op: "==", value: "user123" },
+        { type: "where", field: "authorId", op: "==", value: "user456" },
+      ],
+    },
     limit: 10,
   });
   // comments is DocumentData<Comment>[]
