@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { documentId, orderBy as fbOrderBy } from "firebase/firestore";
+import { documentId, orderBy as fbOrderBy, where as fbWhere } from "firebase/firestore";
 
-import { count, orderBy, where } from "../../src/module/query";
+import { average, count, orderBy, sum, where } from "../../src/module/query";
 import { MATERIALIZE_CLIENT } from "../../src/module/util/type";
 
 type Post = {
@@ -36,7 +36,19 @@ describe("module query builders", () => {
     expect(descriptor?.value()).toEqual(fbOrderBy(documentId(), "asc"));
   });
 
+  it("materializes collection id where with documentId", () => {
+    const constraint = where<Post>("id", "==", "post-1");
+    const descriptor = Object.getOwnPropertyDescriptor(constraint, MATERIALIZE_CLIENT);
+
+    expect(descriptor?.value()).toEqual(fbWhere(documentId(), "==", "post-1"));
+  });
+
   it("returns aggregate helper shape for count", () => {
     expect(count()).toEqual({ type: "count" });
+  });
+
+  it("returns aggregate helper shapes for sum and average", () => {
+    expect(sum<Post>("createdAt")).toEqual({ type: "sum", field: "createdAt" });
+    expect(average<Post>("createdAt")).toEqual({ type: "average", field: "createdAt" });
   });
 });

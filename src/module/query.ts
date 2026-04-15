@@ -52,17 +52,16 @@ const withMaterializer = <T extends { scope: QueryScope; doc: unknown }>(
 export function where<T>(
   ...args: SharedWhereArgs<T>
 ): ModuleWhereConstraint<T, "shared", SharedField<T>, SharedWhereOp<T>, SharedWhereValue<T>>;
+export function where<T, O extends ScalarWhereOp>(
+  field: "id",
+  op: O,
+  value: string,
+): ModuleWhereConstraint<T, "collection", "id", O, string>;
 export function where<T>(
   field: "id",
-  op: ScalarWhereOp | "in" | "not-in",
-  value: string | readonly string[],
-): ModuleWhereConstraint<
-  T,
-  "collection",
-  "id",
-  ScalarWhereOp | "in" | "not-in",
-  string | readonly string[]
->;
+  op: "in" | "not-in",
+  value: readonly string[],
+): ModuleWhereConstraint<T, "collection", "id", "in" | "not-in", readonly string[]>;
 export function where<T>(field: any, op: any, value: any): any {
   const scope = field === "id" ? "collection" : "shared";
   const constraint = {
