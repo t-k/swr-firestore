@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { orderBy, where } from "../../src/module/query";
+import { MATERIALIZE_CLIENT } from "../../src/module/util/type";
 
 type Post = {
   status: "draft" | "published";
@@ -21,7 +22,9 @@ describe("module query builders", () => {
 
   it("keeps materializer non-enumerable", () => {
     const constraint = orderBy<Post>("createdAt", "desc");
+    const descriptor = Object.getOwnPropertyDescriptor(constraint, MATERIALIZE_CLIENT);
 
-    expect(Object.keys(constraint)).toEqual(["type", "field", "direction"]);
+    expect(descriptor).toBeDefined();
+    expect(descriptor?.enumerable).toBe(false);
   });
 });
