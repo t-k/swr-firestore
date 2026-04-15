@@ -1,4 +1,4 @@
-import { average, count, orderBy, where } from "../../../src/module/query";
+import { average, count, limit, orderBy, where } from "../../../src/module/query";
 import type { ModuleQueryConstraint } from "../../../src/module/util/type";
 
 type Post = {
@@ -15,6 +15,34 @@ where<Post>("tags", "array-contains", "news");
 orderBy<Post>("createdAt", "desc");
 count();
 average<Post>("price");
+
+const publishedConstraint = where<Post>("status", "==", "published");
+const createdAtOrder = orderBy<Post>("createdAt", "desc");
+const limited = limit(5);
+
+if (publishedConstraint.type === "where") {
+  const field: string = publishedConstraint.field;
+  const op: string = publishedConstraint.op;
+  const value: unknown = publishedConstraint.value;
+
+  void field;
+  void op;
+  void value;
+}
+
+if (createdAtOrder.type === "orderBy") {
+  const field: string = createdAtOrder.field;
+  const direction: string = createdAtOrder.direction;
+
+  void field;
+  void direction;
+}
+
+if (limited.type === "limit") {
+  const value: number = limited.value;
+
+  void value;
+}
 
 // @ts-expect-error number is invalid for status
 where<Post>("status", "==", 1);

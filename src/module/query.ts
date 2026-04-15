@@ -10,22 +10,26 @@ import {
   MATERIALIZE_CLIENT,
   type ElementOf,
   type ModuleAggregateField,
-  type ModuleQueryConstraint,
+  type ModuleLimitConstraint,
+  type ModuleOrderByConstraint,
+  type ModuleWhereConstraint,
   type PathValue,
   type QueryScope,
   type SharedField,
-  type CollectionField,
 } from "./util/type";
 
 type ScalarWhereOp = "<" | "<=" | "==" | "!=" | ">=" | ">";
 
-type WhereArgs<T, P extends CollectionField<T>> = P extends "id"
-  ? [field: "id", op: ScalarWhereOp | "in" | "not-in", value: string | readonly string[]]
-  :
-      | [field: P, op: ScalarWhereOp, value: PathValue<T, P>]
-      | [field: P, op: "in" | "not-in", value: readonly PathValue<T, P>[]]
-      | [field: P, op: "array-contains", value: ElementOf<PathValue<T, P>>]
-      | [field: P, op: "array-contains-any", value: readonly ElementOf<PathValue<T, P>>[]];
+type SharedWhereArgs<T> = {
+  [P in SharedField<T>]:
+    | [field: P, op: ScalarWhereOp, value: PathValue<T, P>]
+    | [field: P, op: "in" | "not-in", value: readonly PathValue<T, P>[]]
+    | [field: P, op: "array-contains", value: ElementOf<PathValue<T, P>>]
+    | [field: P, op: "array-contains-any", value: readonly ElementOf<PathValue<T, P>>[]];
+}[SharedField<T>];
+
+type SharedWhereOp<T> = SharedWhereArgs<T>[1];
+type SharedWhereValue<T> = SharedWhereArgs<T>[2];
 
 const withMaterializer = <T extends { scope: QueryScope; doc: unknown }>(
   value: T,
@@ -45,10 +49,21 @@ const withMaterializer = <T extends { scope: QueryScope; doc: unknown }>(
   });
 };
 
-export function where<T, P extends CollectionField<T> = CollectionField<T>>(
-  ...args: WhereArgs<T, P>
-): P extends "id" ? ModuleQueryConstraint<T, "collection"> : ModuleQueryConstraint<T, "shared"> {
-  const [field, op, value] = args as [CollectionField<T>, any, unknown];
+export function where<T>(
+  ...args: SharedWhereArgs<T>
+): ModuleWhereConstraint<T, "shared", SharedField<T>, SharedWhereOp<T>, SharedWhereValue<T>>;
+export function where<T>(
+  field: "id",
+  op: ScalarWhereOp | "in" | "not-in",
+  value: string | readonly string[],
+): ModuleWhereConstraint<
+  T,
+  "collection",
+  "id",
+  ScalarWhereOp | "in" | "not-in",
+  string | readonly string[]
+>;
+export function where<T>(field: any, op: any, value: any): any {
   const scope = field === "id" ? "collection" : "shared";
   const constraint = {
     type: "where",
@@ -57,39 +72,47 @@ export function where<T, P extends CollectionField<T> = CollectionField<T>>(
     field,
     op,
     value,
-  } as unknown as ModuleQueryConstraint<T, "shared" | "collection">;
+  } as unknown as ModuleWhereConstraint<T, "shared" | "collection">;
 
   return withMaterializer(constraint, () =>
     field === "id" ? fbWhere(documentId(), op, value) : fbWhere(field, op, value),
-  ) as P extends "id" ? ModuleQueryConstraint<T, "collection"> : ModuleQueryConstraint<T, "shared">;
+  );
 }
 
-export function orderBy<T, P extends CollectionField<T> = CollectionField<T>>(
-  field: P,
-  direction: OrderByDirection = "asc",
-): P extends "id" ? ModuleQueryConstraint<T, "collection"> : ModuleQueryConstraint<T, "shared"> {
+export function orderBy<T>(
+  field: SharedField<T>,
+  direction?: OrderByDirection,
+): ModuleOrderByConstraint<T, "shared", SharedField<T>, OrderByDirection>;
+export function orderBy<T>(
+  field: "id",
+  direction?: OrderByDirection,
+): ModuleOrderByConstraint<T, "collection", "id", OrderByDirection>;
+export function orderBy<T>(field: any, direction: OrderByDirection = "asc"): any {
+  const resolvedDirection = direction;
   const scope = field === "id" ? "collection" : "shared";
   const constraint = {
     type: "orderBy",
     scope,
     doc: undefined as unknown as T,
     field,
-    direction,
-  } as unknown as ModuleQueryConstraint<T, "shared" | "collection">;
+    direction: resolvedDirection,
+  } as unknown as ModuleOrderByConstraint<T, "shared" | "collection">;
 
   return withMaterializer(constraint, () =>
-    field === "id" ? fbOrderBy(documentId(), direction) : fbOrderBy(field, direction),
-  ) as P extends "id" ? ModuleQueryConstraint<T, "collection"> : ModuleQueryConstraint<T, "shared">;
+    field === "id"
+      ? fbOrderBy(documentId(), resolvedDirection)
+      : fbOrderBy(field, resolvedDirection),
+  );
 }
 
-export const limit = (value: number) =>
+export const limit = (value: number): ModuleLimitConstraint<never, "shared"> =>
   withMaterializer(
     {
       type: "limit",
       scope: "shared",
       doc: undefined as unknown as never,
       value,
-    } as unknown as ModuleQueryConstraint<never, "shared">,
+    } as ModuleLimitConstraint<never, "shared">,
     () => fbLimit(value),
   );
 

@@ -1,4 +1,4 @@
-import type { QueryConstraint } from "firebase/firestore";
+import type { OrderByDirection, QueryConstraint, WhereFilterOp } from "firebase/firestore";
 
 import type { Paths } from "../../util/type";
 
@@ -16,22 +16,47 @@ export type PathValue<T, P extends string> = P extends `${infer K}.${infer Rest}
 
 export type ElementOf<T> = T extends readonly (infer U)[] ? U : never;
 
-export type ModuleQueryConstraint<T, TScope extends QueryScope> = {
-  type:
-    | "where"
-    | "orderBy"
-    | "limit"
-    | "limitToLast"
-    | "startAt"
-    | "startAfter"
-    | "endAt"
-    | "endBefore"
-    | "or"
-    | "and";
+type ModuleQueryConstraintBase<T, TScope extends QueryScope, TType extends string> = {
+  type: TType;
   readonly doc: T;
   readonly scope: TScope;
   readonly [MATERIALIZE_CLIENT]: () => QueryConstraint;
 };
+
+export type ModuleWhereConstraint<
+  T,
+  TScope extends QueryScope,
+  TField extends string = string,
+  TOp extends WhereFilterOp = WhereFilterOp,
+  TValue = unknown,
+> = ModuleQueryConstraintBase<T, TScope, "where"> & {
+  field: TField;
+  op: TOp;
+  value: TValue;
+};
+
+export type ModuleOrderByConstraint<
+  T,
+  TScope extends QueryScope,
+  TField extends string = string,
+  TDirection extends OrderByDirection = OrderByDirection,
+> = ModuleQueryConstraintBase<T, TScope, "orderBy"> & {
+  field: TField;
+  direction: TDirection;
+};
+
+export type ModuleLimitConstraint<T, TScope extends QueryScope> = ModuleQueryConstraintBase<
+  T,
+  TScope,
+  "limit"
+> & {
+  value: number;
+};
+
+export type ModuleQueryConstraint<T, TScope extends QueryScope> =
+  | ModuleWhereConstraint<T, TScope>
+  | ModuleOrderByConstraint<T, TScope>
+  | ModuleLimitConstraint<T, TScope>;
 
 export type SharedField<T> = Paths<T>;
 

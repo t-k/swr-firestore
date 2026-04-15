@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
+import { documentId, orderBy as fbOrderBy } from "firebase/firestore";
 
-import { orderBy, where } from "../../src/module/query";
+import { count, orderBy, where } from "../../src/module/query";
 import { MATERIALIZE_CLIENT } from "../../src/module/util/type";
 
 type Post = {
@@ -26,5 +27,16 @@ describe("module query builders", () => {
 
     expect(descriptor).toBeDefined();
     expect(descriptor?.enumerable).toBe(false);
+  });
+
+  it("materializes collection id orderBy with documentId", () => {
+    const constraint = orderBy<Post>("id", "asc");
+    const descriptor = Object.getOwnPropertyDescriptor(constraint, MATERIALIZE_CLIENT);
+
+    expect(descriptor?.value()).toEqual(fbOrderBy(documentId(), "asc"));
+  });
+
+  it("returns aggregate helper shape for count", () => {
+    expect(count()).toEqual({ type: "count" });
   });
 });
