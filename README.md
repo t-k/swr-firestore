@@ -156,17 +156,48 @@ const { key, data } = await getCollection<Post>({
 
 ### module エントリポイントを使う SSR/SSG
 
-module エントリポイントでは、クライアント側の `where` / `orderBy` と server 側の `getCollection` を同じ constraints で組み合わせられます。
+この例は Task 5 で `./module` の package export を有効にした後の利用形です。現時点のリポジトリでは、同じ API を内部パス経由で参照してください。
 
 ```tsx
-import { useCollection } from "@tatsuokaniwa/swr-firestore/module";
-import { where, orderBy } from "@tatsuokaniwa/swr-firestore/module/query";
-import { getCollection } from "@tatsuokaniwa/swr-firestore/module/server";
+import { SWRConfig } from "swr";
+
+import { useCollection } from "./src/module/subscription";
+import { where, orderBy } from "./src/module/query";
+import { getCollection } from "./src/module/server";
 
 const constraints = [
   where<Post>("status", "==", "published"),
   orderBy<Post>("createdAt", "desc"),
 ];
+
+export async function getStaticProps() {
+  const { key, data } = await getCollection<Post>({
+    path: "posts",
+    constraints,
+    isSubscription: true,
+  });
+
+  return {
+    props: {
+      fallback: {
+        [key]: data,
+      },
+    },
+  };
+}
+
+export default function Page({ fallback }: { fallback: Record<string, unknown> }) {
+  const { data } = useCollection<Post>({
+    path: "posts",
+    constraints,
+  });
+
+  return (
+    <SWRConfig value={{ fallback }}>
+      {data?.map((x, i) => <div key={i}>{x.content}</div>)}
+    </SWRConfig>
+  );
+}
 ```
 
 ## API

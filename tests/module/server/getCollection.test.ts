@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { unstable_serialize } from "swr";
 
 import { orderBy, where } from "../../../src/module/query";
 import getCollection from "../../../src/module/server/fetcher/getCollection";
@@ -9,41 +10,38 @@ type Post = {
   createdAt: Date;
 };
 
-const createQueryStub = () => {
-  const queryStub = {
-    where: () => queryStub,
-    orderBy: () => queryStub,
-    limit: () => queryStub,
-    withConverter: () => queryStub,
-    get: async () => ({
-      docs: [
-        {
-          data: () => ({
-            id: "post-1",
-            exists: true,
-            ref: {},
-            status: "published",
-            createdAt: new Date("2025-01-01"),
-          }),
-        },
-      ],
-    }),
-  };
-
-  return queryStub;
-};
-
 describe("module server getCollection", () => {
   it("creates a key compatible with client scrubbed params", async () => {
     const constraints = [where<Post>("status", "==", "published"), orderBy<Post>("createdAt", "desc")];
     const db = {
       databaseId: { database: "(default)", projectId: "project-a" },
-      collection: () => createQueryStub(),
+      collection: () => ({
+        where: () => ({
+          orderBy: () => ({
+            withConverter: () => ({
+              get: async () => ({ docs: [{ data: () => ({ id: "post-1", exists: true, ref: {}, status: "published", createdAt: new Date("2025-01-01") }) }] }),
+            }),
+          }),
+        }),
+        orderBy: () => ({
+          withConverter: () => ({
+            get: async () => ({ docs: [{ data: () => ({ id: "post-1", exists: true, ref: {}, status: "published", createdAt: new Date("2025-01-01") }) }] }),
+          }),
+        }),
+        limit: () => ({
+          withConverter: () => ({
+            get: async () => ({ docs: [{ data: () => ({ id: "post-1", exists: true, ref: {}, status: "published", createdAt: new Date("2025-01-01") }) }] }),
+          }),
+        }),
+        withConverter: () => ({
+          get: async () => ({ docs: [{ data: () => ({ id: "post-1", exists: true, ref: {}, status: "published", createdAt: new Date("2025-01-01") }) }] }),
+        }),
+      }),
     };
     const params = { path: "posts", constraints, db, isSubscription: true };
     const result = await getCollection<Post>(params);
+    const expectedKey = `$sub$${unstable_serialize(scrubModuleKey({ path: "posts", constraints, db }))}`;
 
-    expect(result.key).toContain("constraints");
-    expect(JSON.stringify(scrubModuleKey(params))).toContain("constraints");
+    expect(result.key).toBe(expectedKey);
   });
 });
