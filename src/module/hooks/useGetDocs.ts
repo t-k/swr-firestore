@@ -53,7 +53,9 @@ function useGetDocs<T>(
   swrOptions?: Omit<SWRConfiguration, "fetcher">,
 ): import("swr").SWRResponse<DocumentData<T>[] | undefined, unknown, SWRConfiguration> {
   return useSWR(
-    scrubModuleKey(params as Record<string, unknown> | Falsy),
+    scrubModuleKey(
+      params ? ({ ...params, isCollectionGroup: params.isCollectionGroup ?? false } as Record<string, unknown>) : params,
+    ),
     async () => {
       if (!params) return;
       const db = params.db ?? getFirestore();
