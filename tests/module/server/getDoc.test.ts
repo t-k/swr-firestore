@@ -26,7 +26,9 @@ describe("module server getDoc", () => {
 
     const result = await getDoc<Post>({ path: "posts/post-1", db, isSubscription: true });
 
-    expect(result.key).toBe(`$sub$${unstable_serialize(scrubModuleKey({ path: "posts/post-1", db }))}`);
+    expect(result.key).toBe(
+      `$sub$${unstable_serialize(scrubModuleKey({ path: "posts/post-1", db }))}`,
+    );
     expect(result.data?.content).toBe("hello");
     expect(result.data?.status).toBe("published");
   });

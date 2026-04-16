@@ -29,7 +29,11 @@ const useCollectionCount = <T>(
 
   const swrKey = params ? { ...params, count: true, isCollectionGroup: false } : null;
 
-  return useSWR(scrubModuleKey(swrKey as Record<string, unknown> | null), fetcher, swrOptions ?? {});
+  return useSWR(
+    scrubModuleKey(swrKey as Record<string, unknown> | null),
+    fetcher,
+    swrOptions ?? {},
+  );
 };
 
 export default useCollectionCount;

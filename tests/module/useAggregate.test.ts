@@ -40,7 +40,10 @@ describe("module useAggregate", () => {
   });
 
   it("fetches aggregate values with typed builders", async () => {
-    const direct = await fetchAggregate<Product, { total: { type: "count" }; avgPrice: { type: "average"; field: "price" } }>({
+    const direct = await fetchAggregate<
+      Product,
+      { total: { type: "count" }; avgPrice: { type: "average"; field: "price" } }
+    >({
       path: COLLECTION,
       constraints: [where<Product>("category", "==", "electronics")],
       aggregate: { total: count(), avgPrice: average<Product>("price") },
@@ -50,7 +53,10 @@ describe("module useAggregate", () => {
     expect(direct.avgPrice).toBe(150);
 
     const { result } = renderHook(() =>
-      useAggregate<Product, { total: { type: "count" }; avgPrice: { type: "average"; field: "price" }}>({
+      useAggregate<
+        Product,
+        { total: { type: "count" }; avgPrice: { type: "average"; field: "price" } }
+      >({
         path: COLLECTION,
         constraints: [where<Product>("category", "==", "electronics")],
         aggregate: { total: count(), avgPrice: average<Product>("price") },

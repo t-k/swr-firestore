@@ -12,7 +12,10 @@ type Post = {
 
 describe("module useGetDocs key alignment", () => {
   it("matches module/server for the normal collection case", () => {
-    const constraints = [where<Post>("status", "==", "published"), orderBy<Post>("createdAt", "desc")];
+    const constraints = [
+      where<Post>("status", "==", "published"),
+      orderBy<Post>("createdAt", "desc"),
+    ];
     const db = { databaseId: { database: "(default)", projectId: "project-a" } };
 
     const clientKey = unstable_serialize(
@@ -27,7 +30,9 @@ describe("module useGetDocs key alignment", () => {
 
     expect(clientKey).toBe(serverKey);
     expect(clientKey).not.toBe(
-      unstable_serialize(scrubModuleKey({ path: "posts", constraints, db, isCollectionGroup: true })),
+      unstable_serialize(
+        scrubModuleKey({ path: "posts", constraints, db, isCollectionGroup: true }),
+      ),
     );
   });
 });

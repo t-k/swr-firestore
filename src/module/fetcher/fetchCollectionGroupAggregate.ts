@@ -1,9 +1,4 @@
-import {
-  collectionGroup,
-  getAggregateFromServer,
-  getFirestore,
-  query,
-} from "firebase/firestore";
+import { collectionGroup, getAggregateFromServer, getFirestore, query } from "firebase/firestore";
 
 import type { AggregateResult, SwrAggregateSpec } from "../../util/type";
 import { buildModuleAggregateSpec } from "../util/buildAggregateSpec";

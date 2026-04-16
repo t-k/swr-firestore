@@ -54,7 +54,12 @@ function useGetDocs<T>(
 ): import("swr").SWRResponse<DocumentData<T>[] | undefined, unknown, SWRConfiguration> {
   return useSWR(
     scrubModuleKey(
-      params ? ({ ...params, isCollectionGroup: params.isCollectionGroup ?? false } as Record<string, unknown>) : params,
+      params
+        ? ({ ...params, isCollectionGroup: params.isCollectionGroup ?? false } as Record<
+            string,
+            unknown
+          >)
+        : params,
     ),
     async () => {
       if (!params) return;

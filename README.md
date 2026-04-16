@@ -134,7 +134,9 @@ function Posts() {
   return (
     <>
       <p>{useGetDocsData?.length ?? 0} documents</p>
-      {data?.map((x, i) => <div key={i}>{x.content}</div>)}
+      {data?.map((x, i) => (
+        <div key={i}>{x.content}</div>
+      ))}
     </>
   );
 }
@@ -178,10 +180,7 @@ import { useCollection } from "@tatsuokaniwa/swr-firestore/module";
 import { where, orderBy } from "@tatsuokaniwa/swr-firestore/module/query";
 import { getCollection } from "@tatsuokaniwa/swr-firestore/module/server";
 
-const constraints = [
-  where<Post>("status", "==", "published"),
-  orderBy<Post>("createdAt", "desc"),
-];
+const constraints = [where<Post>("status", "==", "published"), orderBy<Post>("createdAt", "desc")];
 
 export async function getStaticProps() {
   const { key, data } = await getCollection<Post>({
@@ -205,7 +204,13 @@ function Posts() {
     constraints,
   });
 
-  return <>{data?.map((x, i) => <div key={i}>{x.content}</div>)}</>;
+  return (
+    <>
+      {data?.map((x, i) => (
+        <div key={i}>{x.content}</div>
+      ))}
+    </>
+  );
 }
 
 export default function Page({ fallback }: { fallback: Record<string, unknown> }) {

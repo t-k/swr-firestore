@@ -1,9 +1,4 @@
-import {
-  collectionGroup,
-  getCountFromServer,
-  getFirestore,
-  query,
-} from "firebase/firestore";
+import { collectionGroup, getCountFromServer, getFirestore, query } from "firebase/firestore";
 
 import type { ModuleCollectionGroupCountParams } from "../hooks/useCollectionGroupCount";
 import { materializeConstraints } from "../util/materializeConstraint";

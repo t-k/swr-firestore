@@ -34,7 +34,11 @@ const useAggregate = <T, TSpec extends SwrAggregateSpec<T>>(
 
   const swrKey = params ? { ...params, _aggregate: true, isCollectionGroup: false } : null;
 
-  return useSWR(scrubModuleKey(swrKey as Record<string, unknown> | null), fetcher, swrOptions ?? {});
+  return useSWR(
+    scrubModuleKey(swrKey as Record<string, unknown> | null),
+    fetcher,
+    swrOptions ?? {},
+  );
 };
 
 export default useAggregate;

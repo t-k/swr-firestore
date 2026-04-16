@@ -1,8 +1,4 @@
-export type {
-  AggregateResult,
-  AggregateFieldSpec,
-  SwrAggregateSpec,
-} from "../util/type";
+export type { AggregateResult, AggregateFieldSpec, SwrAggregateSpec } from "../util/type";
 export type { ModuleAggregateField } from "./util/type";
 
 export { default as useAggregate } from "./hooks/useAggregate";

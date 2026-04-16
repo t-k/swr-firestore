@@ -1,10 +1,5 @@
 import type { FirestoreError } from "firebase/firestore";
-import {
-  collectionGroup,
-  getCountFromServer,
-  getFirestore,
-  query,
-} from "firebase/firestore";
+import { collectionGroup, getCountFromServer, getFirestore, query } from "firebase/firestore";
 import type { SWRConfiguration, SWRResponse } from "swr";
 import useSWR from "swr";
 
@@ -34,7 +29,11 @@ const useCollectionGroupCount = <T>(
 
   const swrKey = params ? { ...params, count: true, isCollectionGroup: true } : null;
 
-  return useSWR(scrubModuleKey(swrKey as Record<string, unknown> | null), fetcher, swrOptions ?? {});
+  return useSWR(
+    scrubModuleKey(swrKey as Record<string, unknown> | null),
+    fetcher,
+    swrOptions ?? {},
+  );
 };
 
 export default useCollectionGroupCount;

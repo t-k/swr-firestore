@@ -36,7 +36,10 @@ describe("module useGetDocs hook key path", () => {
     const wrapper = ({ children }: { children: unknown }) =>
       createElement(SWRConfig, { value: { provider: () => cache } }, children as never);
 
-    const constraints = [where<Post>("status", "==", "published"), orderBy<Post>("createdAt", "desc")];
+    const constraints = [
+      where<Post>("status", "==", "published"),
+      orderBy<Post>("createdAt", "desc"),
+    ];
     const db = {
       databaseId: { database: "(default)", projectId: "project-a" },
       collection: () => createQueryStub(),

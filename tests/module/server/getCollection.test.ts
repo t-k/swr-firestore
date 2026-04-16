@@ -33,7 +33,10 @@ const createQueryStub = (docId: string) => ({
 
 describe("module server getCollection", () => {
   it("creates a key compatible with client collection scrubbed params", async () => {
-    const constraints = [where<Post>("status", "==", "published"), orderBy<Post>("createdAt", "desc")];
+    const constraints = [
+      where<Post>("status", "==", "published"),
+      orderBy<Post>("createdAt", "desc"),
+    ];
     const db = {
       databaseId: { database: "(default)", projectId: "project-a" },
       collection: () => createQueryStub("post-1"),
@@ -49,14 +52,22 @@ describe("module server getCollection", () => {
   });
 
   it("creates a distinct key for collectionGroup fallback compatibility", async () => {
-    const constraints = [where<Post>("status", "==", "published"), orderBy<Post>("createdAt", "desc")];
+    const constraints = [
+      where<Post>("status", "==", "published"),
+      orderBy<Post>("createdAt", "desc"),
+    ];
     const db = {
       databaseId: { database: "(default)", projectId: "project-a" },
       collection: () => createQueryStub("post-1"),
       collectionGroup: () => createQueryStub("group-1"),
     };
 
-    const collectionResult = await getCollection<Post>({ path: "posts", constraints, db, isSubscription: true });
+    const collectionResult = await getCollection<Post>({
+      path: "posts",
+      constraints,
+      db,
+      isSubscription: true,
+    });
     const collectionGroupResult = await getCollectionGroup<Post>({
       path: "posts",
       constraints,

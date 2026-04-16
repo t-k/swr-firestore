@@ -18,7 +18,9 @@ const getCollection = async <T>(params: ModuleServerCollectionParams<T>) => {
   const db = params.db ?? getFirestore();
   const converter = getFirestoreConverter<T>(params.parseDates);
   const ref = db.collection(params.path);
-  const snapshot = await applyModuleConstraints(ref, params.constraints).withConverter(converter).get();
+  const snapshot = await applyModuleConstraints(ref, params.constraints)
+    .withConverter(converter)
+    .get();
 
   return {
     key: createModuleSwrKey({ ...params, isCollectionGroup: false }),

@@ -12,14 +12,23 @@ type Post = {
 
 describe("createModuleSwrKey", () => {
   it("normalizes db to databaseId and does not serialize the db object itself", () => {
-    const constraints = [where<Post>("status", "==", "published"), orderBy<Post>("createdAt", "desc")];
+    const constraints = [
+      where<Post>("status", "==", "published"),
+      orderBy<Post>("createdAt", "desc"),
+    ];
     const aggregate = { avgPrice: average<Post>("price") };
     const db = {
       databaseId: { database: "(default)", projectId: "project-a" },
       toJSON: () => ({ databaseId: { database: "(default)", projectId: "project-a" } }),
     };
 
-    const key = createModuleSwrKey({ path: "posts", constraints, aggregate, db, isSubscription: true });
+    const key = createModuleSwrKey({
+      path: "posts",
+      constraints,
+      aggregate,
+      db,
+      isSubscription: true,
+    });
 
     expect(key).toMatch(/^\$sub\$/);
     expect(key).toContain("databaseId");
@@ -31,7 +40,10 @@ describe("createModuleSwrKey", () => {
   });
 
   it("keeps the normalized key stable for equivalent db objects", () => {
-    const constraints = [where<Post>("status", "==", "published"), orderBy<Post>("createdAt", "desc")];
+    const constraints = [
+      where<Post>("status", "==", "published"),
+      orderBy<Post>("createdAt", "desc"),
+    ];
     const aggregate = { avgPrice: average<Post>("price") };
 
     const keyA = createModuleSwrKey({
@@ -58,11 +70,24 @@ describe("createModuleSwrKey", () => {
   });
 
   it("keeps collection and collection-group keys separate", () => {
-    const constraints = [where<Post>("status", "==", "published"), orderBy<Post>("createdAt", "desc")];
+    const constraints = [
+      where<Post>("status", "==", "published"),
+      orderBy<Post>("createdAt", "desc"),
+    ];
     const db = { databaseId: { database: "(default)", projectId: "project-a" } };
 
-    const collectionKey = createModuleSwrKey({ path: "posts", constraints, db, isCollectionGroup: false });
-    const collectionGroupKey = createModuleSwrKey({ path: "posts", constraints, db, isCollectionGroup: true });
+    const collectionKey = createModuleSwrKey({
+      path: "posts",
+      constraints,
+      db,
+      isCollectionGroup: false,
+    });
+    const collectionGroupKey = createModuleSwrKey({
+      path: "posts",
+      constraints,
+      db,
+      isCollectionGroup: true,
+    });
 
     expect(collectionKey).not.toBe(collectionGroupKey);
     expect(collectionKey).toContain("isCollectionGroup");
