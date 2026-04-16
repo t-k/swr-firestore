@@ -17,6 +17,11 @@ describe("extractDatabaseId", () => {
     expect(extractDatabaseId(db)).toBe("(default)");
   });
 
+  it("extracts databaseId directly from admin db objects", () => {
+    const db = { databaseId: { database: "(default)", projectId: "p" } };
+    expect(extractDatabaseId(db)).toBe("(default)");
+  });
+
   it("extracts databaseId from DatabaseId object", () => {
     const db = {
       toJSON: () => ({ databaseId: { database: "(default)", projectId: "p" } }),
