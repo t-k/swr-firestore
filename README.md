@@ -18,6 +18,8 @@ npm i --save @tatsuokaniwa/swr-firestore
 yarn add @tatsuokaniwa/swr-firestore
 ```
 
+This package includes both the original root API and a tree-shaking-first `module` API.
+
 ### Requirements
 
 - Node.js >= 12.11 (requires `exports` field support in `package.json`)
@@ -87,6 +89,25 @@ useCollection<City>({
     or(where("capital", "==", true), where("population", ">=", 1000000)),
     orderBy("createdAt", "desc"),
   ],
+});
+```
+
+### Tree-shaking-first `module` API
+
+`@tatsuokaniwa/swr-firestore/module` provides a `constraints`-based API. You import only the builders you need from subpath exports such as `where`, `orderBy`, `count`, and `average`, which makes it a better fit for tree-shaking with the Firebase modular SDK than the root API.
+
+```tsx
+import { useCollection } from "@tatsuokaniwa/swr-firestore/module";
+import { orderBy, where } from "@tatsuokaniwa/swr-firestore/module/query";
+
+const constraints = [
+  where<Post>("status", "==", "published"),
+  orderBy<Post>("createdAt", "desc"),
+];
+
+const { data } = useCollection<Post>({
+  path: "posts",
+  constraints,
 });
 ```
 
@@ -169,9 +190,9 @@ const { key, data } = await getCollection<Post>({
 });
 ```
 
-### module エントリポイントを使う SSR/SSG
+### SSG and SSR with the `module` API
 
-`@tatsuokaniwa/swr-firestore/module` とその subpath exports を使うと、root API と同じ考え方で、クライアント側の `constraints` と server 側の fallback key を同じ形で組み立てられます。hooks は `SWRConfig` の内側で使ってください。
+With `@tatsuokaniwa/swr-firestore/module` and its subpath exports, you can reuse the same client-side `constraints` when generating fallback keys on the server. As with the root API, render the hooks inside `SWRConfig` so the fallback data is consumed.
 
 ```tsx
 import { SWRConfig } from "swr";
@@ -253,9 +274,44 @@ import {
 
 // Server-side fetchers (Firebase Admin SDK)
 import { getCollection, getDoc } from "@tatsuokaniwa/swr-firestore/server";
+
+// Tree-shaking-first module API (constraints + typed builders)
+import { useCollection, useGetDocs } from "@tatsuokaniwa/swr-firestore/module";
+import { where, orderBy, count, average } from "@tatsuokaniwa/swr-firestore/module/query";
+
+// module subscription-only hooks
+import {
+  useCollection as useModuleCollection,
+  useCollectionGroup as useModuleCollectionGroup,
+  useDoc as useModuleDoc,
+} from "@tatsuokaniwa/swr-firestore/module/subscription";
+
+// module aggregate/count hooks and fetchers
+import {
+  useAggregate as useModuleAggregate,
+  useCollectionCount as useModuleCollectionCount,
+  useCollectionGroupCount as useModuleCollectionGroupCount,
+  useCollectionGroupAggregate as useModuleCollectionGroupAggregate,
+} from "@tatsuokaniwa/swr-firestore/module/aggregate";
+
+// module server-side fetchers
+import { getCollection as getModuleCollection, getDoc as getModuleDoc } from "@tatsuokaniwa/swr-firestore/module/server";
 ```
 
-`@tatsuokaniwa/swr-firestore/module/aggregate` では、module 系の aggregate/count hooks と fetchers をまとめて import できます。
+The `module` API is split across these entry points:
+
+- `@tatsuokaniwa/swr-firestore/module`
+  `constraints`-based client hooks and fetchers
+- `@tatsuokaniwa/swr-firestore/module/query`
+  typed query builders and aggregate builders
+- `@tatsuokaniwa/swr-firestore/module/subscription`
+  subscription hooks only
+- `@tatsuokaniwa/swr-firestore/module/aggregate`
+  aggregate/count hooks and fetchers
+- `@tatsuokaniwa/swr-firestore/module/server`
+  server fetchers for SSR/SSG
+
+`@tatsuokaniwa/swr-firestore/module/aggregate` lets you import the module aggregate/count hooks and client fetchers together.
 
 ```ts
 import {
@@ -271,6 +327,19 @@ import {
   getCollectionGroupAggregate,
   getCollectionGroupCount,
 } from "@tatsuokaniwa/swr-firestore/module/server";
+```
+
+Import query and aggregate builders from `module/query`.
+
+```ts
+import {
+  average,
+  count,
+  limit,
+  orderBy,
+  sum,
+  where,
+} from "@tatsuokaniwa/swr-firestore/module/query";
 ```
 
 ### Full export list
