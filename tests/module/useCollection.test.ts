@@ -5,7 +5,7 @@ import { orderBy, where } from "../../src/module/query";
 import useCollection from "../../src/module/hooks/useCollection";
 import { db } from "../supports/fb";
 import { deleteCollection } from "../supports/fbUtil";
-import type { Post } from "../supports/model";
+import type { ModuleTestPost } from "../supports/model";
 
 const COLLECTION = "CollectionTest";
 
@@ -41,10 +41,13 @@ describe("module useCollection", () => {
 
   it("subscribes with typed constraints", async () => {
     const { result } = renderHook(() =>
-      useCollection<Post>({
+      useCollection<ModuleTestPost>({
         path: COLLECTION,
         db,
-        constraints: [where<Post>("status", "==", "published"), orderBy<Post>("createdAt", "desc")],
+        constraints: [
+          where<ModuleTestPost>("status", "==", "published"),
+          orderBy<ModuleTestPost>("createdAt", "desc"),
+        ],
       }),
     );
 

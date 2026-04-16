@@ -5,7 +5,7 @@ import { where } from "../../src/module/query";
 import useGetDocs from "../../src/module/hooks/useGetDocs";
 import { db } from "../supports/fb";
 import { deleteCollection } from "../supports/fbUtil";
-import type { Comment } from "../supports/model";
+import type { ModuleTestComment } from "../supports/model";
 
 const COLLECTION = "ModuleGetDocsTest";
 const SUB_COLLECTION = "comments";
@@ -38,14 +38,17 @@ describe("module useGetDocs", () => {
 
   it("fetches collection group documents with shared constraints", async () => {
     const { result } = renderHook(() =>
-      useGetDocs<Comment>({
+      useGetDocs<ModuleTestComment>({
         path: SUB_COLLECTION,
         db,
         isCollectionGroup: true,
-        constraints: [where<Comment>("content", "==", "foo")],
+        constraints: [where<ModuleTestComment>("content", "==", "foo")],
       }),
     );
 
-    await waitFor(() => expect(result.current.data).toBeDefined());
+    await waitFor(() => {
+      expect(result.current.data).toHaveLength(1);
+      expect(result.current.data?.every((comment) => comment.content === "foo")).toBe(true);
+    });
   });
 });
