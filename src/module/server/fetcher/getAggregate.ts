@@ -10,7 +10,6 @@ export type ModuleServerAggregateParams<T, TSpec extends SwrAggregateSpec<T>> = 
   path: string;
   aggregate: TSpec;
   db?: Firestore;
-  isSubscription?: boolean;
   constraints?: readonly ModuleQueryConstraint<T, "shared" | "collection">[];
 };
 
@@ -21,6 +20,9 @@ const getAggregate = async <T, TSpec extends SwrAggregateSpec<T>>(
   data: AggregateResult<TSpec>;
 }> => {
   const { path, aggregate, db: externalDb, constraints } = params;
+  const { isSubscription: _ignoredIsSubscription, ...keyParams } = params as ModuleServerAggregateParams<T, TSpec> & {
+    isSubscription?: boolean;
+  };
   const db = externalDb ?? getFirestore();
   const ref = db.collection(path);
   const queryRef = applyModuleConstraints(ref, constraints);
@@ -28,7 +30,7 @@ const getAggregate = async <T, TSpec extends SwrAggregateSpec<T>>(
   const snapshot = await queryRef.aggregate(aggregateSpec).get();
 
   return {
-    key: createModuleSwrKey({ ...params, _aggregate: true, isCollectionGroup: false }),
+    key: createModuleSwrKey({ ...keyParams, _aggregate: true, isCollectionGroup: false }),
     data: snapshot.data() as AggregateResult<TSpec>,
   };
 };

@@ -156,4 +156,44 @@ describe("module aggregate barrel", () => {
       ),
     );
   });
+
+  it("ignores isSubscription for collection count keys", async () => {
+    const { key } = await getCollectionCount<Post>({
+      path: COLLECTION,
+      isSubscription: true,
+    } as never);
+
+    expect(key.startsWith("$sub$")).toBe(false);
+  });
+
+  it("ignores isSubscription for collection group count keys", async () => {
+    const { key } = await getCollectionGroupCount<Post>({
+      path: GROUP_SUB_COLLECTION,
+      isSubscription: true,
+    } as never);
+
+    expect(key.startsWith("$sub$")).toBe(false);
+  });
+
+  it("ignores isSubscription for collection aggregate keys", async () => {
+    const aggregate = { total: count() };
+    const { key } = await getAggregate<Post, typeof aggregate>({
+      path: COLLECTION,
+      aggregate,
+      isSubscription: true,
+    } as never);
+
+    expect(key.startsWith("$sub$")).toBe(false);
+  });
+
+  it("ignores isSubscription for collection group aggregate keys", async () => {
+    const aggregate = { total: count() };
+    const { key } = await getCollectionGroupAggregate<Post, typeof aggregate>({
+      path: GROUP_SUB_COLLECTION,
+      aggregate,
+      isSubscription: true,
+    } as never);
+
+    expect(key.startsWith("$sub$")).toBe(false);
+  });
 });

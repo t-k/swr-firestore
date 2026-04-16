@@ -5,4 +5,3 @@ export { default as fetchCollectionGroup } from "./fetchCollectionGroup";
 export { default as fetchCollectionGroupCount } from "./fetchCollectionGroupCount";
 export { default as fetchAggregate } from "./fetchAggregate";
 export { default as fetchCollectionGroupAggregate } from "./fetchCollectionGroupAggregate";
-export { default as fetchDocInTx } from "./fetchDocInTx";
