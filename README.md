@@ -154,6 +154,21 @@ const { key, data } = await getCollection<Post>({
 });
 ```
 
+### module エントリポイントを使う SSR/SSG
+
+module エントリポイントでは、クライアント側の `where` / `orderBy` と server 側の `getCollection` を同じ constraints で組み合わせられます。
+
+```tsx
+import { useCollection } from "@tatsuokaniwa/swr-firestore/module";
+import { where, orderBy } from "@tatsuokaniwa/swr-firestore/module/query";
+import { getCollection } from "@tatsuokaniwa/swr-firestore/module/server";
+
+const constraints = [
+  where<Post>("status", "==", "published"),
+  orderBy<Post>("createdAt", "desc"),
+];
+```
+
 ## API
 
 ### Entry points
