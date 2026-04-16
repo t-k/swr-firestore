@@ -238,11 +238,34 @@ import {
 import {
   useAggregate,
   useCollectionCount,
+  useCollectionGroupAggregate,
+  useCollectionGroupCount,
   fetchAggregate,
+  fetchCollectionCount,
+  fetchCollectionGroupAggregate,
+  fetchCollectionGroupCount,
 } from "@tatsuokaniwa/swr-firestore/aggregate";
 
 // Server-side fetchers (Firebase Admin SDK)
 import { getCollection, getDoc } from "@tatsuokaniwa/swr-firestore/server";
+```
+
+`@tatsuokaniwa/swr-firestore/module/aggregate` では、module 系の aggregate/count hooks と fetchers をまとめて import できます。
+
+```ts
+import {
+  useAggregate,
+  useCollectionCount,
+  useCollectionGroupAggregate,
+  useCollectionGroupCount,
+} from "@tatsuokaniwa/swr-firestore/module/aggregate";
+
+import {
+  getAggregate,
+  getCollectionCount,
+  getCollectionGroupAggregate,
+  getCollectionGroupCount,
+} from "@tatsuokaniwa/swr-firestore/module/server";
 ```
 
 ### Full export list

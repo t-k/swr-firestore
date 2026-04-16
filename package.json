@@ -61,6 +61,11 @@
       "types": "./dist/module/server/index.d.ts",
       "import": "./dist/module/server/index.js",
       "require": "./dist/module/server/index.umd.cjs"
+    },
+    "./module/aggregate": {
+      "types": "./dist/module/aggregate.d.ts",
+      "import": "./dist/module/aggregate.js",
+      "require": "./dist/module/aggregate.umd.cjs"
     }
   },
   "scripts": {
