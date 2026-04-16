@@ -169,7 +169,7 @@ const { key, data } = await getCollection<Post>({
 
 ### module エントリポイントを使う SSR/SSG
 
-`@tatsuokaniwa/swr-firestore/module` とその subpath exports を使うと、root API と同じ考え方で、クライアント側の `constraints` と server 側の fallback key を同じ形で組み立てられます。
+`@tatsuokaniwa/swr-firestore/module` とその subpath exports を使うと、root API と同じ考え方で、クライアント側の `constraints` と server 側の fallback key を同じ形で組み立てられます。hooks は `SWRConfig` の内側で使ってください。
 
 ```tsx
 import { SWRConfig } from "swr";
@@ -199,15 +199,19 @@ export async function getStaticProps() {
   };
 }
 
-export default function Page({ fallback }: { fallback: Record<string, unknown> }) {
+function Posts() {
   const { data } = useCollection<Post>({
     path: "posts",
     constraints,
   });
 
+  return <>{data?.map((x, i) => <div key={i}>{x.content}</div>)}</>;
+}
+
+export default function Page({ fallback }: { fallback: Record<string, unknown> }) {
   return (
     <SWRConfig value={{ fallback }}>
-      {data?.map((x, i) => <div key={i}>{x.content}</div>)}
+      <Posts />
     </SWRConfig>
   );
 }

@@ -21,7 +21,7 @@ const getCollection = async <T>(params: ModuleServerCollectionParams<T>) => {
   const snapshot = await applyModuleConstraints(ref, params.constraints).withConverter(converter).get();
 
   return {
-    key: createModuleSwrKey(params),
+    key: createModuleSwrKey({ ...params, isCollectionGroup: false }),
     data: snapshot.docs.map((doc) => doc.data() as DocumentData<T>),
   };
 };

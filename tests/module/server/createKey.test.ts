@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import { average, orderBy, where } from "../../../src/module/query";
 import createModuleSwrKey from "../../../src/module/server/util/createKey";
 
+import { scrubModuleKey } from "../../../src/module/util/scrubKey";
+
 type Post = {
   status: "draft" | "published";
   createdAt: Date;
@@ -53,5 +55,29 @@ describe("createModuleSwrKey", () => {
 
     expect(keyA).toBe(keyB);
     expect(keyA).not.toBe(keyC);
+  });
+
+  it("keeps collection and collection-group keys separate", () => {
+    const constraints = [where<Post>("status", "==", "published"), orderBy<Post>("createdAt", "desc")];
+    const db = { databaseId: { database: "(default)", projectId: "project-a" } };
+
+    const collectionKey = createModuleSwrKey({ path: "posts", constraints, db, isCollectionGroup: false });
+    const collectionGroupKey = createModuleSwrKey({ path: "posts", constraints, db, isCollectionGroup: true });
+
+    expect(collectionKey).not.toBe(collectionGroupKey);
+    expect(collectionKey).toContain("isCollectionGroup");
+    expect(collectionGroupKey).toContain("isCollectionGroup");
+    expect(collectionKey).toBe(
+      createModuleSwrKey({
+        ...scrubModuleKey({ path: "posts", constraints, db, isCollectionGroup: false }),
+        isCollectionGroup: false,
+      }),
+    );
+    expect(collectionGroupKey).toBe(
+      createModuleSwrKey({
+        ...scrubModuleKey({ path: "posts", constraints, db, isCollectionGroup: true }),
+        isCollectionGroup: true,
+      }),
+    );
   });
 });
