@@ -14,23 +14,45 @@ import { getFirestoreConverter } from "../../util/getConverter";
 import { materializeConstraints } from "../util/materializeConstraint";
 import { scrubModuleKey } from "../util/scrubKey";
 
-export type ModuleGetDocsParams<T> = {
+type ModuleGetDocsBaseParams<T> = {
   path: string;
   parseDates?: import("../../util/type").Paths<T>[];
   db?: import("firebase/firestore").Firestore;
-  isCollectionGroup?: boolean;
   useOfflineCache?: boolean;
+};
+
+type ModuleCollectionGetDocsParams<T> = ModuleGetDocsBaseParams<T> & {
+  isCollectionGroup?: false;
+  constraints?: readonly import("../util/type").ModuleQueryConstraint<T, "shared" | "collection">[];
+};
+
+type ModuleCollectionGroupGetDocsParams<T> = ModuleGetDocsBaseParams<T> & {
+  isCollectionGroup: true;
   constraints?: readonly import("../util/type").ModuleQueryConstraint<
     T,
-    "shared" | "collection" | "collectionGroup"
+    "shared" | "collectionGroup"
   >[];
 };
 
-const useGetDocs = <T>(
+export type ModuleGetDocsParams<T> =
+  | ModuleCollectionGetDocsParams<T>
+  | ModuleCollectionGroupGetDocsParams<T>;
+
+function useGetDocs<T>(
+  params: ModuleCollectionGroupGetDocsParams<T> | Falsy,
+  swrOptions?: Omit<SWRConfiguration, "fetcher">,
+): import("swr").SWRResponse<DocumentData<T>[] | undefined, unknown, SWRConfiguration>;
+
+function useGetDocs<T>(
+  params: ModuleCollectionGetDocsParams<T> | Falsy,
+  swrOptions?: Omit<SWRConfiguration, "fetcher">,
+): import("swr").SWRResponse<DocumentData<T>[] | undefined, unknown, SWRConfiguration>;
+
+function useGetDocs<T>(
   params: ModuleGetDocsParams<T> | Falsy,
   swrOptions?: Omit<SWRConfiguration, "fetcher">,
-) =>
-  useSWR(
+): import("swr").SWRResponse<DocumentData<T>[] | undefined, unknown, SWRConfiguration> {
+  return useSWR(
     scrubModuleKey(params as Record<string, unknown> | Falsy),
     async () => {
       if (!params) return;
@@ -46,5 +68,6 @@ const useGetDocs = <T>(
     },
     swrOptions ?? {},
   );
+}
 
 export default useGetDocs;

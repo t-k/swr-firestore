@@ -2,7 +2,7 @@ import { renderHook, waitFor } from "@testing-library/react";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { describe, expect, it, beforeAll, afterAll } from "vitest";
 import { where } from "../../src/module/query";
-import useGetDocs from "../../src/module/hooks/useGetDocs";
+import { useGetDocs } from "../../src/module";
 import { db } from "../supports/fb";
 import { deleteCollection } from "../supports/fbUtil";
 import type { ModuleTestComment } from "../supports/model";
