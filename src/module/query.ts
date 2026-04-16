@@ -9,16 +9,17 @@ import type { OrderByDirection } from "firebase/firestore";
 import {
   MATERIALIZE_CLIENT,
   type ElementOf,
-  type ModuleAggregateField,
+  type ModuleAverageAggregateField,
+  type ModuleCountAggregateField,
   type ModuleLimitConstraint,
   type ModuleOrderByConstraint,
+  type ModuleSumAggregateField,
   type ModuleWhereConstraint,
   type PathValue,
   type QueryScope,
+  type ScalarWhereOp,
   type SharedField,
 } from "./util/type";
-
-type ScalarWhereOp = "<" | "<=" | "==" | "!=" | ">=" | ">";
 
 type SharedWhereArgs<T> = {
   [P in SharedField<T>]:
@@ -27,9 +28,6 @@ type SharedWhereArgs<T> = {
     | [field: P, op: "array-contains", value: ElementOf<PathValue<T, P>>]
     | [field: P, op: "array-contains-any", value: readonly ElementOf<PathValue<T, P>>[]];
 }[SharedField<T>];
-
-type SharedWhereOp<T> = SharedWhereArgs<T>[1];
-type SharedWhereValue<T> = SharedWhereArgs<T>[2];
 
 const withMaterializer = <T extends { scope: QueryScope; doc: unknown }>(
   value: T,
@@ -49,19 +47,17 @@ const withMaterializer = <T extends { scope: QueryScope; doc: unknown }>(
   });
 };
 
-export function where<T>(
-  ...args: SharedWhereArgs<T>
-): ModuleWhereConstraint<T, "shared", SharedField<T>, SharedWhereOp<T>, SharedWhereValue<T>>;
-export function where<T, O extends ScalarWhereOp>(
+export function where<T>(...args: SharedWhereArgs<T>): ModuleWhereConstraint<T, "shared">;
+export function where<T, O extends ScalarWhereOp = ScalarWhereOp>(
   field: "id",
   op: O,
   value: string,
-): ModuleWhereConstraint<T, "collection", "id", O, string>;
+): Extract<ModuleWhereConstraint<T, "collection">, { field: "id"; op: O }>;
 export function where<T>(
   field: "id",
   op: "in" | "not-in",
   value: readonly string[],
-): ModuleWhereConstraint<T, "collection", "id", "in" | "not-in", readonly string[]>;
+): Extract<ModuleWhereConstraint<T, "collection">, { field: "id"; op: "in" | "not-in" }>;
 export function where<T>(field: any, op: any, value: any): any {
   const scope = field === "id" ? "collection" : "shared";
   const constraint = {
@@ -71,7 +67,7 @@ export function where<T>(field: any, op: any, value: any): any {
     field,
     op,
     value,
-  } as unknown as ModuleWhereConstraint<T, "shared" | "collection">;
+  } as ModuleWhereConstraint<T, "shared" | "collection">;
 
   return withMaterializer(constraint, () =>
     field === "id" ? fbWhere(documentId(), op, value) : fbWhere(field, op, value),
@@ -81,11 +77,11 @@ export function where<T>(field: any, op: any, value: any): any {
 export function orderBy<T>(
   field: SharedField<T>,
   direction?: OrderByDirection,
-): ModuleOrderByConstraint<T, "shared", SharedField<T>, OrderByDirection>;
+): ModuleOrderByConstraint<T, "shared">;
 export function orderBy<T>(
   field: "id",
   direction?: OrderByDirection,
-): ModuleOrderByConstraint<T, "collection", "id", OrderByDirection>;
+): Extract<ModuleOrderByConstraint<T, "collection">, { field: "id" }>;
 export function orderBy<T>(field: any, direction: OrderByDirection = "asc"): any {
   const resolvedDirection = direction;
   const scope = field === "id" ? "collection" : "shared";
@@ -95,7 +91,7 @@ export function orderBy<T>(field: any, direction: OrderByDirection = "asc"): any
     doc: undefined as unknown as T,
     field,
     direction: resolvedDirection,
-  } as unknown as ModuleOrderByConstraint<T, "shared" | "collection">;
+  } as ModuleOrderByConstraint<T, "shared" | "collection">;
 
   return withMaterializer(constraint, () =>
     field === "id"
@@ -115,18 +111,18 @@ export const limit = (value: number): ModuleLimitConstraint<never, "shared"> =>
     () => fbLimit(value),
   );
 
-export const count = (): ModuleAggregateField<never> => ({ type: "count" });
+export const count = (): ModuleCountAggregateField => ({ type: "count" });
 
 export const sum = <T, P extends SharedField<T> = SharedField<T>>(
   field: P,
-): ModuleAggregateField<T> => ({
+): ModuleSumAggregateField<T, P> => ({
   type: "sum",
   field,
 });
 
 export const average = <T, P extends SharedField<T> = SharedField<T>>(
   field: P,
-): ModuleAggregateField<T> => ({
+): ModuleAverageAggregateField<T, P> => ({
   type: "average",
   field,
 });
