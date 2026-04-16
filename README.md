@@ -90,55 +90,68 @@ useCollection<City>({
 });
 ```
 
-### SSG and SSR
+### SSG and SSR with the root API
 
-You can use the server module to get the SWR key and data.
+Use the root API when you want the original package entrypoints (`@tatsuokaniwa/swr-firestore` and `@tatsuokaniwa/swr-firestore/server`). The hooks should be rendered inside `SWRConfig` so the fallback data is actually consumed.
 
 ```tsx
-import { useCollection, useGetDocs } from "@tatsuokaniwa/swr-firestore"
-import { getCollection } from "@tatsuokaniwa/swr-firestore/server"
+import { SWRConfig } from "swr";
+
+import { useCollection, useGetDocs } from "@tatsuokaniwa/swr-firestore";
+import { getCollection } from "@tatsuokaniwa/swr-firestore/server";
 
 export async function getStaticProps() {
   const params = {
     path: "posts",
     where: [["status", "==", "published"]],
-  }
+  };
   const { key, data } = await getCollection<Post>({
     ...params,
     isSubscription: true, // Add the prefix `$sub$` to the SWR key
-  })
-  const { key: useGetDocsKey, data: useGetDocsData } = await getCollection<Post>(params)
+  });
+  const { key: useGetDocsKey, data: useGetDocsData } = await getCollection<Post>(params);
+
   return {
     props: {
       fallback: {
         [key]: data,
         [useGetDocsKey]: useGetDocsData,
-      }
-    }
-  }
+      },
+    },
+  };
 }
 
-export default function Page({ fallback }) {
+function Posts() {
   const { data } = useCollection<Post>({
     path: "posts",
     where: [["status", "==", "published"]],
-  })
+  });
   const { data: useGetDocsData } = useGetDocs<Post>({
     path: "posts",
     where: [["status", "==", "published"]],
-  })
+  });
+
+  return (
+    <>
+      <p>{useGetDocsData?.length ?? 0} documents</p>
+      {data?.map((x, i) => <div key={i}>{x.content}</div>)}
+    </>
+  );
+}
+
+export default function Page({ fallback }: { fallback: Record<string, unknown> }) {
   return (
     <SWRConfig value={{ fallback }}>
-      {data?.map((x, i) => <div key={i}>{x.content}}</div>)}
+      <Posts />
     </SWRConfig>
-  )
+  );
 }
 ```
 
-For `OR` / `AND` queries in the server module, use the server-only `filter` parameter.
+For `OR` / `AND` queries in the root server module, use the server-only `filter` parameter.
 Unlike client-side `queryConstraints`, this API is JSON-serializable and works with SWR fallback keys.
 
-```ts
+```tsx
 import { getCollection } from "@tatsuokaniwa/swr-firestore/server";
 
 const { key, data } = await getCollection<Post>({
@@ -156,7 +169,7 @@ const { key, data } = await getCollection<Post>({
 
 ### module エントリポイントを使う SSR/SSG
 
-`@tatsuokaniwa/swr-firestore/module` とその subpath exports を使うと、クライアント側の `constraints` と server 側の fallback key を同じ形で組み立てられます。
+`@tatsuokaniwa/swr-firestore/module` とその subpath exports を使うと、root API と同じ考え方で、クライアント側の `constraints` と server 側の fallback key を同じ形で組み立てられます。
 
 ```tsx
 import { SWRConfig } from "swr";
