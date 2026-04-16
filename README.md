@@ -111,6 +111,8 @@ const { data } = useCollection<Post>({
 });
 ```
 
+See [README.module.md](./README.module.md) for the full module API guide, including SSR/SSG, aggregate APIs, and entrypoint details.
+
 ### SSG and SSR with the root API
 
 Use the root API when you want the original package entrypoints (`@tatsuokaniwa/swr-firestore` and `@tatsuokaniwa/swr-firestore/server`). The hooks should be rendered inside `SWRConfig` so the fallback data is actually consumed.
@@ -275,72 +277,33 @@ import {
 // Server-side fetchers (Firebase Admin SDK)
 import { getCollection, getDoc } from "@tatsuokaniwa/swr-firestore/server";
 
-// Tree-shaking-first module API (constraints + typed builders)
-import { useCollection, useGetDocs } from "@tatsuokaniwa/swr-firestore/module";
-import { where, orderBy, count, average } from "@tatsuokaniwa/swr-firestore/module/query";
-
-// module subscription-only hooks
-import {
-  useCollection as useModuleCollection,
-  useCollectionGroup as useModuleCollectionGroup,
-  useDoc as useModuleDoc,
-} from "@tatsuokaniwa/swr-firestore/module/subscription";
-
-// module aggregate/count hooks and fetchers
-import {
-  useAggregate as useModuleAggregate,
-  useCollectionCount as useModuleCollectionCount,
-  useCollectionGroupCount as useModuleCollectionGroupCount,
-  useCollectionGroupAggregate as useModuleCollectionGroupAggregate,
-} from "@tatsuokaniwa/swr-firestore/module/aggregate";
-
-// module server-side fetchers
-import { getCollection as getModuleCollection, getDoc as getModuleDoc } from "@tatsuokaniwa/swr-firestore/module/server";
+// Tree-shaking-first module API
+import { useCollection as useModuleCollection } from "@tatsuokaniwa/swr-firestore/module";
+import { where, orderBy } from "@tatsuokaniwa/swr-firestore/module/query";
 ```
 
-The `module` API is split across these entry points:
+For the complete `module` API reference and examples, see [README.module.md](./README.module.md).
 
+The main public entry points are:
+
+- `@tatsuokaniwa/swr-firestore`
+  full client-side API for the original root style
+- `@tatsuokaniwa/swr-firestore/subscription`
+  root subscription hooks only
+- `@tatsuokaniwa/swr-firestore/aggregate`
+  root aggregate/count hooks and fetchers
+- `@tatsuokaniwa/swr-firestore/server`
+  root server-side fetchers
 - `@tatsuokaniwa/swr-firestore/module`
-  `constraints`-based client hooks and fetchers
+  tree-shaking-first client API
 - `@tatsuokaniwa/swr-firestore/module/query`
-  typed query builders and aggregate builders
+  typed builders for module constraints and aggregate fields
 - `@tatsuokaniwa/swr-firestore/module/subscription`
-  subscription hooks only
+  module subscription hooks only
 - `@tatsuokaniwa/swr-firestore/module/aggregate`
-  aggregate/count hooks and fetchers
+  module aggregate/count hooks and client fetchers
 - `@tatsuokaniwa/swr-firestore/module/server`
-  server fetchers for SSR/SSG
-
-`@tatsuokaniwa/swr-firestore/module/aggregate` lets you import the module aggregate/count hooks and client fetchers together.
-
-```ts
-import {
-  useAggregate,
-  useCollectionCount,
-  useCollectionGroupAggregate,
-  useCollectionGroupCount,
-} from "@tatsuokaniwa/swr-firestore/module/aggregate";
-
-import {
-  getAggregate,
-  getCollectionCount,
-  getCollectionGroupAggregate,
-  getCollectionGroupCount,
-} from "@tatsuokaniwa/swr-firestore/module/server";
-```
-
-Import query and aggregate builders from `module/query`.
-
-```ts
-import {
-  average,
-  count,
-  limit,
-  orderBy,
-  sum,
-  where,
-} from "@tatsuokaniwa/swr-firestore/module/query";
-```
+  module server-side fetchers for SSR/SSG
 
 ### Full export list
 

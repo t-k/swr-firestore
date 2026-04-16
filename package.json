@@ -17,7 +17,8 @@
     "url": "git+https://github.com/t-k/swr-firestore.git"
   },
   "files": [
-    "dist"
+    "dist",
+    "README.module.md"
   ],
   "type": "module",
   "sideEffects": false,

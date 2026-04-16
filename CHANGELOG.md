@@ -14,7 +14,7 @@
 
 ### Documentation
 
-- Document the new module entrypoints, query builders, and SSR/SSG usage in `README.md`.
+- Reorganize the module API docs by keeping the root README focused and adding `README.module.md` for the detailed module guide.
 
 ## [3.1.0] - 2026-04-14
 
