@@ -1,5 +1,5 @@
 import { useGetDocs } from "../../../src/module";
-import { where } from "../../../src/module/query";
+import { orderBy, where } from "../../../src/module/query";
 
 type Comment = {
   content: string;
@@ -17,6 +17,13 @@ useGetDocs<Comment>({
   path: "comments",
   isCollectionGroup: true,
   constraints: [where<Comment>("id", "==", "comment-1")],
+});
+
+// @ts-expect-error collection-group queries must reject collection-only id orderBy
+useGetDocs<Comment>({
+  path: "comments",
+  isCollectionGroup: true,
+  constraints: [orderBy<Comment>("id", "asc")],
 });
 
 useGetDocs<Comment>({
