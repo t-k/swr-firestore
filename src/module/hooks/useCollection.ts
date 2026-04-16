@@ -21,7 +21,9 @@ const useCollection = <T>(
   swrOptions?: Omit<SWRConfiguration, "fetcher">,
 ): SWRSubscriptionResponse<DocumentData<T>[], FirestoreError> =>
   useSWRSubscription(
-    scrubModuleKey(params as Record<string, unknown> | Falsy),
+    scrubModuleKey(
+      params ? ({ ...params, isCollectionGroup: false } as Record<string, unknown>) : params,
+    ),
     (_: Key, { next }: SWRSubscriptionOptions<DocumentData<T>[], FirestoreError>) => {
       if (!params) return;
       const ref = collection(params.db ?? getFirestore(), params.path);
