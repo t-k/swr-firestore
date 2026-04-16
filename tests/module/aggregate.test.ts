@@ -1,11 +1,22 @@
 import { renderHook, waitFor } from "@testing-library/react";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { unstable_serialize } from "swr";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-import { useCollectionCount, useCollectionGroupCount } from "../../src/module/aggregate";
-import { getCollectionCount, getCollectionGroupCount } from "../../src/module/server";
+import {
+  fetchAggregate,
+  useCollectionCount,
+  useCollectionGroupCount,
+} from "../../src/module/aggregate";
+import {
+  getAggregate,
+  getCollectionCount,
+  getCollectionGroupAggregate,
+  getCollectionGroupCount,
+} from "../../src/module/server";
+import { count } from "../../src/module/query";
+import { scrubModuleKey } from "../../src/module/util/scrubKey";
 import { db } from "../supports/fb";
-import { adminDb } from "../supports/fbAdmin";
 import { deleteCollection } from "../supports/fbUtil";
 
 type Post = {
@@ -63,7 +74,6 @@ describe("module aggregate barrel", () => {
   it("fetches collection counts through the local server barrel", async () => {
     const { data } = await getCollectionCount<Post>({
       path: COLLECTION,
-      db: adminDb,
     });
 
     expect(data).toBe(3);
@@ -72,9 +82,78 @@ describe("module aggregate barrel", () => {
   it("fetches collection group counts through the local server barrel", async () => {
     const { data } = await getCollectionGroupCount<Post>({
       path: GROUP_SUB_COLLECTION,
-      db: adminDb,
     });
 
     expect(data).toBe(2);
+  });
+
+  it("keeps the collection count key aligned with the client key when db is omitted", async () => {
+    const { key } = await getCollectionCount<Post>({
+      path: COLLECTION,
+    });
+
+    expect(key).toBe(
+      unstable_serialize(
+        scrubModuleKey({ path: COLLECTION, count: true, isCollectionGroup: false }),
+      ),
+    );
+  });
+
+  it("keeps the collection group count key aligned with the client key when db is omitted", async () => {
+    const { key } = await getCollectionGroupCount<Post>({
+      path: GROUP_SUB_COLLECTION,
+    });
+
+    expect(key).toBe(
+      unstable_serialize(
+        scrubModuleKey({ path: GROUP_SUB_COLLECTION, count: true, isCollectionGroup: true }),
+      ),
+    );
+  });
+
+  it("keeps the collection aggregate key aligned with the client key when db is omitted", async () => {
+    const aggregate = { total: count() };
+
+    await fetchAggregate<Post, typeof aggregate>({
+      path: COLLECTION,
+      aggregate,
+      db,
+    });
+
+    const { key } = await getAggregate<Post, typeof aggregate>({
+      path: COLLECTION,
+      aggregate,
+    });
+
+    expect(key).toBe(
+      unstable_serialize(
+        scrubModuleKey({
+          path: COLLECTION,
+          aggregate,
+          _aggregate: true,
+          isCollectionGroup: false,
+        }),
+      ),
+    );
+  });
+
+  it("keeps the collection group aggregate key aligned with the client key when db is omitted", async () => {
+    const aggregate = { total: count() };
+
+    const { key } = await getCollectionGroupAggregate<Post, typeof aggregate>({
+      path: GROUP_SUB_COLLECTION,
+      aggregate,
+    });
+
+    expect(key).toBe(
+      unstable_serialize(
+        scrubModuleKey({
+          path: GROUP_SUB_COLLECTION,
+          aggregate,
+          _aggregate: true,
+          isCollectionGroup: true,
+        }),
+      ),
+    );
   });
 });

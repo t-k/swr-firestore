@@ -18,7 +18,7 @@ const getCollectionCount = async <T>(params: ModuleServerCollectionCountParams<T
   const snapshot = await applyModuleConstraints(ref, constraints).count().get();
 
   return {
-    key: createModuleSwrKey({ ...params, db, count: true, isCollectionGroup: false }),
+    key: createModuleSwrKey({ ...params, count: true, isCollectionGroup: false }),
     data: snapshot.data().count,
   };
 };

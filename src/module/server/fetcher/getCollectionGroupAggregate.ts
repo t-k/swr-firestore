@@ -28,7 +28,7 @@ const getCollectionGroupAggregate = async <T, TSpec extends SwrAggregateSpec<T>>
   const snapshot = await queryRef.aggregate(aggregateSpec).get();
 
   return {
-    key: createModuleSwrKey({ ...params, db, _aggregate: true, isCollectionGroup: true }),
+    key: createModuleSwrKey({ ...params, _aggregate: true, isCollectionGroup: true }),
     data: snapshot.data() as AggregateResult<TSpec>,
   };
 };
