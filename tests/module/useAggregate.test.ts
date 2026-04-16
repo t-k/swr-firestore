@@ -3,9 +3,9 @@ import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { average, count, where } from "../../src/module/query";
-import useAggregate from "../../src/module/hooks/useAggregate";
-import { fetchAggregate } from "../../src/module/fetcher";
+import { fetchAggregate, useAggregate } from "../../src/module/aggregate";
 import { db } from "../supports/fb";
+import { deleteCollection } from "../supports/fbUtil";
 
 type Product = {
   category: string;
@@ -16,6 +16,7 @@ const COLLECTION = "FetchAggregateTest";
 
 describe("module useAggregate", () => {
   beforeAll(async () => {
+    await deleteCollection(COLLECTION);
     const ref = collection(db, COLLECTION);
     await addDoc(ref, {
       category: "electronics",
@@ -35,7 +36,7 @@ describe("module useAggregate", () => {
   });
 
   afterAll(async () => {
-    // Leave the test data in the emulator; collection names are isolated per test run.
+    await deleteCollection(COLLECTION);
   });
 
   it("fetches aggregate values with typed builders", async () => {

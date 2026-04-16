@@ -3,7 +3,9 @@ import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { useCollectionCount, useCollectionGroupCount } from "../../src/module/aggregate";
+import { getCollectionCount, getCollectionGroupCount } from "../../src/module/server";
 import { db } from "../supports/fb";
+import { adminDb } from "../supports/fbAdmin";
 import { deleteCollection } from "../supports/fbUtil";
 
 type Post = {
@@ -56,5 +58,23 @@ describe("module aggregate barrel", () => {
     );
 
     await waitFor(() => expect(result.current.data).toBe(2));
+  });
+
+  it("fetches collection counts through the local server barrel", async () => {
+    const { data } = await getCollectionCount<Post>({
+      path: COLLECTION,
+      db: adminDb,
+    });
+
+    expect(data).toBe(3);
+  });
+
+  it("fetches collection group counts through the local server barrel", async () => {
+    const { data } = await getCollectionGroupCount<Post>({
+      path: GROUP_SUB_COLLECTION,
+      db: adminDb,
+    });
+
+    expect(data).toBe(2);
   });
 });
