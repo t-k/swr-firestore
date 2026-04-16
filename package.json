@@ -41,6 +41,26 @@
       "types": "./dist/server/index.d.ts",
       "import": "./dist/server/index.js",
       "require": "./dist/server/index.umd.cjs"
+    },
+    "./module": {
+      "types": "./dist/module/index.d.ts",
+      "import": "./dist/module/index.js",
+      "require": "./dist/module/index.umd.cjs"
+    },
+    "./module/query": {
+      "types": "./dist/module/query.d.ts",
+      "import": "./dist/module/query.js",
+      "require": "./dist/module/query.umd.cjs"
+    },
+    "./module/subscription": {
+      "types": "./dist/module/subscription.d.ts",
+      "import": "./dist/module/subscription.js",
+      "require": "./dist/module/subscription.umd.cjs"
+    },
+    "./module/server": {
+      "types": "./dist/module/server/index.d.ts",
+      "import": "./dist/module/server/index.js",
+      "require": "./dist/module/server/index.umd.cjs"
     }
   },
   "scripts": {

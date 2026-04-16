@@ -156,14 +156,14 @@ const { key, data } = await getCollection<Post>({
 
 ### module エントリポイントを使う SSR/SSG
 
-この例は Task 5 で `./module` の package export を有効にした後の利用形です。現時点のリポジトリでは、同じ API を内部パス経由で参照してください。
+`@tatsuokaniwa/swr-firestore/module` とその subpath exports を使うと、クライアント側の `constraints` と server 側の fallback key を同じ形で組み立てられます。
 
 ```tsx
 import { SWRConfig } from "swr";
 
-import { useCollection } from "./src/module/subscription";
-import { where, orderBy } from "./src/module/query";
-import { getCollection } from "./src/module/server";
+import { useCollection } from "@tatsuokaniwa/swr-firestore/module";
+import { where, orderBy } from "@tatsuokaniwa/swr-firestore/module/query";
+import { getCollection } from "@tatsuokaniwa/swr-firestore/module/server";
 
 const constraints = [
   where<Post>("status", "==", "published"),
