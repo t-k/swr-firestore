@@ -46,6 +46,10 @@ service cloud.firestore {
       allow read: if true;
       allow write: if true;
     }
+    match /{path=**}/comments/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
 
     match /DocTest/{resourceId} {
       allow read: if true;
