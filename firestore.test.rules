@@ -46,6 +46,14 @@ service cloud.firestore {
       allow read: if true;
       allow write: if true;
     }
+    match /comments/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /{path=**}/comments/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
 
     match /DocTest/{resourceId} {
       allow read: if true;
@@ -180,6 +188,63 @@ service cloud.firestore {
     }
 
     match /FetchDocInTransactionTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /ModuleFetchDocTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /ModuleFetchCollectionTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /ModuleFetchCollectionGroupParent/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /{path=**}/ModuleFetchCollectionGroupSub/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /ModuleUseCollectionTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /ModuleCollectionGroupTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /{path=**}/ModuleUseCollectionGroupSub/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /ModuleUseGetDocTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /ModuleGetDocsTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /{path=**}/ModuleUseGetDocsSub/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /ModuleUseAggregateTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /ModuleAggregateCountTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /ModuleAggregateGroupCountParent/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /{path=**}/ModuleAggregateSubGroupCountTest/{resourceId} {
       allow read: if true;
       allow write: if true;
     }

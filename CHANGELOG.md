@@ -1,3 +1,21 @@
+## [Unreleased]
+
+### Features
+
+- Add tree-shaking-first `module` entrypoints:
+  - `@tatsuokaniwa/swr-firestore/module`
+  - `@tatsuokaniwa/swr-firestore/module/query`
+  - `@tatsuokaniwa/swr-firestore/module/subscription`
+  - `@tatsuokaniwa/swr-firestore/module/aggregate`
+  - `@tatsuokaniwa/swr-firestore/module/server`
+- Add typed `constraints` builders for the module API, including `where`, `orderBy`, `limit`, `count`, `sum`, and `average`.
+- Add module client hooks/fetchers, module server fetchers, and module aggregate/count APIs.
+- Add SSR/SSG-compatible key generation for the module API, including collection vs collectionGroup key separation and aggregate/count fallback alignment.
+
+### Documentation
+
+- Reorganize the module API docs by keeping the root README focused and adding `README.module.md` for the detailed module guide.
+
 ## [3.1.0] - 2026-04-14
 
 ### Features

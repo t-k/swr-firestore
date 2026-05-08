@@ -17,3 +17,6 @@ export type Comment = {
   createdAt: Date;
   sortableId?: number;
 };
+
+export type ModuleTestPost = Post;
+export type ModuleTestComment = Comment;

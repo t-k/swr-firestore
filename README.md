@@ -18,6 +18,8 @@ npm i --save @tatsuokaniwa/swr-firestore
 yarn add @tatsuokaniwa/swr-firestore
 ```
 
+This package includes both the original root API and a tree-shaking-first `module` API.
+
 ### Requirements
 
 - Node.js >= 12.11 (requires `exports` field support in `package.json`)
@@ -90,55 +92,88 @@ useCollection<City>({
 });
 ```
 
-### SSG and SSR
+### Tree-shaking-first `module` API
 
-You can use the server module to get the SWR key and data.
+`@tatsuokaniwa/swr-firestore/module` provides a `constraints`-based API. You import only the builders you need from subpath exports such as `where`, `orderBy`, `count`, and `average`, which makes it a better fit for tree-shaking with the Firebase modular SDK than the root API.
 
 ```tsx
-import { useCollection, useGetDocs } from "@tatsuokaniwa/swr-firestore"
-import { getCollection } from "@tatsuokaniwa/swr-firestore/server"
+import { useCollection } from "@tatsuokaniwa/swr-firestore/module";
+import { orderBy, where } from "@tatsuokaniwa/swr-firestore/module/query";
+
+const constraints = [where<Post>("status", "==", "published"), orderBy<Post>("createdAt", "desc")];
+
+const { data } = useCollection<Post>({
+  path: "posts",
+  constraints,
+});
+```
+
+See [README.module.md](./README.module.md) for the full module API guide, including SSR/SSG, aggregate APIs, and entrypoint details.
+
+### SSG and SSR with the root API
+
+Use the root API when you want the original package entrypoints (`@tatsuokaniwa/swr-firestore` and `@tatsuokaniwa/swr-firestore/server`). The hooks should be rendered inside `SWRConfig` so the fallback data is actually consumed.
+
+```tsx
+import { SWRConfig } from "swr";
+
+import { useCollection, useGetDocs } from "@tatsuokaniwa/swr-firestore";
+import { getCollection } from "@tatsuokaniwa/swr-firestore/server";
 
 export async function getStaticProps() {
   const params = {
     path: "posts",
     where: [["status", "==", "published"]],
-  }
+  };
   const { key, data } = await getCollection<Post>({
     ...params,
     isSubscription: true, // Add the prefix `$sub$` to the SWR key
-  })
-  const { key: useGetDocsKey, data: useGetDocsData } = await getCollection<Post>(params)
+  });
+  const { key: useGetDocsKey, data: useGetDocsData } = await getCollection<Post>(params);
+
   return {
     props: {
       fallback: {
         [key]: data,
         [useGetDocsKey]: useGetDocsData,
-      }
-    }
-  }
+      },
+    },
+  };
 }
 
-export default function Page({ fallback }) {
+function Posts() {
   const { data } = useCollection<Post>({
     path: "posts",
     where: [["status", "==", "published"]],
-  })
+  });
   const { data: useGetDocsData } = useGetDocs<Post>({
     path: "posts",
     where: [["status", "==", "published"]],
-  })
+  });
+
+  return (
+    <>
+      <p>{useGetDocsData?.length ?? 0} documents</p>
+      {data?.map((x, i) => (
+        <div key={i}>{x.content}</div>
+      ))}
+    </>
+  );
+}
+
+export default function Page({ fallback }: { fallback: Record<string, unknown> }) {
   return (
     <SWRConfig value={{ fallback }}>
-      {data?.map((x, i) => <div key={i}>{x.content}}</div>)}
+      <Posts />
     </SWRConfig>
-  )
+  );
 }
 ```
 
-For `OR` / `AND` queries in the server module, use the server-only `filter` parameter.
+For `OR` / `AND` queries in the root server module, use the server-only `filter` parameter.
 Unlike client-side `queryConstraints`, this API is JSON-serializable and works with SWR fallback keys.
 
-```ts
+```tsx
 import { getCollection } from "@tatsuokaniwa/swr-firestore/server";
 
 const { key, data } = await getCollection<Post>({
@@ -152,6 +187,59 @@ const { key, data } = await getCollection<Post>({
   },
   orderBy: [["createdAt", "desc"]],
 });
+```
+
+### SSG and SSR with the `module` API
+
+With `@tatsuokaniwa/swr-firestore/module` and its subpath exports, you can reuse the same client-side `constraints` when generating fallback keys on the server. As with the root API, render the hooks inside `SWRConfig` so the fallback data is consumed.
+
+```tsx
+import { SWRConfig } from "swr";
+
+import { useCollection } from "@tatsuokaniwa/swr-firestore/module";
+import { where, orderBy } from "@tatsuokaniwa/swr-firestore/module/query";
+import { getCollection } from "@tatsuokaniwa/swr-firestore/module/server";
+
+const constraints = [where<Post>("status", "==", "published"), orderBy<Post>("createdAt", "desc")];
+
+export async function getStaticProps() {
+  const { key, data } = await getCollection<Post>({
+    path: "posts",
+    constraints,
+    isSubscription: true,
+  });
+
+  return {
+    props: {
+      fallback: {
+        [key]: data,
+      },
+    },
+  };
+}
+
+function Posts() {
+  const { data } = useCollection<Post>({
+    path: "posts",
+    constraints,
+  });
+
+  return (
+    <>
+      {data?.map((x, i) => (
+        <div key={i}>{x.content}</div>
+      ))}
+    </>
+  );
+}
+
+export default function Page({ fallback }: { fallback: Record<string, unknown> }) {
+  return (
+    <SWRConfig value={{ fallback }}>
+      <Posts />
+    </SWRConfig>
+  );
+}
 ```
 
 ## API
@@ -175,12 +263,44 @@ import {
 import {
   useAggregate,
   useCollectionCount,
+  useCollectionGroupAggregate,
+  useCollectionGroupCount,
   fetchAggregate,
+  fetchCollectionCount,
+  fetchCollectionGroupAggregate,
+  fetchCollectionGroupCount,
 } from "@tatsuokaniwa/swr-firestore/aggregate";
 
 // Server-side fetchers (Firebase Admin SDK)
 import { getCollection, getDoc } from "@tatsuokaniwa/swr-firestore/server";
+
+// Tree-shaking-first module API
+import { useCollection as useModuleCollection } from "@tatsuokaniwa/swr-firestore/module";
+import { where, orderBy } from "@tatsuokaniwa/swr-firestore/module/query";
 ```
+
+For the complete `module` API reference and examples, see [README.module.md](./README.module.md).
+
+The main public entry points are:
+
+- `@tatsuokaniwa/swr-firestore`
+  full client-side API for the original root style
+- `@tatsuokaniwa/swr-firestore/subscription`
+  root subscription hooks only
+- `@tatsuokaniwa/swr-firestore/aggregate`
+  root aggregate/count hooks and fetchers
+- `@tatsuokaniwa/swr-firestore/server`
+  root server-side fetchers
+- `@tatsuokaniwa/swr-firestore/module`
+  tree-shaking-first client API
+- `@tatsuokaniwa/swr-firestore/module/query`
+  typed builders for module constraints and aggregate fields
+- `@tatsuokaniwa/swr-firestore/module/subscription`
+  module subscription hooks only
+- `@tatsuokaniwa/swr-firestore/module/aggregate`
+  module aggregate/count hooks and client fetchers
+- `@tatsuokaniwa/swr-firestore/module/server`
+  module server-side fetchers for SSR/SSG
 
 ### Full export list
 
