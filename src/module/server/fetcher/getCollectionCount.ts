@@ -12,9 +12,10 @@ export type ModuleServerCollectionCountParams<T> = {
 
 const getCollectionCount = async <T>(params: ModuleServerCollectionCountParams<T>) => {
   const { path, db: externalDb, constraints } = params;
-  const { isSubscription: _ignoredIsSubscription, ...keyParams } = params as ModuleServerCollectionCountParams<T> & {
-    isSubscription?: boolean;
-  };
+  const { isSubscription: _ignoredIsSubscription, ...keyParams } =
+    params as ModuleServerCollectionCountParams<T> & {
+      isSubscription?: boolean;
+    };
   const db = externalDb ?? getFirestore();
   const ref = db.collection(path);
   const snapshot = await applyModuleConstraints(ref, constraints).count().get();

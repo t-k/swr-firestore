@@ -17,10 +17,7 @@ type Post = {
   createdAt: Date;
 };
 
-const constraints = [
-  where<Post>("status", "==", "published"),
-  orderBy<Post>("createdAt", "desc"),
-];
+const constraints = [where<Post>("status", "==", "published"), orderBy<Post>("createdAt", "desc")];
 
 export default function App() {
   const { data } = useCollection<Post>({
@@ -110,10 +107,7 @@ type Post = {
   createdAt: Date;
 };
 
-const constraints = [
-  where<Post>("status", "==", "published"),
-  orderBy<Post>("createdAt", "desc"),
-];
+const constraints = [where<Post>("status", "==", "published"), orderBy<Post>("createdAt", "desc")];
 
 export async function getStaticProps() {
   const { key, data } = await getCollection<Post>({

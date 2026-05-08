@@ -20,9 +20,10 @@ const getAggregate = async <T, TSpec extends SwrAggregateSpec<T>>(
   data: AggregateResult<TSpec>;
 }> => {
   const { path, aggregate, db: externalDb, constraints } = params;
-  const { isSubscription: _ignoredIsSubscription, ...keyParams } = params as ModuleServerAggregateParams<T, TSpec> & {
-    isSubscription?: boolean;
-  };
+  const { isSubscription: _ignoredIsSubscription, ...keyParams } =
+    params as ModuleServerAggregateParams<T, TSpec> & {
+      isSubscription?: boolean;
+    };
   const db = externalDb ?? getFirestore();
   const ref = db.collection(path);
   const queryRef = applyModuleConstraints(ref, constraints);

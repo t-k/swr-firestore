@@ -100,10 +100,7 @@ useCollection<City>({
 import { useCollection } from "@tatsuokaniwa/swr-firestore/module";
 import { orderBy, where } from "@tatsuokaniwa/swr-firestore/module/query";
 
-const constraints = [
-  where<Post>("status", "==", "published"),
-  orderBy<Post>("createdAt", "desc"),
-];
+const constraints = [where<Post>("status", "==", "published"), orderBy<Post>("createdAt", "desc")];
 
 const { data } = useCollection<Post>({
   path: "posts",
