@@ -102,5 +102,5 @@ where<Post>("id", "==", ["x"]);
 where<Post>("id", "in", "x");
 
 // @ts-expect-error collection group params must reject collection-only id constraint
-const invalidCollectionGroupConstraint: ModuleQueryConstraint<Post, "shared" | "collectionGroup"> =
+const _invalidCollectionGroupConstraint: ModuleQueryConstraint<Post, "shared" | "collectionGroup"> =
   orderBy<Post>("id", "asc");
