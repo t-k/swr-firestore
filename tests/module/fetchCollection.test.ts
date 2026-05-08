@@ -12,7 +12,7 @@ type TestDoc = {
   createdAt: Date;
 };
 
-const COLLECTION = "FetchCollectionTest";
+const COLLECTION = "ModuleFetchCollectionTest";
 
 describe("module fetchCollection", () => {
   beforeAll(async () => {

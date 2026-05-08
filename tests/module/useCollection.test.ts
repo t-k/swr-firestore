@@ -7,7 +7,7 @@ import { db } from "../supports/fb";
 import { deleteCollection } from "../supports/fbUtil";
 import type { ModuleTestPost } from "../supports/model";
 
-const COLLECTION = "CollectionTest";
+const COLLECTION = "ModuleUseCollectionTest";
 
 describe("module useCollection", () => {
   beforeAll(async () => {

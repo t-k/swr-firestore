@@ -13,7 +13,7 @@ type TestDoc = {
 };
 
 const PARENT = "ModuleFetchCollectionGroupParent";
-const SUB_COLLECTION = "comments";
+const SUB_COLLECTION = "ModuleFetchCollectionGroupSub";
 
 describe("module fetchCollectionGroup", () => {
   beforeAll(async () => {

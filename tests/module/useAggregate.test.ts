@@ -12,7 +12,7 @@ type Product = {
   price: number;
 };
 
-const COLLECTION = "FetchAggregateTest";
+const COLLECTION = "ModuleUseAggregateTest";
 
 describe("module useAggregate", () => {
   beforeAll(async () => {

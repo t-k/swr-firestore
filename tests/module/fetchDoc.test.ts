@@ -5,7 +5,7 @@ import { fetchDoc } from "../../src/module";
 import { db } from "../supports/fb";
 import { deleteCollection } from "../supports/fbUtil";
 
-const COLLECTION = "FetchDocTest";
+const COLLECTION = "ModuleFetchDocTest";
 
 type TestDoc = {
   title: string;

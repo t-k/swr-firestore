@@ -7,7 +7,7 @@ import { db } from "../supports/fb";
 import { deleteCollection } from "../supports/fbUtil";
 import type { ModuleTestPost } from "../supports/model";
 
-const COLLECTION = "useGetDocTest";
+const COLLECTION = "ModuleUseGetDocTest";
 
 describe("module useGetDoc", () => {
   const docId = "module-get-doc";

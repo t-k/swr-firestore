@@ -23,9 +23,9 @@ type Post = {
   status: "draft" | "published";
 };
 
-const COLLECTION = "FetchCollectionCountTest";
-const GROUP_PARENT = "FetchCollectionGroupCountParent";
-const GROUP_SUB_COLLECTION = "FetchSubCollectionGroupCountTest";
+const COLLECTION = "ModuleAggregateCountTest";
+const GROUP_PARENT = "ModuleAggregateGroupCountParent";
+const GROUP_SUB_COLLECTION = "ModuleAggregateSubGroupCountTest";
 
 describe("module aggregate barrel", () => {
   beforeAll(async () => {

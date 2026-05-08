@@ -8,7 +8,7 @@ import { deleteCollection } from "../supports/fbUtil";
 import type { ModuleTestComment } from "../supports/model";
 
 const COLLECTION = "ModuleGetDocsTest";
-const SUB_COLLECTION = "comments";
+const SUB_COLLECTION = "ModuleUseGetDocsSub";
 
 describe("module useGetDocs", () => {
   beforeAll(async () => {

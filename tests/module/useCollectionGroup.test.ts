@@ -9,7 +9,7 @@ import { deleteCollection } from "../supports/fbUtil";
 import type { ModuleTestComment } from "../supports/model";
 
 const COLLECTION = "ModuleCollectionGroupTest";
-const SUB_COLLECTION = "comments";
+const SUB_COLLECTION = "ModuleUseCollectionGroupSub";
 
 describe("module useCollectionGroup", () => {
   beforeAll(async () => {
