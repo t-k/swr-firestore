@@ -35,4 +35,26 @@ describe("module useGetDocs key alignment", () => {
       ),
     );
   });
+
+  it("keeps client keys separate for different projects with the same database name", () => {
+    const constraints = [where<Post>("status", "==", "published")];
+    const projectAKey = unstable_serialize(
+      scrubModuleKey({
+        path: "posts",
+        constraints,
+        db: { databaseId: { database: "(default)", projectId: "project-a" } },
+        isCollectionGroup: false,
+      }),
+    );
+    const projectBKey = unstable_serialize(
+      scrubModuleKey({
+        path: "posts",
+        constraints,
+        db: { databaseId: { database: "(default)", projectId: "project-b" } },
+        isCollectionGroup: false,
+      }),
+    );
+
+    expect(projectAKey).not.toBe(projectBKey);
+  });
 });

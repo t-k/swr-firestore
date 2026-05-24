@@ -11,7 +11,7 @@ type Post = {
 };
 
 describe("createModuleSwrKey", () => {
-  it("normalizes db to databaseId and does not serialize the db object itself", () => {
+  it("normalizes db to database identity and does not serialize the db object itself", () => {
     const constraints = [
       where<Post>("status", "==", "published"),
       orderBy<Post>("createdAt", "desc"),
@@ -32,14 +32,14 @@ describe("createModuleSwrKey", () => {
 
     expect(key).toMatch(/^\$sub\$/);
     expect(key).toContain("databaseId");
+    expect(key).toContain("project-a");
     expect(key).toContain("(default)");
     expect(key).not.toContain("[object Object]");
-    expect(key).not.toContain("project-a");
     expect(key).not.toContain("toJSON");
     expect(key).not.toContain("materializeClient");
   });
 
-  it("keeps the normalized key stable for equivalent db objects", () => {
+  it("keeps keys separate for different projects with the same database name", () => {
     const constraints = [
       where<Post>("status", "==", "published"),
       orderBy<Post>("createdAt", "desc"),
@@ -65,7 +65,7 @@ describe("createModuleSwrKey", () => {
       db: { databaseId: { database: "secondary", projectId: "project-c" } },
     });
 
-    expect(keyA).toBe(keyB);
+    expect(keyA).not.toBe(keyB);
     expect(keyA).not.toBe(keyC);
   });
 

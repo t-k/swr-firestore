@@ -94,6 +94,8 @@ The `"id"` field is also supported for collection queries.
 
 Use the same `constraints` array on both the client and server.
 
+`where<T>("id", ...)` and `orderBy<T>("id", ...)` use builder metadata to materialize document id queries. To keep client and server keys aligned for SSR / SSG, reuse the `constraints` array returned by the builders and do not pass JSON-stringified constraints to the server fetchers.
+
 ```tsx
 import { SWRConfig } from "swr";
 

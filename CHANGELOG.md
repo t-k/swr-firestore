@@ -1,4 +1,4 @@
-## [3.2.0] - 2026-05-08
+## [3.2.0] - 2026-05-24
 
 ### Features
 
@@ -10,7 +10,7 @@
   - `@tatsuokaniwa/swr-firestore/module/server`
 - Add typed `constraints` builders for the module API, including `where`, `orderBy`, `limit`, `count`, `sum`, and `average`.
 - Add module client hooks/fetchers, module server fetchers, and module aggregate/count APIs.
-- Add SSR/SSG-compatible key generation for the module API, including collection vs collectionGroup key separation and aggregate/count fallback alignment.
+- Add SSR/SSG-compatible key generation for the module API, including collection vs collectionGroup key separation, aggregate/count fallback alignment, and project-aware database identity for custom Firestore instances.
 
 ### Documentation
 

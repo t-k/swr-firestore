@@ -9,6 +9,7 @@ ui-debug.log
 tsconfig.tsbuildinfo
 .vscode
 .worktrees
+docs.local
 *.d.ts
 *.js
 *.js.map
