@@ -52,14 +52,14 @@ const useCollectionCount = <T>(
         ...(sa ? [startAfter(...(Array.isArray(sa) ? sa : [sa]))] : []),
         ...(e ? [endAt(...(Array.isArray(e) ? e : [e]))] : []),
         ...(eb ? [endBefore(...(Array.isArray(eb) ? eb : [eb]))] : []),
-        ...(l ? [limit(l)] : []),
-        ...(ltl ? [limitToLast(ltl)] : []),
+        ...(l != null ? [limit(l)] : []),
+        ...(ltl != null ? [limitToLast(ltl)] : []),
       );
     }
     const sn = await getCountFromServer(q);
     return sn.data().count;
   };
-  return useSWR(params && { ...params, count: true }, fetcher, {
+  return useSWR(params && { ...params, count: true, isCollectionGroup: false }, fetcher, {
     ...swrOptions,
     use: [serializeMiddleware, ...(swrOptions?.use ?? [])],
   });

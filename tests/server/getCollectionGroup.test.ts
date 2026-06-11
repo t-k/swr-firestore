@@ -39,7 +39,7 @@ describe("getCollectionGroup", () => {
         path: SUB_COLLECTION,
       });
       expect(data != null).toBe(true);
-      expect(key).toEqual(unstable_serialize({ path: SUB_COLLECTION }));
+      expect(key).toEqual(unstable_serialize({ path: SUB_COLLECTION, isCollectionGroup: true }));
     });
   });
   describe("with isSubscription option", () => {
@@ -49,7 +49,9 @@ describe("getCollectionGroup", () => {
         isSubscription: true,
       });
       expect(data != null).toBe(true);
-      expect(key).toEqual("$sub$" + unstable_serialize({ path: SUB_COLLECTION }));
+      expect(key).toEqual(
+        "$sub$" + unstable_serialize({ path: SUB_COLLECTION, isCollectionGroup: true }),
+      );
     });
   });
   describe("with parseDates option", () => {

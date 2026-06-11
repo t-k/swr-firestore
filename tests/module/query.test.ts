@@ -56,6 +56,10 @@ describe("module query builders", () => {
     expect(descriptor?.value()).toEqual(fbLimit(3));
   });
 
+  it("rejects zero limit values", () => {
+    expect(() => limit(0)).toThrow("limit must be greater than 0");
+  });
+
   it("returns aggregate helper shape for count", () => {
     expect(count()).toEqual({ type: "count" });
   });

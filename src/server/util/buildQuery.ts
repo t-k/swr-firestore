@@ -25,6 +25,12 @@ const mapCollectionField = (field: string | DocumentId): string | FieldPath => {
   return field === "id" ? FieldPath.documentId() : field;
 };
 
+const assertPositiveLimit = (name: "limit" | "limitToLast", value: number | undefined): void => {
+  if (value != null && value <= 0) {
+    throw new RangeError(`${name} must be greater than 0`);
+  }
+};
+
 /**
  * Build query for Collection (Admin SDK)
  * - Converts "id" to FieldPath.documentId()
@@ -45,6 +51,9 @@ export const buildQueryForCollection = <T>(
     limit: l,
     limitToLast: ltl,
   } = params;
+
+  assertPositiveLimit("limit", l);
+  assertPositiveLimit("limitToLast", ltl);
 
   if (f) {
     queryRef = (queryRef ?? collectionRef).where(buildServerFilter(f, mapCollectionField));
@@ -77,10 +86,10 @@ export const buildQueryForCollection = <T>(
   if (eb) {
     queryRef = (queryRef ?? collectionRef).endBefore(...(Array.isArray(eb) ? eb : [eb]));
   }
-  if (l) {
+  if (l != null) {
     queryRef = (queryRef ?? collectionRef).limit(l);
   }
-  if (ltl) {
+  if (ltl != null) {
     queryRef = (queryRef ?? collectionRef).limitToLast(ltl);
   }
 
@@ -108,6 +117,9 @@ export const buildQueryForCollectionGroup = <T>(
     limitToLast: ltl,
   } = params;
 
+  assertPositiveLimit("limit", l);
+  assertPositiveLimit("limitToLast", ltl);
+
   if (f) {
     queryRef = (queryRef ?? collectionGroupRef).where(buildServerFilter(f, (field) => field));
   }
@@ -133,10 +145,10 @@ export const buildQueryForCollectionGroup = <T>(
   if (eb) {
     queryRef = (queryRef ?? collectionGroupRef).endBefore(...(Array.isArray(eb) ? eb : [eb]));
   }
-  if (l) {
+  if (l != null) {
     queryRef = (queryRef ?? collectionGroupRef).limit(l);
   }
-  if (ltl) {
+  if (ltl != null) {
     queryRef = (queryRef ?? collectionGroupRef).limitToLast(ltl);
   }
 

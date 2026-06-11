@@ -57,4 +57,14 @@ describe("module useGetDocs key alignment", () => {
 
     expect(projectAKey).not.toBe(projectBKey);
   });
+
+  it("matches module/server for Date-valued constraints", () => {
+    const constraints = [where<Post>("createdAt", ">=", new Date("2024-01-01T00:00:00.000Z"))];
+    const params = { path: "posts", constraints, isCollectionGroup: false };
+
+    const clientKey = unstable_serialize(scrubModuleKey(params));
+    const serverKey = createModuleSwrKey(params);
+
+    expect(clientKey).toBe(serverKey);
+  });
 });

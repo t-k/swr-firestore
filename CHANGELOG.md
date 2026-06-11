@@ -1,3 +1,28 @@
+## [Unreleased]
+
+### Breaking Changes
+
+- Change generated SWR key shapes for Firestore instances to include project-aware database identity and collection-vs-collectionGroup discriminators. This fixes SSR fallback and cache collisions across projects and query scopes, but mixed client/server versions may not share fallback keys.
+- Normalize `DocumentData.exists` to a boolean on both client and server converter results.
+- Rename CommonJS build files from `*.umd.cjs` to `*.cjs`.
+
+### Fixed
+
+- Fix module SSR fallback keys when server fetchers receive a real Firebase Admin Firestore instance.
+- Fix Date-valued query params producing different client and server SWR keys.
+- Fix aggregate server fallback keys when `db` is omitted.
+- Prevent `parseDates` paths from creating phantom nested objects or overwriting primitive intermediate fields.
+- Prevent unsafe `parseDates` path segments from creating a prototype pollution primitive.
+- Reject non-positive `limit` values consistently instead of silently dropping `limit: 0` in some paths.
+- Throw when module server fetchers receive an unknown query constraint type.
+- Wire type tests into CI and reject invalid count fallback params at the type level.
+
+### Documentation
+
+- Document that server fetchers use `firebase-admin` and bypass Firestore Security Rules.
+- Document that subscription errors are terminal for the mounted key and auth-gated reads should use conditional params.
+- Document the local JDK 21 requirement for emulator-backed tests.
+
 ## [3.2.0] - 2026-05-24
 
 ### Features

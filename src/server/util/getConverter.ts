@@ -6,6 +6,7 @@ const formatTimestamp = (obj: object, props?: string[]): object => {
   if (props == null) return obj;
   return props.reduce((result, prop: string) => {
     const value = getByPath(result, prop);
+    if (value === undefined) return result;
     const converted =
       value != null && typeof value === "object" && "toDate" in value
         ? (value as { toDate: () => Date }).toDate()
@@ -22,7 +23,7 @@ export const getFirestoreConverter = <T>(
     return {
       ...formatTimestamp(data, parseDates),
       ref: snapshot.ref,
-      exists: snapshot.exists,
+      exists: Boolean(snapshot.exists),
       id: snapshot.id,
     } as DocumentData<T>;
   },

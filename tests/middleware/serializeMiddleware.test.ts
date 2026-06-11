@@ -32,7 +32,16 @@ describe("serializeMiddleware", () => {
       }),
     };
     const result = call({ path: "test/doc", db });
-    expect(result).toEqual({ path: "test/doc", databaseId: "(default)" });
+    expect(result).toEqual({ path: "test/doc", databaseId: "my-project/(default)" });
+  });
+
+  it("should keep collection and collection-group keys separate", () => {
+    const { call } = createCapture();
+
+    const collectionKey = call({ path: "comments", isCollectionGroup: false });
+    const collectionGroupKey = call({ path: "comments", isCollectionGroup: true });
+
+    expect(collectionKey).not.toEqual(collectionGroupKey);
   });
 
   it("should produce different keys for different db instances", () => {

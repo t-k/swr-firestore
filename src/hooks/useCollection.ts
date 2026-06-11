@@ -13,7 +13,7 @@ const useCollection = <T>(
   swrOptions?: Omit<SWRConfiguration, "fetcher">,
 ): SWRSubscriptionResponse<DocumentData<T>[], FirestoreError> => {
   return useSWRSubscription(
-    params || null,
+    params ? { ...params, isCollectionGroup: false } : null,
     (_: Key, { next }: SWRSubscriptionOptions<DocumentData<T>[], FirestoreError>) => {
       if (!params) {
         return;

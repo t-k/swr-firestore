@@ -26,47 +26,47 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "require": "./dist/index.umd.cjs"
+      "require": "./dist/index.cjs"
     },
     "./subscription": {
       "types": "./dist/subscription.d.ts",
       "import": "./dist/subscription.js",
-      "require": "./dist/subscription.umd.cjs"
+      "require": "./dist/subscription.cjs"
     },
     "./aggregate": {
       "types": "./dist/aggregate.d.ts",
       "import": "./dist/aggregate.js",
-      "require": "./dist/aggregate.umd.cjs"
+      "require": "./dist/aggregate.cjs"
     },
     "./server": {
       "types": "./dist/server/index.d.ts",
       "import": "./dist/server/index.js",
-      "require": "./dist/server/index.umd.cjs"
+      "require": "./dist/server/index.cjs"
     },
     "./module": {
       "types": "./dist/module/index.d.ts",
       "import": "./dist/module/index.js",
-      "require": "./dist/module/index.umd.cjs"
+      "require": "./dist/module/index.cjs"
     },
     "./module/query": {
       "types": "./dist/module/query.d.ts",
       "import": "./dist/module/query.js",
-      "require": "./dist/module/query.umd.cjs"
+      "require": "./dist/module/query.cjs"
     },
     "./module/subscription": {
       "types": "./dist/module/subscription.d.ts",
       "import": "./dist/module/subscription.js",
-      "require": "./dist/module/subscription.umd.cjs"
+      "require": "./dist/module/subscription.cjs"
     },
     "./module/server": {
       "types": "./dist/module/server/index.d.ts",
       "import": "./dist/module/server/index.js",
-      "require": "./dist/module/server/index.umd.cjs"
+      "require": "./dist/module/server/index.cjs"
     },
     "./module/aggregate": {
       "types": "./dist/module/aggregate.d.ts",
       "import": "./dist/module/aggregate.js",
-      "require": "./dist/module/aggregate.umd.cjs"
+      "require": "./dist/module/aggregate.cjs"
     }
   },
   "scripts": {
@@ -75,6 +75,7 @@
     "test": "vitest",
     "test:ci": "firebase emulators:exec --only auth,firestore,storage 'vitest run --coverage'",
     "coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.type-tests.json --noEmit",
     "lint": "oxlint",
     "format": "oxfmt --write",
     "format:check": "oxfmt --check",
@@ -95,7 +96,7 @@
     "oxlint": "^1.57.0",
     "react": "^19",
     "react-dom": "^19",
-    "swr": "^2.1.0 <3.0.0",
+    "swr": "^2.1.0",
     "typescript": "^6.0.2",
     "vite": "^8.0.3",
     "vitest": "^4.1.2"
@@ -103,7 +104,19 @@
   "peerDependencies": {
     "firebase": ">=9.11.0",
     "firebase-admin": ">=11.0.0",
-    "swr": "^2.1.0 <3.0.0"
+    "react": ">=18",
+    "swr": "^2.1.0"
+  },
+  "peerDependenciesMeta": {
+    "firebase": {
+      "optional": true
+    },
+    "firebase-admin": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=20"
   },
   "packageManager": "pnpm@10.19.0"
 }

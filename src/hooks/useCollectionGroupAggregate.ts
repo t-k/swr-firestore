@@ -29,7 +29,7 @@ const useCollectionGroupAggregate = <T, TSpec extends SwrAggregateSpec<T>>(
     return snapshot.data() as AggregateResult<TSpec>;
   };
 
-  const swrKey = params ? { ...params, _aggregate: true } : null;
+  const swrKey = params ? { ...params, _aggregate: true, isCollectionGroup: true } : null;
 
   return useSWR(swrKey, fetcher, {
     ...swrOptions,

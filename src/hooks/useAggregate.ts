@@ -24,7 +24,7 @@ const useAggregate = <T, TSpec extends SwrAggregateSpec<T>>(
     return snapshot.data() as AggregateResult<TSpec>;
   };
 
-  const swrKey = params ? { ...params, _aggregate: true } : null;
+  const swrKey = params ? { ...params, _aggregate: true, isCollectionGroup: false } : null;
 
   return useSWR(swrKey, fetcher, {
     ...swrOptions,

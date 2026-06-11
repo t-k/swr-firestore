@@ -102,15 +102,15 @@ export type KeyParams<T> = BaseParams<T> & (QueryParams<T> | QueryConstraintPara
 export type KeyParamsForCollectionGroup<T> = BaseParams<T> &
   (QueryParamsForCollectionGroup<T> | QueryConstraintParams);
 
-export type KeyParamsForCount<T> = BaseParams<T> &
-  (Omit<QueryParams<T>, "parseDates"> | QueryConstraintParams);
+export type KeyParamsForCount<T> = Omit<BaseParams<T>, "parseDates"> &
+  (QueryParams<T> | QueryConstraintParams);
 
-export type KeyParamsForCollectionGroupCount<T> = BaseParams<T> &
-  (Omit<QueryParamsForCollectionGroup<T>, "parseDates"> | QueryConstraintParams);
+export type KeyParamsForCollectionGroupCount<T> = Omit<BaseParams<T>, "parseDates"> &
+  (QueryParamsForCollectionGroup<T> | QueryConstraintParams);
 
 export type GetDocKeyParams<T> = KeyParams<T> & { useOfflineCache?: boolean };
 
-export type DocumentData<T> = T & Pick<QueryDocumentSnapshot, "exists" | "id" | "ref">;
+export type DocumentData<T> = T & { exists: boolean } & Pick<QueryDocumentSnapshot, "id" | "ref">;
 
 // Aggregation types
 

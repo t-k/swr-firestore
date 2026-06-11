@@ -53,6 +53,16 @@ describe("applyModuleConstraints", () => {
     documentIdSpy.mockRestore();
   });
 
+  it("throws on unknown constraint types", () => {
+    const query = createQueryMock();
+
+    expect(() =>
+      applyModuleConstraints<Post>(query, [
+        { type: "futureConstraint", scope: "shared", doc: undefined } as never,
+      ]),
+    ).toThrow("Unsupported module query constraint type: futureConstraint");
+  });
+
   it("keeps collection-group non-id constraints on field paths", () => {
     const documentIdSpy = vi.spyOn(FieldPath, "documentId");
     const query = createQueryMock();

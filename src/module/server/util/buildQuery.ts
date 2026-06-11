@@ -39,6 +39,8 @@ export const applyModuleConstraints = <T>(
       case "limit":
         return current.limit(constraint.value);
       default:
-        return current;
+        throw new Error(
+          `Unsupported module query constraint type: ${String((constraint as { type: unknown }).type)}`,
+        );
     }
   }, query);

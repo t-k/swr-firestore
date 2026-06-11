@@ -43,6 +43,7 @@ describe("getCollectionGroupCountCount", () => {
         unstable_serialize({
           path: SUB_COLLECTION,
           count: true,
+          isCollectionGroup: true,
         }),
       );
     });

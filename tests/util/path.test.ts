@@ -22,6 +22,11 @@ describe("getByPath", () => {
     expect(getByPath(null, "a")).toBeUndefined();
     expect(getByPath(undefined, "a")).toBeUndefined();
   });
+
+  it("does not read unsafe prototype path segments", () => {
+    expect(getByPath({}, "__proto__.toString")).toBeUndefined();
+    expect(getByPath({}, "constructor.prototype")).toBeUndefined();
+  });
 });
 
 describe("setByPath", () => {
@@ -47,5 +52,23 @@ describe("setByPath", () => {
     const obj = { x: 1 };
     const result = setByPath(obj, "x", 2);
     expect(result).toBe(obj);
+  });
+
+  it("does not modify Object.prototype through unsafe path segments", () => {
+    const obj: Record<string, unknown> = {};
+
+    setByPath(obj, "__proto__.polluted", "yes");
+    setByPath(obj, "constructor.prototype.polluted", "yes");
+
+    expect(({} as Record<string, unknown>).polluted).toBeUndefined();
+    expect(obj).toEqual({});
+  });
+
+  it("does not overwrite primitive intermediate values", () => {
+    const obj: Record<string, unknown> = { a: 5 };
+
+    setByPath(obj, "a.b", "value");
+
+    expect(obj).toEqual({ a: 5 });
   });
 });

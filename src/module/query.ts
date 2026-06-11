@@ -47,6 +47,12 @@ const withMaterializer = <T extends { scope: QueryScope; doc: unknown }>(
   });
 };
 
+const assertPositiveLimit = (value: number): void => {
+  if (value <= 0) {
+    throw new RangeError("limit must be greater than 0");
+  }
+};
+
 export function where<T>(...args: SharedWhereArgs<T>): ModuleWhereConstraint<T, "shared">;
 export function where<T, O extends ScalarWhereOp = ScalarWhereOp>(
   field: "id",
@@ -100,8 +106,9 @@ export function orderBy<T>(field: any, direction: OrderByDirection = "asc"): any
   );
 }
 
-export const limit = (value: number): ModuleLimitConstraint<never, "shared"> =>
-  withMaterializer(
+export const limit = (value: number): ModuleLimitConstraint<never, "shared"> => {
+  assertPositiveLimit(value);
+  return withMaterializer(
     {
       type: "limit",
       scope: "shared",
@@ -110,6 +117,7 @@ export const limit = (value: number): ModuleLimitConstraint<never, "shared"> =>
     } as ModuleLimitConstraint<never, "shared">,
     () => fbLimit(value),
   );
+};
 
 export const count = (): ModuleCountAggregateField => ({ type: "count" });
 

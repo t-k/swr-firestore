@@ -15,7 +15,7 @@ const getCollectionCount = async <T>(
   const q = buildQueryForCollection(collectionRef, params);
   const sn = await q.count().get();
   return {
-    key: createSwrKey({ ...params, count: true }),
+    key: createSwrKey({ ...params, count: true, isCollectionGroup: false }),
     data: sn.data().count,
   };
 };

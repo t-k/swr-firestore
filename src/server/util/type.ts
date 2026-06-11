@@ -71,11 +71,16 @@ export type KeyParams<T> = BaseParams<T> & QueryParams<T>;
 
 export type KeyParamsForCollectionGroup<T> = BaseParams<T> & QueryParamsForCollectionGroup<T>;
 
-export type KeyParamsForCount<T> = BaseParams<T> & QueryParams<T>;
+export type KeyParamsForCount<T> = Omit<BaseParams<T>, "parseDates" | "isSubscription"> &
+  QueryParams<T>;
 
-export type KeyParamsForCollectionGroupCount<T> = BaseParams<T> & QueryParamsForCollectionGroup<T>;
+export type KeyParamsForCollectionGroupCount<T> = Omit<
+  BaseParams<T>,
+  "parseDates" | "isSubscription"
+> &
+  QueryParamsForCollectionGroup<T>;
 
-export type DocumentData<T> = T & Pick<QueryDocumentSnapshot, "exists" | "id" | "ref">;
+export type DocumentData<T> = T & { exists: boolean } & Pick<QueryDocumentSnapshot, "id" | "ref">;
 
 export type KeyParamsForAggregate<T, TSpec extends SwrAggregateSpec<T>> = Omit<
   BaseParams<T>,

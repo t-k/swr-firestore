@@ -1,4 +1,5 @@
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { unstable_serialize } from "swr";
 import { getCollectionGroupAggregate } from "../../src/server";
 
 import { db } from "../supports/fb";
@@ -70,7 +71,14 @@ describe("getCollectionGroupAggregate", () => {
           total: { type: "count" },
         },
       });
-      expect(key).toBeDefined();
+      expect(key).toBe(
+        unstable_serialize({
+          path: SUB_COLLECTION,
+          aggregate: { total: { type: "count" } },
+          _aggregate: true,
+          isCollectionGroup: true,
+        }),
+      );
       expect(data).toEqual({ total: 4 });
     });
   });

@@ -25,11 +25,18 @@ This package includes both the original root API and a tree-shaking-first `modul
 - Node.js >= 12.11 (requires `exports` field support in `package.json`)
 - TypeScript >= 4.7 (requires `exports` field support for type resolution)
 - `firebase >= 9.11.0`, `swr >= 2.1.0 < 3.0.0`
+- Use `firebase` for browser/client entry points and `firebase-admin` for server entry points.
 
 #### For Aggregation Queries
 
 - Client-side: `firebase >= 9.17.0`
 - Server-side: `firebase-admin >= 11.5.0` (recommended)
+
+### Server fetcher security
+
+The `@tatsuokaniwa/swr-firestore/server` and `@tatsuokaniwa/swr-firestore/module/server` entry points use `firebase-admin`. They bypass Firestore Security Rules, just like any other Admin SDK code. Never import these server entry points into client bundles, and enforce authorization in your own server code before passing fetched data to SWR `fallback`.
+
+Do not build the `path` parameter directly from untrusted input. Firestore validates path syntax, but choosing which collection or document may be read is still your application's authorization responsibility.
 
 ## Usage
 
@@ -109,6 +116,21 @@ const { data } = useCollection<Post>({
 ```
 
 See [README.module.md](./README.module.md) for the full module API guide, including SSR/SSG, aggregate APIs, and entrypoint details.
+
+### Subscription error recovery
+
+Firestore stops a listener after an `onSnapshot` error. The subscription hooks forward that error through SWR, but they do not re-subscribe in place for the same key. For auth-gated reads, pass `null` until auth is ready so the hook mounts only after the user can read the path.
+
+```tsx
+const { data, error } = useCollection<Post>(
+  user
+    ? {
+        path: "posts",
+        where: [["ownerId", "==", user.uid]],
+      }
+    : null,
+);
+```
 
 ### SSG and SSR with the root API
 
@@ -404,7 +426,7 @@ type KeyParams<T> =
 ```ts
 import type { QueryDocumentSnapshot } from "firebase/firestore";
 
-type DocumentData<T> = T & Pick<QueryDocumentSnapshot, "exists" | "id" | "ref">;
+type DocumentData<T> = T & { exists: boolean } & Pick<QueryDocumentSnapshot, "id" | "ref">;
 ```
 
 ### `useCollection(params, swrOptions)`
@@ -1328,7 +1350,7 @@ When `db` is omitted, it falls back to `getFirestore()` as before, so existing c
 
 ## Testing
 
-Before running the test, you need to install the [Firebase tools](https://firebase.google.com/docs/cli).
+Before running the emulator-backed test suite locally, install a JDK 21 or newer and the [Firebase tools](https://firebase.google.com/docs/cli). CI uses Temurin 21.
 
 ```bash
 pnpm run test:ci

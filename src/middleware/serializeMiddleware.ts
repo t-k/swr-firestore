@@ -1,5 +1,7 @@
-import type { Middleware, SWRHook } from "swr";
-import { extractDatabaseId } from "../util/databaseId";
+import type { Key, Middleware, SWRHook } from "swr";
+import { extractDatabaseIdentity } from "../util/databaseId";
+
+const sanitize = (value: unknown): unknown => JSON.parse(JSON.stringify(value));
 
 const serializeMiddleware: Middleware = (useSWRNext: SWRHook) => {
   return (key, fetcher, config) => {
@@ -7,13 +9,14 @@ const serializeMiddleware: Middleware = (useSWRNext: SWRHook) => {
     if (key != null && typeof key === "object") {
       const keyObj = key as Record<string, unknown>;
       const hasDb = "db" in keyObj;
-      const hasSpecial = "queryConstraints" in keyObj || "aggregate" in keyObj;
 
-      if (hasDb || hasSpecial) {
+      if (hasDb) {
         const { db, ...rest } = keyObj;
-        const databaseId = extractDatabaseId(db);
+        const databaseId = extractDatabaseIdentity(db);
         const cleaned = databaseId != null ? { ...rest, databaseId } : rest;
-        swrKey = hasSpecial ? JSON.parse(JSON.stringify(cleaned)) : cleaned;
+        swrKey = sanitize(cleaned) as Key;
+      } else {
+        swrKey = sanitize(keyObj) as Key;
       }
     }
     return useSWRNext(swrKey, fetcher, config);

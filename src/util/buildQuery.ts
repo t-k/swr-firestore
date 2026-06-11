@@ -22,6 +22,12 @@ const hasQueryConstraints = <T>(
   return "queryConstraints" in params && params.queryConstraints != null;
 };
 
+const assertPositiveLimit = (name: "limit" | "limitToLast", value: number | undefined): void => {
+  if (value != null && value <= 0) {
+    throw new RangeError(`${name} must be greater than 0`);
+  }
+};
+
 /**
  * Build query for Collection
  * - Converts "id" to documentId()
@@ -45,6 +51,9 @@ export const buildQueryForCollection = <T>(
     limitToLast: ltl,
   } = params as QueryParams<T>;
 
+  assertPositiveLimit("limit", l);
+  assertPositiveLimit("limitToLast", ltl);
+
   return query(
     ref,
     ...(w ? w : []).map((q) =>
@@ -55,8 +64,8 @@ export const buildQueryForCollection = <T>(
     ...(sa ? [startAfter(...(Array.isArray(sa) ? sa : [sa]))] : []),
     ...(e ? [endAt(...(Array.isArray(e) ? e : [e]))] : []),
     ...(eb ? [endBefore(...(Array.isArray(eb) ? eb : [eb]))] : []),
-    ...(l ? [limit(l)] : []),
-    ...(ltl ? [limitToLast(ltl)] : []),
+    ...(l != null ? [limit(l)] : []),
+    ...(ltl != null ? [limitToLast(ltl)] : []),
   );
 };
 
@@ -83,6 +92,9 @@ export const buildQueryForCollectionGroup = <T>(
     limitToLast: ltl,
   } = params as QueryParamsForCollectionGroup<T>;
 
+  assertPositiveLimit("limit", l);
+  assertPositiveLimit("limitToLast", ltl);
+
   return query(
     ref,
     ...(w ? w : []).map((q) => where(q[0], q[1], q[2])),
@@ -91,7 +103,7 @@ export const buildQueryForCollectionGroup = <T>(
     ...(sa ? [startAfter(...(Array.isArray(sa) ? sa : [sa]))] : []),
     ...(e ? [endAt(...(Array.isArray(e) ? e : [e]))] : []),
     ...(eb ? [endBefore(...(Array.isArray(eb) ? eb : [eb]))] : []),
-    ...(l ? [limit(l)] : []),
-    ...(ltl ? [limitToLast(ltl)] : []),
+    ...(l != null ? [limit(l)] : []),
+    ...(ltl != null ? [limitToLast(ltl)] : []),
   );
 };

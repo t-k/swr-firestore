@@ -17,7 +17,7 @@ const getCollection = async <T>(
   const q = buildQueryForCollection(collectionRef, params);
   const sn = await q.withConverter(converter).get();
   return {
-    key: createSwrKey(params),
+    key: createSwrKey({ ...params, isCollectionGroup: false }),
     data: sn.docs.map((x) => x.data()),
   };
 };

@@ -73,6 +73,12 @@ import {
 - `@tatsuokaniwa/swr-firestore/module/server`
   server fetchers for SSR/SSG
 
+## Server fetcher security
+
+The `@tatsuokaniwa/swr-firestore/module/server` entry point uses `firebase-admin`. It bypasses Firestore Security Rules, just like any other Admin SDK code. Never import it into client bundles, and enforce authorization in your own server code before passing fetched data to SWR `fallback`.
+
+Do not build the `path` parameter directly from untrusted input. Firestore validates path syntax, but choosing which collection or document may be read is still your application's authorization responsibility.
+
 ## Typed constraints
 
 Build constraints with functions from `module/query`.
@@ -175,3 +181,5 @@ const { data } = useAggregate<Product>({
 ```
 
 For server-side fallback generation, use the matching fetchers from `@tatsuokaniwa/swr-firestore/module/server`.
+
+Transaction-aware helpers remain available from the root `@tatsuokaniwa/swr-firestore/server` entry point. The module server entry point intentionally exposes only non-transaction SSR/SSG fetchers.

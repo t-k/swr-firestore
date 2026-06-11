@@ -30,7 +30,7 @@ const useCollectionGroup = <T>(
   swrOptions?: Omit<SWRConfiguration, "fetcher">,
 ): SWRSubscriptionResponse<DocumentData<T>[], FirestoreError> => {
   return useSWRSubscription(
-    params || null,
+    params ? { ...params, isCollectionGroup: true } : null,
     (_: Key, { next }: SWRSubscriptionOptions<DocumentData<T>[], FirestoreError>) => {
       if (!params) {
         return;
@@ -61,8 +61,8 @@ const useCollectionGroup = <T>(
           ...(sa ? [startAfter(...(Array.isArray(sa) ? sa : [sa]))] : []),
           ...(e ? [endAt(...(Array.isArray(e) ? e : [e]))] : []),
           ...(eb ? [endBefore(...(Array.isArray(eb) ? eb : [eb]))] : []),
-          ...(l ? [limit(l)] : []),
-          ...(ltl ? [limitToLast(ltl)] : []),
+          ...(l != null ? [limit(l)] : []),
+          ...(ltl != null ? [limitToLast(ltl)] : []),
         );
       }
       const unsub = onSnapshot<DocumentData<T>, FsDocumentData>(

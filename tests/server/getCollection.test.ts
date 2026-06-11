@@ -61,7 +61,7 @@ describe("getCollection", () => {
     it("should fetch data", async () => {
       const { key, data } = await getCollection<Post>({ path: COLLECTION });
       expect(data != null).toBe(true);
-      expect(key).toEqual(unstable_serialize({ path: COLLECTION }));
+      expect(key).toEqual(unstable_serialize({ path: COLLECTION, isCollectionGroup: false }));
     });
   });
   describe("with isSubscription option", () => {
@@ -71,7 +71,9 @@ describe("getCollection", () => {
         isSubscription: true,
       });
       expect(data != null).toBe(true);
-      expect(key).toEqual("$sub$" + unstable_serialize({ path: COLLECTION }));
+      expect(key).toEqual(
+        "$sub$" + unstable_serialize({ path: COLLECTION, isCollectionGroup: false }),
+      );
     });
   });
   describe("with parseDates option", () => {

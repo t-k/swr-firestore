@@ -39,6 +39,16 @@ const extractDatabaseIdentityValue = (databaseId: unknown): string | undefined =
   return toDatabaseIdentityString(databaseId);
 };
 
+const extractProjectId = (db: Record<string, unknown>): string | undefined => {
+  if (typeof db.projectId === "string") return db.projectId;
+  if (typeof db._projectId === "string") return db._projectId;
+  if (db.app != null && typeof db.app === "object") {
+    const app = db.app as { options?: { projectId?: unknown } };
+    if (typeof app.options?.projectId === "string") return app.options.projectId;
+  }
+  return undefined;
+};
+
 /**
  * Safely extract databaseId from a Firestore-like object.
  * Returns undefined if the object doesn't have the expected shape.
@@ -62,8 +72,13 @@ export const extractDatabaseId = (db: unknown): string | undefined => {
  */
 export const extractDatabaseIdentity = (db: unknown): string | undefined => {
   if (db == null || typeof db !== "object") return undefined;
+  const projectId = extractProjectId(db as Record<string, unknown>);
   if ("databaseId" in db) {
-    return extractDatabaseIdentityValue((db as { databaseId?: unknown }).databaseId);
+    const databaseId = (db as { databaseId?: unknown }).databaseId;
+    if (typeof databaseId === "string") {
+      return projectId != null ? `${projectId}/${databaseId}` : databaseId;
+    }
+    return extractDatabaseIdentityValue(databaseId);
   }
   if (!("toJSON" in db) || typeof (db as Record<string, unknown>).toJSON !== "function")
     return undefined;
