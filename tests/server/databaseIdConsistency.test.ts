@@ -63,4 +63,60 @@ describe("client/server databaseId consistency", () => {
 
     expect(unstable_serialize(clientKey as Record<string, unknown>)).toBe(createSwrKey(params));
   });
+
+  it("should produce matching SWR keys for complex collection params with real SDK instances", () => {
+    const params = {
+      path: "posts",
+      db,
+      where: [["status", "==", "published"]],
+      orderBy: [["createdAt", "desc"]],
+      limit: 10,
+      isCollectionGroup: false,
+    };
+    let clientKey: unknown;
+    const middleware = serializeMiddleware(((key: unknown) => {
+      clientKey = key;
+      return {};
+    }) as Parameters<typeof serializeMiddleware>[0]);
+
+    middleware(params, null as never, {} as never);
+
+    expect(unstable_serialize(clientKey as Record<string, unknown>)).toBe(
+      createSwrKey({ ...params, db: adminDb }),
+    );
+  });
+
+  it("should produce matching count and aggregate keys with real SDK instances", () => {
+    const countParams = {
+      path: "posts",
+      db,
+      count: true,
+      isCollectionGroup: false,
+    };
+    const aggregateParams = {
+      path: "posts",
+      db,
+      aggregate: { total: { type: "count" } },
+      _aggregate: true,
+      isCollectionGroup: false,
+    };
+
+    let clientCountKey: unknown;
+    let clientAggregateKey: unknown;
+    const middleware = serializeMiddleware(((key: unknown) => {
+      if ((key as { count?: unknown }).count) clientCountKey = key;
+      if ((key as { _aggregate?: unknown })._aggregate) clientAggregateKey = key;
+      return {};
+    }) as Parameters<typeof serializeMiddleware>[0]);
+
+    middleware(countParams, null as never, {} as never);
+    middleware(aggregateParams, null as never, {} as never);
+
+    expect(unstable_serialize(clientCountKey as Record<string, unknown>)).toBe(
+      createSwrKey({ ...countParams, db: adminDb }),
+    );
+    expect(unstable_serialize(clientAggregateKey as Record<string, unknown>)).toBe(
+      createSwrKey({ ...aggregateParams, db: adminDb }),
+    );
+  });
 });

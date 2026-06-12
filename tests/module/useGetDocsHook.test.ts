@@ -6,7 +6,10 @@ import { unstable_serialize } from "swr";
 
 import { orderBy, where } from "../../src/module/query";
 import { useGetDocs } from "../../src/module";
+import { useCollection } from "../../src/module/subscription";
+import createModuleSwrKey from "../../src/module/server/util/createKey";
 import { scrubModuleKey } from "../../src/module/util/scrubKey";
+import { db } from "../supports/fb";
 
 type Post = {
   status: "draft" | "published";
@@ -62,5 +65,35 @@ describe("module useGetDocs hook key path", () => {
     await waitFor(() => {
       expect(cache.has(expectedKey)).toBe(true);
     });
+  });
+
+  it("stores the subscription key compatible with module/server getCollection", async () => {
+    const cache = new Map();
+    const wrapper = ({ children }: { children: unknown }) =>
+      createElement(SWRConfig, { value: { provider: () => cache } }, children as never);
+
+    const constraints = [where<Post>("status", "==", "published")];
+    const expectedKey = createModuleSwrKey({
+      path: "posts",
+      db,
+      constraints,
+      isSubscription: true,
+      isCollectionGroup: false,
+    });
+
+    const { unmount } = renderHook(
+      () =>
+        useCollection<Post>({
+          path: "posts",
+          db,
+          constraints,
+        }),
+      { wrapper },
+    );
+
+    await waitFor(() => {
+      expect(cache.has(expectedKey)).toBe(true);
+    });
+    unmount();
   });
 });

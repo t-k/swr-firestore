@@ -9,6 +9,7 @@
 ### Fixed
 
 - Fix module SSR fallback keys when server fetchers receive a real Firebase Admin Firestore instance.
+- Fix published declaration files for TypeScript `node16`/`nodenext` consumers and provide CJS-specific `.d.cts` declarations.
 - Fix Date-valued query params producing different client and server SWR keys.
 - Fix aggregate server fallback keys when `db` is omitted.
 - Prevent `parseDates` paths from creating phantom nested objects or overwriting primitive intermediate fields.
@@ -16,6 +17,8 @@
 - Reject non-positive `limit` values consistently instead of silently dropping `limit: 0` in some paths.
 - Throw when module server fetchers receive an unknown query constraint type.
 - Wire type tests into CI and reject invalid count fallback params at the type level.
+- Add package shape checks with `@arethetypeswrong/cli` and `publint`.
+- Add module entrypoint coverage for `useDoc`, aggregate fetchers, SSR key parity, subscription key parity, error paths, unsubscribe behavior, and barrel exports.
 
 ### Documentation
 

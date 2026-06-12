@@ -30,6 +30,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm add -g firebase-tools
       - run: pnpm run test:ci
+      - run: pnpm run package:check
       - name: Verify tag matches package version
         run: node -e 'const v=require("./package.json").version; if ("v" + v !== process.env.GITHUB_REF_NAME) { console.error("Tag " + process.env.GITHUB_REF_NAME + " does not match package version v" + v); process.exit(1); }'
       - name: Publish to npm

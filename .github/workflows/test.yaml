@@ -26,6 +26,7 @@ jobs:
       - run: pnpm run lint
       - run: pnpm run format:check
       - run: pnpm run typecheck
+      - run: pnpm run package:check
 
   test:
     runs-on: ubuntu-latest

@@ -213,6 +213,14 @@ service cloud.firestore {
       allow read: if true;
       allow write: if true;
     }
+    match /ModuleUseDocTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /ModuleUseDocErrTest/{resourceId} {
+      allow read: if false;
+      allow write: if true;
+    }
     match /ModuleCollectionGroupTest/{resourceId} {
       allow read: if true;
       allow write: if true;
@@ -246,6 +254,18 @@ service cloud.firestore {
       allow write: if true;
     }
     match /{path=**}/ModuleAggregateSubGroupCountTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /ModuleFetchAggregateTest/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /ModuleFetchAggregateGroupParent/{resourceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /{path=**}/ModuleFetchAggregateSubGroupTest/{resourceId} {
       allow read: if true;
       allow write: if true;
     }
