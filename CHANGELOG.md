@@ -1,6 +1,8 @@
 ## [Unreleased]
 
-### Breaking Changes
+## [3.2.1] - 2026-06-26
+
+### Behavior Changes
 
 - Change generated SWR key shapes for Firestore instances to include project-aware database identity and collection-vs-collectionGroup discriminators. This fixes SSR fallback and cache collisions across projects and query scopes, but mixed client/server versions may not share fallback keys.
 - Normalize `DocumentData.exists` to a boolean on both client and server converter results.
