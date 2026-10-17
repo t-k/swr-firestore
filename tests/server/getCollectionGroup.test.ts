@@ -1,4 +1,4 @@
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { addDoc, collection, doc, serverTimestamp, setDoc, Timestamp } from "firebase/firestore";
 import { getCollectionGroup } from "../../src/server";
 
 import { db } from "../supports/fb";
@@ -13,18 +13,19 @@ describe("getCollectionGroup", () => {
   beforeAll(async () => {
     await deleteCollection(COLLECTION, [SUB_COLLECTION]);
     const ref = collection(db, COLLECTION);
-    const doc = await addDoc(ref, {
+    const parentDoc = await addDoc(ref, {
       content: "hello",
       status: "draft",
       createdAt: serverTimestamp(),
     });
-    const subRef = collection(db, `${COLLECTION}/${doc.id}/${SUB_COLLECTION}`);
+    const subRef = collection(db, `${COLLECTION}/${parentDoc.id}/${SUB_COLLECTION}`);
     const contents = ["foo", "bar", "baz", "foo"];
+    const createdAt = [3, 1, 4, 2].map((seconds) => Timestamp.fromMillis(seconds * 1000));
     await Promise.all(
       [1, 10, 100, 1000].map((x, i) => {
-        return addDoc(subRef, {
+        return setDoc(doc(subRef, String(x).padStart(4, "0")), {
           content: contents[i],
-          createdAt: serverTimestamp(),
+          createdAt: createdAt[i],
           sortableId: x,
         });
       }),
@@ -104,9 +105,7 @@ describe("getCollectionGroup", () => {
         path: SUB_COLLECTION,
         orderBy: [["createdAt", "desc"]],
       });
-      const data1 = data![0];
-      const data2 = data![1];
-      expect(data1.createdAt > data2.createdAt).toBe(true);
+      expect(data?.map((item) => item.sortableId)).toEqual([100, 1, 1000, 10]);
     });
   });
 
