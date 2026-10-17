@@ -297,11 +297,11 @@ describe("useCollectionGroup", () => {
         createdAt: serverTimestamp(),
       });
       const subRef = collection(db, `${COLLECTION}/${doc.id}/${SUB_COLLECTION}`);
-      await addDoc(subRef, {
+      const fooRef = await addDoc(subRef, {
         content: "foo",
         createdAt: serverTimestamp(),
       });
-      await addDoc(subRef, {
+      const barRef = await addDoc(subRef, {
         content: "bar",
         createdAt: serverTimestamp(),
       });
@@ -311,10 +311,15 @@ describe("useCollectionGroup", () => {
           queryConstraints: [or(where("content", "==", "foo"), where("content", "==", "bar"))],
         }),
       );
-      await waitFor(() => expect(result.current.data != null).toBe(true), {
-        timeout: 5000,
-      });
-      expect(result.current.data?.length).toBe(2);
+      await waitFor(
+        () => {
+          expect(result.current.error).toBeUndefined();
+          expect(result.current.data?.map((item) => item.ref.path).sort()).toEqual(
+            [fooRef.path, barRef.path].sort(),
+          );
+        },
+        { timeout: 5000 },
+      );
       unmount();
     });
   });
