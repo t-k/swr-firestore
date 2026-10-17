@@ -12,19 +12,21 @@ useGetDocs<Comment>({
   constraints: [where<Comment>("content", "==", "foo")],
 });
 
-// @ts-expect-error collection-group queries must reject collection-only id constraints
-useGetDocs<Comment>({
+const groupWithIdWhere = {
   path: "comments",
-  isCollectionGroup: true,
+  isCollectionGroup: true as const,
   constraints: [where<Comment>("id", "==", "comment-1")],
-});
+};
+// @ts-expect-error collection-group queries must reject collection-only id constraints
+useGetDocs<Comment>(groupWithIdWhere);
 
-// @ts-expect-error collection-group queries must reject collection-only id orderBy
-useGetDocs<Comment>({
+const groupWithIdOrderBy = {
   path: "comments",
-  isCollectionGroup: true,
+  isCollectionGroup: true as const,
   constraints: [orderBy<Comment>("id", "asc")],
-});
+};
+// @ts-expect-error collection-group queries must reject collection-only id orderBy
+useGetDocs<Comment>(groupWithIdOrderBy);
 
 useGetDocs<Comment>({
   path: "posts",
