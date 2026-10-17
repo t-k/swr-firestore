@@ -141,7 +141,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^6.0.1",
-    "@vitest/coverage-v8": "^4.1.2",
+    "@vitest/coverage-v8": "^5.0.4",
     "firebase": ">=9.17.0",
     "firebase-admin": ">=11.5.0",
     "firebase-tools": "15.33.0",
@@ -155,7 +155,7 @@
     "swr": "^2.1.0",
     "typescript": "^6.0.2",
     "vite": "^8.0.3",
-    "vitest": "^4.1.2"
+    "vitest": "^5.0.4"
   },
   "peerDependencies": {
     "firebase": ">=9.11.0",
