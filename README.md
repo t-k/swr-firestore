@@ -1350,11 +1350,14 @@ When `db` is omitted, it falls back to `getFirestore()` as before, so existing c
 
 ## Testing
 
-Before running the emulator-backed test suite locally, install a JDK 21 or newer and the [Firebase tools](https://firebase.google.com/docs/cli). CI uses Temurin 21.
+Install dependencies with `pnpm install --frozen-lockfile`. The default suite uses the pinned [fireemu](https://github.com/t-k/fireemu) runtime and does not require Java.
 
 ```bash
 pnpm run test:ci
+pnpm run test:mutation
 ```
+
+`pnpm run test:official` and `pnpm run test:rules` require Java 21 and verify compatibility with the official emulator. See [Testing](docs/testing.md) for mutation scope, Rules differential checks, and reports.
 
 ## License
 
