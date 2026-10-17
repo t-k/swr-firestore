@@ -4,7 +4,7 @@ Install dependencies with `pnpm install --frozen-lockfile`. Use a supported Node
 
 ## Integration tests
 
-`pnpm test:ci` starts the pinned [fireemu](https://github.com/t-k/fireemu) runtime, runs all Vitest tests with coverage, and shuts it down. Java is not required. `fireemu.json` selects the `emulator` compatibility profile and reuses the rules, indexes, and other settings from `firebase.json`. Test runs use dynamically assigned Firestore ports; both client and Admin SDK tests consume `FIRESTORE_EMULATOR_HOST`.
+`pnpm test:ci` starts the pinned [fireemu](https://github.com/t-k/fireemu) runtime, runs all Vitest tests with coverage, and shuts it down. Java is not required. `fireemu.json` selects the `strict` profile and reuses the rules, indexes, and other settings from `firebase.json`. The required query indexes are declared in `firestore.indexes.test.json`; missing-index checks remain enabled. Test runs use dynamically assigned Firestore ports; both client and Admin SDK tests consume `FIRESTORE_EMULATOR_HOST`.
 
 `pnpm test:official` runs the same suite against the official Firestore emulator using the pinned local Firebase CLI. This requires Java 21 and port 8080. Only Firestore is started because this library's tests do not use Auth or Storage emulators. The compatibility CI job runs this suite independently of the fireemu matrix.
 

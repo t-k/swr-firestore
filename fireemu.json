@@ -1,6 +1,6 @@
 {
   "$schema": "https://fireemu.dev/spec/config/fireemu.schema.json",
   "schemaVersion": 1,
-  "profile": "emulator",
+  "profile": "strict",
   "firebaseJson": "firebase.json"
 }
