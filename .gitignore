@@ -13,3 +13,7 @@ docs.local
 docs/logs
 docs/superpowers
 .claude
+
+.worktree/
+.stryker-tmp/
+reports/

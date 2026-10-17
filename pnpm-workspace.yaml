@@ -4,3 +4,7 @@ ignoredBuiltDependencies:
 
 minimumReleaseAge: 4320
 trustPolicy: no-downgrade
+
+minimumReleaseAgeExclude:
+  - fireemu
+  - "@fireemu/*"

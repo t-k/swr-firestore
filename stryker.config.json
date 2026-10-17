@@ -1,0 +1,21 @@
+{
+  "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
+  "testRunner": "vitest",
+  "vitest": {
+    "configFile": "vitest.config.ts"
+  },
+  "mutate": [
+    "src/util/{path,databaseId,buildAggregateSpec}.ts",
+    "src/module/util/{normalizeKeyParams,materializeConstraint}.ts"
+  ],
+  "concurrency": 1,
+  "reporters": ["clear-text", "progress", "html", "json"],
+  "thresholds": {
+    "high": 90,
+    "low": 75,
+    "break": 75
+  },
+  "timeoutMS": 10000,
+  "ignorePatterns": ["docs.local", ".worktree", ".worktrees", "reports", "coverage"],
+  "plugins": ["@stryker-mutator/vitest-runner"]
+}
