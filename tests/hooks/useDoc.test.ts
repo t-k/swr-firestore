@@ -52,7 +52,7 @@ describe("useDoc", () => {
         await updateDoc(docRef, { content: "world" });
         return;
       });
-      expect(result.current.data?.content).toBe("world");
+      await waitFor(() => expect(result.current.data?.content).toBe("world"));
       unmount();
     });
   });

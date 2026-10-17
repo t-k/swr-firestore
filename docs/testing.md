@@ -10,11 +10,13 @@ Install dependencies with `pnpm install --frozen-lockfile`. Use a supported Node
 
 `pnpm emulator` starts an interactive fireemu session on the configured port. Stop it with Ctrl-C after use.
 
+When running multiple coverage commands in one checkout, set `COVERAGE_REPORTS_DIRECTORY` to independent sibling directories, such as `docs.local/coverage-node20` and `docs.local/coverage-node24`. A coverage run cleans its output directory recursively; do not run a parent output directory concurrently with its descendants.
+
 ## TypeScript mutation tests
 
-`pnpm test:mutation` starts fireemu and runs [StrykerJS](https://stryker-mutator.io/docs/stryker-js/vitest-runner/) with the Vitest runner. The default scope is five implementation files: `src/util/path.ts`, `src/util/databaseId.ts`, `src/util/buildAggregateSpec.ts`, `src/module/util/normalizeKeyParams.ts`, and `src/module/util/materializeConstraint.ts`. These cover unsafe property paths, database cache identities, aggregate specification construction, and modular query materialization. This is a focused mutation gate, not a whole-library mutation score.
+`pnpm test:mutation` runs [StrykerJS](https://stryker-mutator.io/docs/stryker-js/vitest-runner/) with the Vitest runner. The default scope is five implementation files: `src/util/path.ts`, `src/util/databaseId.ts`, `src/util/buildAggregateSpec.ts`, `src/module/util/normalizeKeyParams.ts`, and `src/module/util/materializeConstraint.ts`. These cover unsafe property paths, database cache identities, aggregate specification construction, and modular query materialization. This is a focused mutation gate, not a whole-library mutation score.
 
-Stryker runs one worker to avoid shared database interference. A score below 75 fails the job. HTML and JSON reports are written under `reports/mutation` and uploaded by CI. Surviving mutants remain visible in the reports; equivalent mutants are not automatically excluded. To inspect a broader scope, run `pnpm exec fireemu exec --only firestore --project swr-firestore-project --firestore-port 0 --hub-port 0 --logging-port 0 -- stryker run --mutate 'src/**/*.ts'`.
+The mutation-specific Vitest configuration runs focused unit tests in Node without an emulator. All five targets have direct unit coverage, so mutants do not repeat the complete SDK integration suite. Stryker runs one worker for reproducible execution. A score below 75 fails the job. HTML and JSON reports are written under `reports/mutation` and uploaded by CI. Surviving mutants remain visible in the reports; equivalent mutants are not automatically excluded. To expand the mutation scope, update `mutate` in `stryker.config.json` and the corresponding test includes in `vitest.mutation.config.ts`. Emulator-backed tests can run through `pnpm exec fireemu exec --only firestore --project swr-firestore-project --firestore-port 0 --hub-port 0 --logging-port 0 -- stryker run`.
 
 ## Rules mutation and differential tests
 

@@ -19,6 +19,7 @@ export default defineConfig({
     environment: "jsdom",
     coverage: {
       provider: "v8",
+      reportsDirectory: process.env.COVERAGE_REPORTS_DIRECTORY ?? "coverage",
       reporter: ["text", "json", "html"],
       include: ["src/**/*.{ts,tsx}"],
       exclude: [

@@ -90,3 +90,41 @@ describe("extractDatabaseIdentity", () => {
     expect(extractDatabaseIdentity(db)).toBe("secondary");
   });
 });
+
+describe("database input validation", () => {
+  const invalid = [
+    null,
+    undefined,
+    0,
+    "db",
+    false,
+    {},
+    { toJSON: 1 },
+    ...[null, undefined, 0, {}, { database: 1 }].map((databaseId) => ({ databaseId })),
+    ...[null, undefined, "db", 0, {}, { databaseId: 1 }].map((json) => ({ toJSON: () => json })),
+  ];
+  it.each(invalid)("returns undefined for malformed input %#", (db) => {
+    expect(extractDatabaseId(db)).toBeUndefined();
+    expect(extractDatabaseIdentity(db)).toBeUndefined();
+  });
+
+  it("extracts string database names without a project", () => {
+    expect(extractDatabaseIdentity({ databaseId: "secondary" })).toBe("secondary");
+    expect(extractDatabaseId({ databaseId: "secondary" })).toBe("secondary");
+  });
+
+  it.each([
+    [{ projectId: "p", _projectId: "q", app: { options: { projectId: "r" } } }, "p"],
+    [{ projectId: 1, _projectId: "q", app: { options: { projectId: "r" } } }, "q"],
+    [{ app: { options: { projectId: "r" } } }, "r"],
+    [{ projectId: "" }, ""],
+    [{ app: null }, undefined],
+    [{ app: "app" }, undefined],
+    [{ app: {} }, undefined],
+    [{ app: { options: { projectId: 1 } } }, undefined],
+  ])("resolves project source %#", (fields, project) => {
+    expect(extractDatabaseIdentity({ ...fields, databaseId: "secondary" })).toBe(
+      project === undefined ? "secondary" : `${project}/secondary`,
+    );
+  });
+});

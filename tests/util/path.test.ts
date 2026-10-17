@@ -72,3 +72,21 @@ describe("setByPath", () => {
     expect(obj).toEqual({ a: 5 });
   });
 });
+
+describe("path safety boundaries", () => {
+  it.each(["__proto__", "constructor", "prototype"])(
+    "rejects standalone unsafe segment %s",
+    (key) => {
+      const obj = Object.create(null);
+      obj[key] = { value: 1 };
+      expect(getByPath(obj, `${key}.value`)).toBeUndefined();
+      setByPath(obj, `${key}.value`, 2);
+      expect(obj[key].value).toBe(1);
+    },
+  );
+
+  it("does not read inherited properties or properties of primitives", () => {
+    expect(getByPath(Object.create({ inherited: 42 }), "inherited")).toBeUndefined();
+    expect(getByPath("text", "length")).toBeUndefined();
+  });
+});

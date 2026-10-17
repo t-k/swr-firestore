@@ -127,7 +127,7 @@
     "format:check": "oxfmt --check",
     "prepublishOnly": "pnpm run build",
     "test:official": "firebase emulators:exec --project swr-firestore-project --only firestore \"pnpm exec vitest run --coverage\"",
-    "test:mutation": "fireemu exec --only firestore --project swr-firestore-project --firestore-port 0 --hub-port 0 --logging-port 0 -- stryker run",
+    "test:mutation": "stryker run",
     "test:rules": "node --test scripts/rules-compare.test.mjs && node scripts/test-rules.mjs"
   },
   "devDependencies": {
