@@ -1,6 +1,6 @@
 # Testing
 
-Install dependencies with `pnpm install --frozen-lockfile`. Use a supported Node.js version (Node 20.19+, 22.12+, or 24) for the Vite-based test suite. CI uses Node 20, 22, and 24 for integration tests and Node 24 for mutation and compatibility tests.
+Install dependencies with `pnpm install --frozen-lockfile`. Use a supported Node.js version (Node 20.19+, 22.12+, 24, or 26) for the Vite-based test suite. CI uses Node 20, 22, 24, and 26 for integration tests and Node 24 for mutation and compatibility tests.
 
 ## Integration tests
 
