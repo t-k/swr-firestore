@@ -9,79 +9,79 @@ importers:
   .:
     devDependencies:
       '@arethetypeswrong/cli':
-        specifier: ^0.18.3
+        specifier: "^0.18.3"
         version: 0.18.4
       '@faker-js/faker':
-        specifier: ^10.0.0
+        specifier: "^10.0.0"
         version: 10.4.0
       '@firebase/rules-unit-testing':
-        specifier: 5.0.1
+        specifier: "5.0.1"
         version: 5.0.1(firebase@12.15.0)
       '@stryker-mutator/core':
-        specifier: 9.6.1
+        specifier: "9.6.1"
         version: 9.6.1(@types/node@26.6.5)
       '@stryker-mutator/vitest-runner':
-        specifier: 9.6.1
+        specifier: "9.6.1"
         version: 9.6.1(@stryker-mutator/core@9.6.1(@types/node@26.6.5))(vitest@4.1.2(@opentelemetry/api@1.9.1)(@types/node@26.6.5)(jsdom@29.1.1)(vite@8.0.16(@types/node@26.6.5)(yaml@2.9.1)))
       '@testing-library/jest-dom':
-        specifier: ^6.0.0
+        specifier: "^6.0.0"
         version: 6.9.1
       '@testing-library/react':
-        specifier: ^16.0.0
-        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.4(react@19.2.7))(react@19.2.7)
+        specifier: "^16.0.0"
+        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@types/react':
-        specifier: ^19
+        specifier: "^19"
         version: 19.2.17
       '@types/react-dom':
-        specifier: ^19
+        specifier: "^19"
         version: 19.2.3(@types/react@19.2.17)
       '@vitejs/plugin-react':
-        specifier: ^6.0.1
+        specifier: "^6.0.1"
         version: 6.0.2(vite@8.0.16(@types/node@26.6.5)(yaml@2.9.1))
       '@vitest/coverage-v8':
-        specifier: ^4.1.2
+        specifier: "^4.1.2"
         version: 4.1.2(vitest@4.1.2(@opentelemetry/api@1.9.1)(@types/node@26.6.5)(jsdom@29.1.1)(vite@8.0.16(@types/node@26.6.5)(yaml@2.9.1)))
       firebase:
-        specifier: '>=9.17.0'
+        specifier: ">=9.17.0"
         version: 12.15.0
       firebase-admin:
-        specifier: '>=11.5.0'
+        specifier: ">=11.5.0"
         version: 14.0.0
       firebase-tools:
-        specifier: 15.33.0
+        specifier: "15.33.0"
         version: 15.33.0(@types/node@26.6.5)
       fireemu:
-        specifier: 0.24.0
+        specifier: "0.24.0"
         version: 0.24.0
       jsdom:
-        specifier: ^29.0.0
+        specifier: "^29.0.0"
         version: 29.1.1
       oxfmt:
-        specifier: ^0.54.0
+        specifier: "^0.54.0"
         version: 0.54.0
       oxlint:
-        specifier: ^1.57.0
+        specifier: "^1.57.0"
         version: 1.69.0
       publint:
-        specifier: ^0.3.21
+        specifier: "^0.3.21"
         version: 0.3.21
       react:
-        specifier: ^19
+        specifier: "^19"
         version: 19.2.7
       react-dom:
-        specifier: ^19
-        version: 19.2.4(react@19.2.7)
+        specifier: "^19"
+        version: 19.2.7(react@19.2.7)
       swr:
-        specifier: ^2.1.0
+        specifier: "^2.1.0"
         version: 2.4.1(react@19.2.7)
       typescript:
-        specifier: ^6.0.2
+        specifier: "^6.0.2"
         version: 6.0.3
       vite:
-        specifier: ^8.0.3
+        specifier: "^8.0.3"
         version: 8.0.16(@types/node@26.6.5)(yaml@2.9.1)
       vitest:
-        specifier: ^4.1.2
+        specifier: "^4.1.2"
         version: 4.1.2(@opentelemetry/api@1.9.1)(@types/node@26.6.5)(jsdom@29.1.1)(vite@8.0.16(@types/node@26.6.5)(yaml@2.9.1))
 
 packages:
@@ -3742,10 +3742,10 @@ packages:
   re2js@0.4.3:
     resolution: {integrity: sha512-EuNmh7jurhHEE8Ge/lBo9JuMLb3qf866Xjjfyovw3wPc7+hlqDkZq4LwhrCQMEI+ARWfrKrHozEndzlpNT0WDg==}
 
-  react-dom@19.2.4:
-    resolution: {integrity: sha512-AXJdLo8kgMbimY95O2aKQqsz2iWi9jMgKJhRBAxECE4IFxfcazB2LmzloIoibJI3C12IlY20+KFaLv+71bUJeQ==}
+  react-dom@19.2.7:
+    resolution: {integrity: sha512-t0BRVXvbiE/o20Hfw669rLbMCDWtYZLvmJigy2f0MxsXF+71pxhR3xOkspmsO8h3ZlNzyibAmtCa3l4lYKk6gQ==}
     peerDependencies:
-      react: ^19.2.4
+      react: ^19.2.7
 
   react-is@17.0.2:
     resolution: {integrity: sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==}
@@ -6026,12 +6026,12 @@ snapshots:
       picocolors: 1.1.1
       redent: 3.0.0
 
-  '@testing-library/react@16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.4(react@19.2.7))(react@19.2.7)':
+  '@testing-library/react@16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
       '@babel/runtime': 7.28.4
       '@testing-library/dom': 10.4.1
       react: 19.2.7
-      react-dom: 19.2.4(react@19.2.7)
+      react-dom: 19.2.7(react@19.2.7)
     optionalDependencies:
       '@types/react': 19.2.17
       '@types/react-dom': 19.2.3(@types/react@19.2.17)
@@ -8539,7 +8539,7 @@ snapshots:
 
   re2js@0.4.3: {}
 
-  react-dom@19.2.4(react@19.2.7):
+  react-dom@19.2.7(react@19.2.7):
     dependencies:
       react: 19.2.7
       scheduler: 0.27.0
