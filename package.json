@@ -154,7 +154,7 @@
     "react": "^19",
     "react-dom": "^19",
     "swr": "^2.1.0",
-    "targeted-mutation": "0.8.0",
+    "targeted-mutation": "0.8.1",
     "typescript": "^6.0.2",
     "vite": "^8.0.3",
     "vitest": "^4.1.2"

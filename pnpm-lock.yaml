@@ -75,8 +75,8 @@ importers:
         specifier: ^2.1.0
         version: 2.4.1(react@19.3.0)
       targeted-mutation:
-        specifier: 0.8.0
-        version: 0.8.0
+        specifier: 0.8.1
+        version: 0.8.1
       typescript:
         specifier: ^6.0.2
         version: 6.0.3
@@ -1523,30 +1523,30 @@ packages:
       '@stryker-mutator/core': 9.6.1
       vitest: '>=2.0.0'
 
-  '@targeted-mutation/tmt-darwin-arm64@0.8.0':
-    resolution: {integrity: sha512-6KAYBj0LrJ4lyvhpn60YmLE8EZKvOXl7qiU4McwZtWAug4BHJDbqtvd1fFHyxUgx/EhhHETNywFXiIrcKudIAg==}
+  '@targeted-mutation/tmt-darwin-arm64@0.8.1':
+    resolution: {integrity: sha512-Auc8jtpEFMamkQs1Zc/FnMWtR7fbKgbXqlQxWiLxXnjRQXO6y2D77ZTUfq003AahIzvmjOuGhetYy8zTpsz5Rg==}
     cpu: [arm64]
     os: [darwin]
 
-  '@targeted-mutation/tmt-darwin-x64@0.8.0':
-    resolution: {integrity: sha512-Xlu4AQMXfTkziXnpAvTRslf0Co7heQuzRBvLEh8IoxEE9PeWJGDJ/pdHva+mv9sxbNtYHUL6gCNS4ztHxvxTLQ==}
+  '@targeted-mutation/tmt-darwin-x64@0.8.1':
+    resolution: {integrity: sha512-sr5UZUrCEgcbyrtpA3bRtETW3nqEqoX+/3uXLeCse386H0kqIRoiJhZs/fh4lbcjSwkJpHDr5G3mxmyWaBuwWw==}
     cpu: [x64]
     os: [darwin]
 
-  '@targeted-mutation/tmt-linux-arm64@0.8.0':
-    resolution: {integrity: sha512-Xf+2qOO3SEXgoW8BjHG22EDn5kARF+cTVqOW8NF9Mo4MU1VOiZXTR96Zn6gCs3e57bA6xQ5ckQ23pmA6zqREjQ==}
+  '@targeted-mutation/tmt-linux-arm64@0.8.1':
+    resolution: {integrity: sha512-/1j+kXdSv584unA1oeSiffTTQeUXD1es5/j4YmgkIlClUeQkG0O/EbAEALzW35odHRz1v3mjz1FgtraufZeh0A==}
     cpu: [arm64]
     os: [linux]
     libc: [glibc]
 
-  '@targeted-mutation/tmt-linux-x64@0.8.0':
-    resolution: {integrity: sha512-PnntxlGbv2uPwtfQKJBqguM4UReIOWKzoWS69M3rfNbFEjX8wQUjrwco/pwyQK0kvF5lR8ThJxGUnlGIR/ap7A==}
+  '@targeted-mutation/tmt-linux-x64@0.8.1':
+    resolution: {integrity: sha512-+a904rTIy/rmCi55yWXG09/Pw1ncIc6jbCPh+tP1KTAIOeyVG2v3gzjCwWX7ufPlsLkkUGaBpOzKYbfbj3xYfg==}
     cpu: [x64]
     os: [linux]
     libc: [glibc]
 
-  '@targeted-mutation/tmt-win32-x64@0.8.0':
-    resolution: {integrity: sha512-yXzBrgiu80E7qxfCBBwEwQwuOxhpwJy/zmbyjZE8aqqyXRnQXxpE3K+tQdQP8XSjnUVV/u6vcHhLn2fw1nEYrw==}
+  '@targeted-mutation/tmt-win32-x64@0.8.1':
+    resolution: {integrity: sha512-j3ziNydo4BhwwGUDmV2vxPo5SqoICNhW3w7bJhwMMTGaX/KYSTZEiFylpJos+nPqVP1t7vV8Rv2lewtLsjCJFQ==}
     cpu: [x64]
     os: [win32]
 
@@ -4117,8 +4117,8 @@ packages:
     resolution: {integrity: sha512-MFO/QzvtAOmJbkhOaCTvbGcFN9L9b+JunIsDwaKljSOdcLMea3NJ1k9Usz/rjdfSXTq4dfzfeS7W4p4YOAAHeA==}
     engines: {node: '>=18'}
 
-  targeted-mutation@0.8.0:
-    resolution: {integrity: sha512-b/qQ4Oqq6ZoygqRGQfxkUjeBNzuQbMOShe9QHPOmT00zTpTyLdMxXEe+IMjPuXMaO39/ZGZTGD6nzNFqu+iThg==}
+  targeted-mutation@0.8.1:
+    resolution: {integrity: sha512-AZbjCzdhbgw12+3wJgjb/Y6nLjiXVMtCjQcRFSr1TYsGqzsxP7QwdoyExy0pUkLzz7kLHBWS8/+odqJkAPUCUA==}
     engines: {node: ^22.18.0 || >=24.11.0}
     hasBin: true
 
@@ -6075,19 +6075,19 @@ snapshots:
       tslib: 2.8.1
       vitest: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))
 
-  '@targeted-mutation/tmt-darwin-arm64@0.8.0':
+  '@targeted-mutation/tmt-darwin-arm64@0.8.1':
     optional: true
 
-  '@targeted-mutation/tmt-darwin-x64@0.8.0':
+  '@targeted-mutation/tmt-darwin-x64@0.8.1':
     optional: true
 
-  '@targeted-mutation/tmt-linux-arm64@0.8.0':
+  '@targeted-mutation/tmt-linux-arm64@0.8.1':
     optional: true
 
-  '@targeted-mutation/tmt-linux-x64@0.8.0':
+  '@targeted-mutation/tmt-linux-x64@0.8.1':
     optional: true
 
-  '@targeted-mutation/tmt-win32-x64@0.8.0':
+  '@targeted-mutation/tmt-win32-x64@0.8.1':
     optional: true
 
   '@testing-library/dom@10.4.1':
@@ -9030,15 +9030,15 @@ snapshots:
       minizlib: 3.1.0
       yallist: 5.0.0
 
-  targeted-mutation@0.8.0:
+  targeted-mutation@0.8.1:
     dependencies:
       typescript: 6.0.3
     optionalDependencies:
-      '@targeted-mutation/tmt-darwin-arm64': 0.8.0
-      '@targeted-mutation/tmt-darwin-x64': 0.8.0
-      '@targeted-mutation/tmt-linux-arm64': 0.8.0
-      '@targeted-mutation/tmt-linux-x64': 0.8.0
-      '@targeted-mutation/tmt-win32-x64': 0.8.0
+      '@targeted-mutation/tmt-darwin-arm64': 0.8.1
+      '@targeted-mutation/tmt-darwin-x64': 0.8.1
+      '@targeted-mutation/tmt-linux-arm64': 0.8.1
+      '@targeted-mutation/tmt-linux-x64': 0.8.1
+      '@targeted-mutation/tmt-win32-x64': 0.8.1
 
   tcp-port-used@1.0.3:
     dependencies:
