@@ -1,0 +1,9 @@
+{
+  "config": "vitest.mutation.config.ts",
+  "files": [
+    "src/util/{path,databaseId,buildAggregateSpec}.ts",
+    "src/module/util/{normalizeKeyParams,materializeConstraint}.ts"
+  ],
+  "concurrency": 1,
+  "copyExcludeGitignore": true
+}

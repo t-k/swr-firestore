@@ -8,3 +8,9 @@ trustPolicy: no-downgrade
 minimumReleaseAgeExclude:
   - fireemu
   - "@fireemu/*"
+  - targeted-mutation@0.8.0
+  - "@targeted-mutation/tmt-darwin-arm64@0.8.0"
+  - "@targeted-mutation/tmt-darwin-x64@0.8.0"
+  - "@targeted-mutation/tmt-linux-arm64@0.8.0"
+  - "@targeted-mutation/tmt-linux-x64@0.8.0"
+  - "@targeted-mutation/tmt-win32-x64@0.8.0"

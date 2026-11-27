@@ -1355,6 +1355,7 @@ Install dependencies with `pnpm install --frozen-lockfile`. The default suite us
 ```bash
 pnpm run test:ci
 pnpm run test:mutation
+pnpm run test:mutation:targeted
 ```
 
 `pnpm run test:official` and `pnpm run test:rules` require JDK 21 and verify compatibility with the official emulator. See [Testing](docs/testing.md) for mutation scope, Rules differential checks, and reports.

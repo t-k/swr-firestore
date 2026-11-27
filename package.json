@@ -128,6 +128,7 @@
     "prepublishOnly": "pnpm run build",
     "test:official": "firebase emulators:exec --project swr-firestore-project --only firestore \"pnpm exec vitest run --coverage\"",
     "test:mutation": "stryker run",
+    "test:mutation:targeted": "targeted-mutation analyze . --format text",
     "test:rules": "node --test scripts/rules-compare.test.mjs && node scripts/test-rules.mjs"
   },
   "devDependencies": {
@@ -153,6 +154,7 @@
     "react": "^19",
     "react-dom": "^19",
     "swr": "^2.1.0",
+    "targeted-mutation": "0.8.0",
     "typescript": "^6.0.2",
     "vite": "^8.0.3",
     "vitest": "^4.1.2"

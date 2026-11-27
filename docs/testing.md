@@ -18,6 +18,16 @@ When running multiple coverage commands in one checkout, set `COVERAGE_REPORTS_D
 
 The mutation-specific Vitest configuration runs focused unit tests in Node without an emulator. All five targets have direct unit coverage, so mutants do not repeat the complete SDK integration suite. Stryker runs one worker for reproducible execution. A score below 75 fails the job. HTML and JSON reports are written under `reports/mutation` and uploaded by CI. Surviving mutants remain visible in the reports; equivalent mutants are not automatically excluded. To expand the mutation scope, update `mutate` in `stryker.config.json` and the corresponding test includes in `vitest.mutation.config.ts`. Emulator-backed tests can run through `pnpm exec fireemu exec --only firestore --project swr-firestore-project --firestore-port 0 --hub-port 0 --logging-port 0 -- stryker run`.
 
+`pnpm run test:mutation:targeted` uses [targeted-mutation](https://github.com/t-k/targeted-mutation-ts) to diagnose missing inputs and assertions in the same five files. It uses the same emulator-free Vitest suite and requires Node 22.18+ on the 22.x line or Node 24.11+. CI runs it on Node 24 and adds `reports/mutation/targeted-mutation.json` to the mutation artifact. Findings appear in the report. An unsuccessful analysis fails the job, and Stryker enforces the mutation score.
+
+```sh
+pnpm run test:mutation:targeted --list
+pnpm run test:mutation:targeted src/util/path.ts
+pnpm run test:mutation:targeted --json-out reports/mutation/targeted-mutation.json
+```
+
+Update `files` in `targeted-mutation.config.json` and `mutate` in `stryker.config.json` together when changing the default mutation scope.
+
 ## Rules mutation and differential tests
 
 `pnpm test:rules` first tests the comparison harness, then replays the same deterministic corpus against the official emulator and fireemu. Java 21 and port 8080 are required for the official run. Each backend is stopped before starting the next one. Results are written to `reports/rules/{official,fireemu,summary}.json` and uploaded by CI.
