@@ -51,8 +51,8 @@ importers:
         specifier: 15.33.0
         version: 15.33.0(@types/node@26.6.5)
       fireemu:
-        specifier: 0.24.0
-        version: 0.24.0
+        specifier: 0.68.0
+        version: 0.68.0
       jsdom:
         specifier: ^29.0.0
         version: 29.1.1
@@ -648,32 +648,32 @@ packages:
   '@firebase/webchannel-wrapper@1.0.6':
     resolution: {integrity: sha512-Vr/Mqu79dMwGRAyGbJ4uN4+BtXB3/mRTdzetD1daWNeG8QaWuzhhbG77GltO5c0yYmYls8i250iX73624GJd7Q==}
 
-  '@fireemu/darwin-arm64@0.24.0':
-    resolution: {integrity: sha512-HwprXn0O7AQ8f8BC1C8U745Svf5QPuytLthT3bZ6ogSyD3eAWArHy6I0kvc2RJygU3XOxVePwnVK9QO8vQeVWg==}
+  '@fireemu/darwin-arm64@0.68.0':
+    resolution: {integrity: sha512-wT05otvPtvFivlmN1fQEBSiJ/x7qalLh9nJUF78su+EK+mCDZQMYqefdRtAUJppPv+emdklKogK/kLBw5DExBQ==}
     engines: {node: '>=20'}
     cpu: [arm64]
     os: [darwin]
 
-  '@fireemu/darwin-x64@0.24.0':
-    resolution: {integrity: sha512-l4fuo47UzidZv1Mbf1qM8fqL+Xs99zQZtVjJ0aaba4oilT0rgcHrFakKrOHqQRZlKrTs+tiEs6rM0oTb4+eVUQ==}
+  '@fireemu/darwin-x64@0.68.0':
+    resolution: {integrity: sha512-HgO6Ava+zLdYyloxYNo6W1tqg/q53aXpDHzxLtqWBcboBIt3u58rD5yhkQGkrebW/rLXOy2GBVG91FT/GxtdHw==}
     engines: {node: '>=20'}
     cpu: [x64]
     os: [darwin]
 
-  '@fireemu/linux-arm64@0.24.0':
-    resolution: {integrity: sha512-vFE/44TMkrUxzX5ahvuExMmL05vxMhRR0W9i1LIsJ737lPDYnJg2iOULJkxvJHBrOtl8i058BnrimrIradU+bg==}
+  '@fireemu/linux-arm64@0.68.0':
+    resolution: {integrity: sha512-j0/qjPIbghoQeCcaTA1GXqkKjZ+8G/JozhqBV1ab6zM7HNMCzG6zzepcYDkEBYz5RnDuGbUXVi7QRideSbgwUg==}
     engines: {node: '>=20'}
     cpu: [arm64]
     os: [linux]
 
-  '@fireemu/linux-x64@0.24.0':
-    resolution: {integrity: sha512-CNHdMxFrbkZcPe6h3bN6WkC4chpc8FUmDHFdQ+cQx3YWIQDeSvAUod62TFiUgEMotEAEdvXu3WQ5fVz4YXfX8Q==}
+  '@fireemu/linux-x64@0.68.0':
+    resolution: {integrity: sha512-UnCYyTo/Awp4wDv5Hn1J13Hd/NunJ6G4RxCqXxRNiQxxmwhcgqfrF4RL3zpN5jgtAxY+pZB3M+lQGFcoAoZYcQ==}
     engines: {node: '>=20'}
     cpu: [x64]
     os: [linux]
 
-  '@fireemu/win32-x64@0.24.0':
-    resolution: {integrity: sha512-xLSFU/XLXYxdSSMSmCy26TUvtOHkCXVSGqVprqeQOe9cVT8VArMDtgcM9vSbGdS6ukFi0BOPKjv5iO9qqotSJQ==}
+  '@fireemu/win32-x64@0.68.0':
+    resolution: {integrity: sha512-4no4efk7BHNQUkXCM8kTkjUm+S+R+cQbg8zIcBPguI/NT9H40YUJnROELJnpjbsbSaTqwy00FijUp2ahKwymvA==}
     engines: {node: '>=20'}
     cpu: [x64]
     os: [win32]
@@ -2526,8 +2526,8 @@ packages:
   firebase@12.15.0:
     resolution: {integrity: sha512-p0YTLcRSTiBXMx9sGr4ZNSfLjc/RVBEw4C/TXjVMtw65+6E1Pbm47UY3F4/AqRoDobEcNX3gsbPGy7jPjxbgSQ==}
 
-  fireemu@0.24.0:
-    resolution: {integrity: sha512-jGTfUCVSJD1kZVexAOKj0btoYGZwwBOSRP6LjREOqzTjNdeqHS4QPQelhX5NOyXy6SkFk+vd29NmHK3nMcEbAQ==}
+  fireemu@0.68.0:
+    resolution: {integrity: sha512-sWHzuJfovDlzPXrGs5Q9I28soJ4N/FMQ+aEGGePTZkhzOzpyBY6cMN/xe1RLxGOLtMsszimJP3RHEvicUHevdw==}
     engines: {node: '>=20'}
     hasBin: true
 
@@ -5326,19 +5326,19 @@ snapshots:
 
   '@firebase/webchannel-wrapper@1.0.6': {}
 
-  '@fireemu/darwin-arm64@0.24.0':
+  '@fireemu/darwin-arm64@0.68.0':
     optional: true
 
-  '@fireemu/darwin-x64@0.24.0':
+  '@fireemu/darwin-x64@0.68.0':
     optional: true
 
-  '@fireemu/linux-arm64@0.24.0':
+  '@fireemu/linux-arm64@0.68.0':
     optional: true
 
-  '@fireemu/linux-x64@0.24.0':
+  '@fireemu/linux-x64@0.68.0':
     optional: true
 
-  '@fireemu/win32-x64@0.24.0':
+  '@fireemu/win32-x64@0.68.0':
     optional: true
 
   '@google-cloud/cloud-sql-connector@1.12.1':
@@ -7281,13 +7281,13 @@ snapshots:
     transitivePeerDependencies:
       - '@react-native-async-storage/async-storage'
 
-  fireemu@0.24.0:
+  fireemu@0.68.0:
     optionalDependencies:
-      '@fireemu/darwin-arm64': 0.24.0
-      '@fireemu/darwin-x64': 0.24.0
-      '@fireemu/linux-arm64': 0.24.0
-      '@fireemu/linux-x64': 0.24.0
-      '@fireemu/win32-x64': 0.24.0
+      '@fireemu/darwin-arm64': 0.68.0
+      '@fireemu/darwin-x64': 0.68.0
+      '@fireemu/linux-arm64': 0.68.0
+      '@fireemu/linux-x64': 0.68.0
+      '@fireemu/win32-x64': 0.68.0
 
   fn.name@1.1.0: {}
 

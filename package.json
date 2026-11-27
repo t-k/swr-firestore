@@ -146,7 +146,7 @@
     "firebase": ">=9.17.0",
     "firebase-admin": ">=11.5.0",
     "firebase-tools": "15.33.0",
-    "fireemu": "0.24.0",
+    "fireemu": "0.68.0",
     "jsdom": "^29.0.0",
     "oxfmt": "^0.54.0",
     "oxlint": "^1.57.0",
